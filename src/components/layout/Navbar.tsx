@@ -24,9 +24,16 @@ export function Navbar() {
     <nav id="nav">
       <div className="logo" onClick={() => router.push("/")} style={{ gap: '8px' }}>
         <img 
-          src="/logo.png" 
+          src={theme === 'dark' ? "/logo-dark.png" : "/logo.png"} 
           alt="BeeMate Logo" 
-          style={{ height: '48px', width: 'auto', objectFit: 'contain', transform: 'scale(1.1)', transformOrigin: 'left center' }} 
+          style={{ 
+            height: '44px', 
+            width: 'auto', 
+            objectFit: 'contain', 
+            transform: 'scale(1)', 
+            transformOrigin: 'left center',
+            transition: 'opacity 0.3s ease'
+          }} 
         />
       </div>
       
