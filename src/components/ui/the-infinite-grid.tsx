@@ -27,15 +27,13 @@ export const TheInfiniteGrid = () => {
   const gridOffsetX = useMotionValue(0);
   const gridOffsetY = useMotionValue(0);
 
-  const speedX = 0.5; 
-  const speedY = 0.5;
-
-  useAnimationFrame(() => {
-    const currentX = gridOffsetX.get();
-    const currentY = gridOffsetY.get();
-    gridOffsetX.set((currentX + speedX) % 40);
-    gridOffsetY.set((currentY + speedY) % 40);
-  });
+  // Komentari `useAnimationFrame` karena memaksa render SVG 60fps yang sangat berat untuk performa CPU/GPU
+  // useAnimationFrame(() => {
+  //   const currentX = gridOffsetX.get();
+  //   const currentY = gridOffsetY.get();
+  //   gridOffsetX.set((currentX + speedX) % 40);
+  //   gridOffsetY.set((currentY + speedY) % 40);
+  // });
 
   const maskImage = useMotionTemplate`radial-gradient(300px circle at ${mouseX}px ${mouseY}px, black, transparent)`;
 
@@ -54,11 +52,11 @@ export const TheInfiniteGrid = () => {
         <GridPattern offsetX={gridOffsetX} offsetY={gridOffsetY} />
       </motion.div>
 
-      {/* Glowing Ambient Orbs */}
-      <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute right-[-10%] top-[-10%] w-[40%] h-[40%] rounded-full bg-orange-500/10 dark:bg-orange-600/10 blur-[120px]" />
-        <div className="absolute right-[20%] top-[40%] w-[20%] h-[20%] rounded-full bg-yellow-500/10 dark:bg-yellow-500/10 blur-[100px]" />
-        <div className="absolute left-[-10%] bottom-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/10 dark:bg-blue-600/10 blur-[120px]" />
+      {/* Glowing Ambient Orbs - Mengurangi efek ekstrim blur yang sering menyebabkan laptop freeze */}
+      <div className="absolute inset-0 pointer-events-none z-0" style={{ transform: "translateZ(0)" }}>
+        <div className="absolute right-[-10%] top-[-10%] w-[40%] h-[40%] rounded-full bg-orange-500/5 dark:bg-orange-600/5 blur-3xl" />
+        <div className="absolute right-[20%] top-[40%] w-[20%] h-[20%] rounded-full bg-yellow-500/5 dark:bg-yellow-500/5 blur-3xl" />
+        <div className="absolute left-[-10%] bottom-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/5 dark:bg-blue-600/5 blur-3xl" />
       </div>
     </div>
   );
