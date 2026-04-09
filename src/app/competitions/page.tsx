@@ -1,70 +1,103 @@
 "use client";
 
+import { useState } from "react";
 import { COMPETITIONS } from "@/lib/data";
+import { motion } from "framer-motion";
+import { ExpandingSearchDock } from "@/components/ui/ExpandingSearchDock";
 
 export default function CompetitionsPage() {
-  return (
-    <div className="page on">
-      <div className="shell">
-        <aside className="sidebar">
-          <div className="sb-section">
-            <span className="sb-label">Jenis Lomba</span>
-            <div className="sb-list">
-              <button className="sbi on">Semua Lomba</button>
-              <button className="sbi">Dukungan Universitas</button>
-              <button className="sbi">Hackathon</button>
-              <button className="sbi">Game Jam</button>
-            </div>
-          </div>
-        </aside>
+  const [search, setSearch] = useState("");
 
-        <div className="main">
-          <div className="page-head">
-            <div>
-              <div className="page-title">Info Lomba Terkini</div>
-              <div className="page-sub">Temukan wadah untuk membuktikan keahlian timmu.</div>
-            </div>
-            <button className="btn btn-honey btn-md">+ Tambah Info Lomba</button>
-          </div>
+  const filtered = COMPETITIONS.filter(c => 
+    c.title.toLowerCase().includes(search.toLowerCase()) ||
+    c.org.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div className="page on" style={{ minHeight: '100vh', padding: '16px 24px 60px' }}>
+      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+        
+        {/* Header */}
+        <div style={{ marginBottom: '48px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <h1 style={{ fontFamily: "'Sora', sans-serif", fontSize: 'clamp(36px, 5vw, 48px)', fontWeight: 800, margin: 0, color: 'var(--t)' }}>
+            Lomba & <span style={{ background: 'linear-gradient(90deg, var(--ho), #ffbe4d)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Kompetisi</span>
+          </h1>
+          <p style={{ fontSize: '16px', color: 'var(--t2)', maxWidth: '600px', lineHeight: 1.6 }}>
+            Temukan berbagai lomba nasional hingga internasional terbaru. Segera bentuk timmu dan daftarkan diri sebelum pendaftaran ditutup!
+          </p>
           
-          <div className="grid">
-            {COMPETITIONS.map(c => (
-              <div key={c.id} className="comp-card cursor-pointer" style={{ padding: 0, overflow: 'hidden' }}>
-                <div style={{ padding: '24px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                    <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: `${c.color}20`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: c.color, fontSize: '24px' }}>
-                      <i className="ph-fill ph-trophy"></i>
-                    </div>
-                    <span className="proj-deadline" style={{ background: 'var(--bg5)', padding: '6px 10px', borderRadius: '8px', color: 'var(--t2)' }}>
-                      <i className="ph-fill ph-clock"></i> {c.deadline}
-                    </span>
-                  </div>
-                  
-                  <h3 style={{ fontSize: '19px', fontWeight: '800', lineHeight: 1.3, marginBottom: '6px', color: 'var(--t)' }}>
-                    {c.title}
-                  </h3>
-                  <div style={{ fontSize: '12px', color: 'var(--t2)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <i className="ph-fill ph-buildings"></i> Penyelenggara: <b>{c.org}</b>
-                  </div>
-                  
-                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '24px' }}>
-                    {c.tags.map(t => (
-                      <span key={t} style={{ fontSize: '10px', fontWeight: '600', padding: '5px 12px', borderRadius: '20px', background: 'var(--b)', color: 'var(--t2)' }}>
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                  
-                  <div style={{ borderTop: '1px solid var(--b)', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '11px', color: 'var(--t3)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                      Kategori: <span style={{ color: c.color }}>{c.type}</span>
-                    </span>
-                    <button className="apply-btn" style={{ background: 'var(--t)', color: 'var(--bg)', border: 'none', padding: '6px 14px' }}>Detail <i className="ph-bold ph-arrow-right"></i></button>
-                  </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '12px', flexWrap: 'wrap' }}>
+            <ExpandingSearchDock
+              value={search}
+              onChange={setSearch}
+              placeholder="Cari nama lomba atau institusi..."
+            />
+            {search && (
+              <span style={{ fontSize: 12, color: 'var(--t3)' }}>
+                {filtered.length} hasil untuk &ldquo;{search}&rdquo;
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
+          {filtered.map((c, i) => (
+            <motion.div 
+              key={c.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05 }}
+              style={{
+                background: 'var(--bg2)',
+                border: '1px solid var(--bdr)',
+                borderRadius: '24px',
+                padding: '24px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.borderColor = c.color;
+                e.currentTarget.style.boxShadow = `0 12px 24px ${c.color}15`;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.borderColor = 'var(--bdr)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
+                <div style={{ 
+                  width: '48px', height: '48px', borderRadius: '14px', 
+                  background: `${c.color}15`, color: c.color,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px'
+                }}>
+                  <i className="ph-fill ph-trophy"></i>
+                </div>
+                <div style={{ background: 'var(--bg)', padding: '4px 12px', borderRadius: '100px', fontSize: '11px', fontWeight: 700, color: 'var(--t2)', border: '1px solid var(--bdr)' }}>
+                  {c.deadline}
                 </div>
               </div>
-            ))}
-          </div>
+              
+              <h3 style={{ fontSize: '18px', fontWeight: 800, margin: '0 0 8px 0', color: 'var(--t)' }}>{c.title}</h3>
+              <div style={{ fontSize: '14px', color: 'var(--t2)', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <i className="ph-fill ph-buildings"></i> {c.org}
+              </div>
+              
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '24px' }}>
+                {c.tags.map(tag => (
+                  <span key={tag} style={{ background: 'var(--bg)', border: '1px solid var(--bdr)', padding: '4px 10px', borderRadius: '8px', fontSize: '11px', color: 'var(--t3)' }}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <button className="btn" style={{ width: '100%', background: 'var(--bg)', border: '1px solid var(--bdr)', color: 'var(--t)', padding: '12px', borderRadius: '12px', fontWeight: 600 }}>
+                Lihat Detail
+              </button>
+            </motion.div>
+          ))}
         </div>
       </div>
     </div>

@@ -1,0 +1,160 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+// ==========================================
+// 1. NEXTAUTH / AUTH.JS STANDARD MODELS
+// ==========================================
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ==========================================
+// 2. BEEMATE CORE MODELS
+// ==========================================
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum JoinStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum NotificationType {
+  INVITE
+  ACCEPT
+  ALERT
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          UserRole  @default(USER)
+  
+  // Profil BeeMate
+  bio           String?   @db.Text
+  skills        String[]  // Fitur array didukung secara native oleh PostgreSQL
+  title         String?   // Hacker, Hustler, atau Hipster
+  portfolioUrl  String?
+
+  // Relasi NextAuth
+  accounts      Account[]
+  sessions      Session[]
+
+  // Relasi BeeMate
+  teamsCreated  Team[]         @relation("TeamLeader")
+  teamMembers   TeamMember[]
+  competitions  Competition[]  @relation("CompetitionAuthor")
+  
+  notificationsReceived Notification[] @relation("Recipient")
+  notificationsSent     Notification[] @relation("Sender")
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Team {
+  id          String   @id @default(cuid())
+  name        String
+  description String?  @db.Text
+  
+  leaderId    String
+  leader      User     @relation("TeamLeader", fields: [leaderId], references: [id])
+  
+  members     TeamMember[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model TeamMember {
+  id         String     @id @default(cuid())
+  teamId     String
+  userId     String
+  role       String     @default("MEMBER") // ADMIN_TIM atau MEMBER
+  joinStatus JoinStatus @default(PENDING)
+
+  team       Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime @default(now())
+  
+  @@unique([teamId, userId]) // Mencegah 1 user masuk tim yg sama 2 kali
+}
+
+model Competition {
+  id               String   @id @default(cuid())
+  title            String
+  description      String   @db.Text
+  imageUrl         String?
+  registrationLink String?
+  deadline         DateTime?
+  
+  authorId         String
+  author           User     @relation("CompetitionAuthor", fields: [authorId], references: [id])
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Notification {
+  id          String           @id @default(cuid())
+  
+  recipientId String
+  recipient   User             @relation("Recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  
+  senderId    String?
+  sender      User?            @relation("Sender", fields: [senderId], references: [id], onDelete: SetNull)
+  
+  type        NotificationType
+  message     String           @db.Text
+  isRead      Boolean          @default(false)
+
+  createdAt   DateTime         @default(now())
+}

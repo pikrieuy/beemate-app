@@ -27,13 +27,16 @@ export const TheInfiniteGrid = () => {
   const gridOffsetX = useMotionValue(0);
   const gridOffsetY = useMotionValue(0);
 
-  // Komentari `useAnimationFrame` karena memaksa render SVG 60fps yang sangat berat untuk performa CPU/GPU
-  // useAnimationFrame(() => {
-  //   const currentX = gridOffsetX.get();
-  //   const currentY = gridOffsetY.get();
-  //   gridOffsetX.set((currentX + speedX) % 40);
-  //   gridOffsetY.set((currentY + speedY) % 40);
-  // });
+  const speedX = 0.12;
+  const speedY = 0.08;
+
+  // Slow, smooth infinite grid drift animation — lightweight at 0.12px/frame
+  useAnimationFrame(() => {
+    const currentX = gridOffsetX.get();
+    const currentY = gridOffsetY.get();
+    gridOffsetX.set((currentX + speedX) % 40);
+    gridOffsetY.set((currentY + speedY) % 40);
+  });
 
   const maskImage = useMotionTemplate`radial-gradient(300px circle at ${mouseX}px ${mouseY}px, black, transparent)`;
 
@@ -46,7 +49,7 @@ export const TheInfiniteGrid = () => {
 
       {/* Interactive Cursor Grid Reveal */}
       <motion.div 
-        className="absolute inset-0 z-0 opacity-30 dark:opacity-40"
+        className="absolute inset-0 z-0 opacity-20 dark:opacity-30"
         style={{ maskImage, WebkitMaskImage: maskImage }}
       >
         <GridPattern offsetX={gridOffsetX} offsetY={gridOffsetY} />

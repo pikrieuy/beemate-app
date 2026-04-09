@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { PEOPLE } from "@/lib/data";
 import { PersonCard } from "@/components/cards/PersonCard";
+import { ExpandingSearchDock } from "@/components/ui/ExpandingSearchDock";
 
 export default function PeoplePage() {
   const [search, setSearch] = useState("");
@@ -35,19 +36,17 @@ export default function PeoplePage() {
         <div className="main">
           <div className="page-head">
             <div>
-              <div className="page-title">Browse People</div>
-              <div className="page-sub" id="people-count-label">{filtered.filter(p => p.status === 'open').length} orang sedang open to team</div>
+              <h1 style={{ fontFamily: "'Sora', sans-serif", fontSize: 'clamp(28px, 4vw, 36px)', fontWeight: 800, margin: '0 0 8px 0', color: 'var(--t)' }}>
+                Browse <span style={{ background: 'linear-gradient(90deg, var(--bl), #93c5fd)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>People</span>
+              </h1>
+              <div className="page-sub" id="people-count-label" style={{ fontSize: '15px' }}>{filtered.filter(p => p.status === 'open').length} orang sedang open to team</div>
             </div>
             <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
-              <div className="search-box" style={{ width: "250px" }}>
-                <span className="search-icon">🔍</span>
-                <input 
-                  type="text" 
-                  placeholder="Cari skill atau nama..." 
-                  value={search} 
-                  onChange={e => setSearch(e.target.value)} 
-                />
-              </div>
+              <ExpandingSearchDock
+                value={search}
+                onChange={setSearch}
+                placeholder="Cari skill atau nama..."
+              />
             </div>
           </div>
           

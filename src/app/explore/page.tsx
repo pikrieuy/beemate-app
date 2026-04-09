@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { PROJECTS } from "@/lib/data";
 import { ProjectCard } from "@/components/cards/ProjectCard";
+import { ExpandingSearchDock } from "@/components/ui/ExpandingSearchDock";
 
 export default function ExplorePage() {
   const [filterType, setFilterType] = useState("all");
@@ -79,19 +80,17 @@ export default function ExplorePage() {
         <div className="main">
           <div className="page-head">
             <div>
-              <div className="page-title">Open Projects</div>
-              <div className="page-sub" id="proj-count-label">{filtered.length} proyek aktif mencari anggota</div>
+              <h1 style={{ fontFamily: "'Sora', sans-serif", fontSize: 'clamp(28px, 4vw, 36px)', fontWeight: 800, margin: '0 0 8px 0', color: 'var(--t)' }}>
+                Explore <span style={{ background: 'linear-gradient(90deg, var(--ho), #ffbe4d)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Projects</span>
+              </h1>
+              <div className="page-sub" id="proj-count-label" style={{ fontSize: '15px' }}>{filtered.length} proyek aktif mencari anggota</div>
             </div>
             <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
-              <div className="search-box" style={{ width: "205px" }}>
-                <span className="search-icon">🔍</span>
-                <input 
-                  type="text" 
-                  placeholder="Cari proyek..." 
-                  value={search} 
-                  onChange={e => setSearch(e.target.value)} 
-                />
-              </div>
+              <ExpandingSearchDock
+                value={search}
+                onChange={setSearch}
+                placeholder="Cari proyek..."
+              />
               <button className="btn btn-honey btn-md">+ Post Project</button>
             </div>
           </div>

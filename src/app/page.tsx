@@ -2,8 +2,25 @@
 
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { TheInfiniteGrid } from "@/components/ui/the-infinite-grid";
 import { Typewriter } from "@/components/ui/typewriter";
+import { TestimonialsColumn } from "@/components/ui/TestimonialsColumn";
+
+
+const allTestimonials = [
+  { text: "Berkat BeeMate, aku ketemu anak DKV dari Alam Sutera yang skill-nya persis yang aku butuhkan. Alhamdulillah juara 1 Gemastik!", name: "Raka Kusuma", role: "Computer Science · Bandung", av: "RK", color: "#f5a623" },
+  { text: "Dulu cari tim lewat grup WA sering ghosting. Sekarang pakai BeeMate lebih terstruktur dan orang-orangnya lebih serius.", name: "Nadia Salsabila", role: "VCD · Bandung", av: "NS", color: "#5b9cf6" },
+  { text: "Commitment score-nya game changer. Bisa lihat track record orang sebelum diajak tim — tidak takut dapat partner ghosting lagi.", name: "Marco Rivaldi", role: "Business · Kemanggisan", av: "MR", color: "#22d17a" },
+  { text: "Aku dari jurusan Psikologi bisa kolaborasi sama anak CS untuk PKM-KC. Sesuatu yang nggak akan terjadi tanpa BeeMate.", name: "Anisa Kartika", role: "Psychology · Kemanggisan", av: "AK", color: "#fb923c" },
+  { text: "Fitur Smart Matching-nya luar biasa. Langsung dapat rekomendasi yang relevan tanpa perlu scroll panjang-panjang.", name: "Dimas Pratama", role: "Informatics · Kemanggisan", av: "DP", color: "#a78bfa" },
+  { text: "Tim saya terbentuk dalam 3 hari! BeeMate benar-benar mempercepat proses cari anggota yang biasanya makan berminggu-minggu.", name: "Bagas Ardhian", role: "Industrial Engineering · Bandung", av: "BA", color: "#f96b6b" },
+  { text: "Verified portfolio-nya bikin saya lebih percaya diri pas nge-approach orang. Prestasi saya langsung keliatan kredibel.", name: "Zahra Amalia", role: "Design · ALS", av: "ZA", color: "#22d4d4" },
+  { text: "Dari Bandung bisa connect sama anak Kemanggisan, dan proyek kita malah menang Best Startup di BINUS Hackathon.", name: "Kevin Santoso", role: "CS · Bandung", av: "KS", color: "#f5a623" },
+  { text: "BeeMate ubah cara saya membangun network kampus. Sekarang punya 8 koneksi serius dari berbagai jurusan!", name: "Silvia Ratnasari", role: "Marketing · Kemanggisan", av: "SR", color: "#5b9cf6" },
+];
+
+const col1 = allTestimonials.slice(0, 3);
+const col2 = allTestimonials.slice(3, 6);
+const col3 = allTestimonials.slice(6, 9);
 
 export default function LandingPage() {
   const router = useRouter();
@@ -11,48 +28,54 @@ export default function LandingPage() {
   return (
     <div className="page on" style={{ paddingTop: 0, position: "relative", minHeight: "100vh" }}>
 
-      {/* ── INFINITE GRID LAYER ── */}
-      <TheInfiniteGrid />
-
       {/* ══════════════════════════════════════════════
-          SECTION 1 — FULL SCREEN HERO
+          SECTION 1 — CENTERED HERO SECTION
       ══════════════════════════════════════════════ */}
-      <section style={{
+
+        <section style={{
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        alignItems: "flex-start",
+        alignItems: "center",
         justifyContent: "center",
-        padding: "100px 60px 60px",
-        maxWidth: 1100,
-        margin: "0 auto",
+        padding: "80px 24px 60px",
+        textAlign: "center",
         position: "relative",
         zIndex: 1,
         width: "100%",
+        gap: 0,
       }}>
 
         {/* Eyebrow pill */}
-        <div className="bc-hero-eyebrow" style={{ marginBottom: 36 }}>
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="bc-hero-eyebrow" 
+          style={{ marginBottom: 36 }}
+        >
           <i className="ph-fill ph-sparkle" style={{ fontSize: 11 }}></i>
           Eksklusif untuk Binusian
-        </div>
+        </motion.div>
 
-        {/* Main headline — 3 stacked lines, fully static */}
-        <h1 style={{
-          fontFamily: "'Sora', sans-serif",
-          fontSize: "clamp(48px, 5.5vw, 76px)",
-          fontWeight: 900,
-          lineHeight: 1.08,
-          letterSpacing: "-2.5px",
-          marginBottom: 0,
-          maxWidth: 820,
-        }}>
-          {/* Line 1 - static */}
+        {/* Main headline */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.05 }}
+          style={{
+            fontFamily: "'Sora', sans-serif",
+            fontSize: "clamp(42px, 6vw, 76px)",
+            fontWeight: 900,
+            lineHeight: 1.05,
+            letterSpacing: "-2.5px",
+            marginBottom: 0,
+            maxWidth: 1000,
+          }}
+        >
           <span style={{ display: "block", color: "var(--t)" }}>
             Temukan partner
           </span>
-
-          {/* Line 2 - static gradient */}
           <span style={{
             display: "block",
             background: "linear-gradient(90deg, var(--ho), #ffbe4d)",
@@ -63,79 +86,62 @@ export default function LandingPage() {
           }}>
             yang siap
           </span>
-
-          {/* Line 3 - typewriter only, fixed height so nothing shifts */}
-          <span style={{
-            display: "block",
-            height: "1.1em",
-            overflow: "hidden",
-            color: "var(--t)",
-          }}>
+          <span style={{ display: "block", height: "1.2em", overflow: "hidden", color: "var(--t)" }}>
             <Typewriter
-              text={[
-                "commit penuh.",
-                "begadang bareng.",
-                "juara bersama.",
-                "nggak ghosting.",
-                "lintas jurusan.",
-                "bikin startup.",
-              ]}
-              speed={65}
-              deleteSpeed={35}
-              waitTime={2200}
-              cursorChar="_"
-              cursorClassName=""
-              className=""
+              text={["commit penuh.", "begadang bareng.", "juara bersama.", "nggak ghosting.", "lintas jurusan.", "bikin startup."]}
+              speed={65} deleteSpeed={35} waitTime={2200}
+              cursorChar="_" cursorClassName="" className=""
               cursorAnimationVariants={{
                 initial: { opacity: 0 },
-                animate: {
-                  opacity: 1,
-                  transition: {
-                    duration: 0.01,
-                    repeat: Infinity,
-                    repeatDelay: 0.4,
-                    repeatType: "reverse" as const,
-                  },
-                },
+                animate: { opacity: 1, transition: { duration: 0.01, repeat: Infinity, repeatDelay: 0.4, repeatType: "reverse" as const } },
               }}
             />
           </span>
-        </h1>
+        </motion.h1>
 
-        {/* Divider line */}
-        <div style={{
-          width: 64, height: 3,
-          background: "linear-gradient(90deg, var(--ho), transparent)",
-          borderRadius: 4,
-          margin: "36px 0 28px",
-        }} />
+        {/* Divider */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          style={{ width: 64, height: 3, background: "linear-gradient(90deg, var(--ho), transparent 50%, var(--ho))", borderRadius: 4, margin: "36px auto 28px" }}
+        />
 
         {/* Subtext */}
-        <p style={{
-          fontSize: 16,
-          color: "var(--t2)",
-          lineHeight: 1.9,
-          maxWidth: 480,
-          marginBottom: 44,
-          fontWeight: 400,
-        }}>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.35 }}
+          style={{ fontSize: 17, color: "var(--t2)", lineHeight: 1.8, maxWidth: 600, marginBottom: 44, fontWeight: 400 }}
+        >
           Platform matchmaking untuk Binusian. Temukan rekan lomba,
           lintas jurusan, & co-founder yang terverifikasi —
           bebas dari drama & ghosting.
-        </p>
+        </motion.p>
 
         {/* CTA Buttons */}
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 52 }}>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.45 }}
+          style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", marginBottom: 52 }}
+        >
           <button className="btn btn-honey btn-lg" onClick={() => router.push("/explore")}>
             <i className="ph-fill ph-squares-four lc"></i> Explore Projects
           </button>
           <button className="btn btn-dark btn-lg" onClick={() => router.push("/people")}>
             <i className="ph-fill ph-users lc"></i> Browse People
           </button>
-        </div>
+        </motion.div>
 
         {/* Social proof bar */}
-        <div className="bc-proof" style={{ justifyContent: "flex-start" }}>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.55 }}
+          className="bc-proof" 
+          style={{ justifyContent: "center", marginBottom: 64 }}
+        >
           <div className="av-stack">
             <div className="av av-32" style={{ background: "linear-gradient(135deg,#f5a623,#ffc04d)" }}>RK</div>
             <div className="av av-32" style={{ background: "linear-gradient(135deg,#5b9cf6,#93c5fd)" }}>NS</div>
@@ -146,7 +152,8 @@ export default function LandingPage() {
           <div className="bc-proof-text">
             <strong>1,240+ Bergabung</strong> · 320+ Tim Aktif · 42 Juara Lomba
           </div>
-        </div>
+        </motion.div>
+
 
         {/* Scroll hint */}
         <motion.div
@@ -177,6 +184,7 @@ export default function LandingPage() {
           </motion.div>
         </motion.div>
       </section>
+
 
 
       {/* ══════════════════════════════════════════════
@@ -253,57 +261,63 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════════════════════════════════════════
-          SECTION 3 — TESTIMONIALS (horizontal scroll)
+          SECTION 3 — TESTIMONIALS (scrolling columns)
       ══════════════════════════════════════════════ */}
-      <section style={{ position: "relative", zIndex: 1, padding: "0 0 80px" }}>
-        <div style={{ padding: "0 28px", maxWidth: 1100, margin: "0 auto 32px" }}>
-          <p className="section-label">
-            <i className="ph-fill ph-quotes lc" style={{ marginRight: 6 }}></i>
-            Kata Mereka
-          </p>
+      <section className="testi-col-section">
+        {/* Header */}
+        <div style={{ padding: "0 28px", maxWidth: 1100, margin: "0 auto 48px", textAlign: "center" }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {/* Label pill */}
+            <div style={{
+              display: "inline-flex", alignItems: "center", gap: 6,
+              background: "var(--hbg)", border: "1px solid var(--hbd)", color: "var(--ho)",
+              fontSize: 10, fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase",
+              padding: "5px 14px", borderRadius: 100, marginBottom: 20,
+            }}>
+              <i className="ph-fill ph-quotes" style={{ fontSize: 12 }}></i>
+              Kata Mereka
+            </div>
+
+            <h2 style={{
+              fontFamily: "'Sora', sans-serif",
+              fontSize: "clamp(28px, 3.5vw, 44px)",
+              fontWeight: 900,
+              letterSpacing: "-1.5px",
+              lineHeight: 1.1,
+              marginBottom: 14,
+            }}>
+              Ribuan Binusian{" "}
+              <span style={{
+                background: "linear-gradient(90deg, var(--ho), #ffbe4d)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}>sudah merasakan</span>
+            </h2>
+            <p style={{ fontSize: 13, color: "var(--t2)", lineHeight: 1.8, maxWidth: 480, margin: "0 auto" }}>
+              Bukan sekedar klaim — ini cerita nyata dari sesama Binusian yang berhasil bangun tim impian lewat BeeMate.
+            </p>
+          </motion.div>
         </div>
 
-        <div style={{
-          display: "flex",
-          gap: 20,
-          overflowX: "auto",
-          padding: "8px 28px 24px",
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-        }}>
-          {[
-            { stars: "★★★★★", text: "Berkat BeeMate, aku ketemu anak DKV dari Alam Sutera yang skill-nya persis yang aku butuhkan. Alhamdulillah juara 1 Gemastik!", name: "Raka Kusuma", role: "Computer Science · Bandung", av: "RK", color: "#f5a623" },
-            { stars: "★★★★★", text: "Dulu cari tim lewat grup WA sering ghosting. Sekarang pakai BeeMate lebih terstruktur dan orang-orangnya lebih serius.", name: "Nadia Salsabila", role: "VCD · Bandung", av: "NS", color: "#5b9cf6" },
-            { stars: "★★★★★", text: "Commitment score-nya game changer. Bisa lihat track record orang sebelum diajak tim — tidak takut dapat partner ghosting lagi.", name: "Marco Rivaldi", role: "Business · Kemanggisan", av: "MR", color: "#22d17a" },
-            { stars: "★★★★★", text: "Aku dari jurusan Psikologi bisa kolaborasi sama anak CS untuk PKM-KC. Sesuatu yang nggak akan terjadi tanpa BeeMate.", name: "Anisa Kartika", role: "Psychology · Kemanggisan", av: "AK", color: "#fb923c" },
-          ].map((t, i) => (
-            <motion.div
-              key={t.name}
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.45, delay: i * 0.08 }}
-              className="testi-card"
-              style={{
-                minWidth: 320, maxWidth: 360,
-                flexShrink: 0,
-                padding: 28,
-                borderRadius: 20,
-              }}
-            >
-              <div className="testi-stars" style={{ marginBottom: 12 }}>{t.stars}</div>
-              <p className="testi-text" style={{ marginBottom: 20, lineHeight: 1.75, fontSize: 13 }}>
-                &ldquo;{t.text}&rdquo;
-              </p>
-              <div className="testi-author">
-                <div className="av av-36" style={{ background: `linear-gradient(135deg, ${t.color}, ${t.color}88)` }}>{t.av}</div>
-                <div>
-                  <div className="testi-name">{t.name}</div>
-                  <div className="testi-role">{t.role}</div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+        {/* Scrolling Columns — full width */}
+        <div className="testi-col-mask">
+          <TestimonialsColumn testimonials={col1} duration={18} />
+          <TestimonialsColumn
+            testimonials={col2}
+            duration={22}
+            className="testi-col-mask-col2"
+          />
+          <TestimonialsColumn
+            testimonials={col3}
+            duration={20}
+            className="testi-col-mask-col3"
+          />
         </div>
       </section>
 
