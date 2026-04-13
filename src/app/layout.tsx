@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   description: "Platform matchmaking mutakhir kampus.",
 };
 
+import { Providers } from "@/components/layout/providers";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id" data-theme="dark" suppressHydrationWarning>
@@ -21,12 +23,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" async></script>
       </head>
       <body className={`${sora.variable} ${jakarta.variable} ${jetbrains.variable}`}>
-        <GlobalGrid />
-        <Navbar />
-        <BottomNav />
-        <div id="app">
-          {children}
-        </div>
+        <Providers>
+          <GlobalGrid />
+          <Navbar />
+          <BottomNav />
+          <div id="app">
+            {children}
+          </div>
+        </Providers>
       </body>
     </html>
   );

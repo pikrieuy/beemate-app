@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { PostModal } from "@/components/ui/PostModal";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -11,6 +12,7 @@ export function Navbar() {
   const [theme, setTheme] = useState("dark");
   const [isPostOpen, setIsPostOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     const root = document.documentElement;
@@ -89,7 +91,21 @@ export function Navbar() {
           <i className="ph-fill ph-list lc" style={{ fontSize: '24px' }}></i>
         </button>
 
-        <div className="nav-av hide-on-mobile" onClick={() => router.push("/profile")}>RK</div>
+        {status === "loading" ? (
+          <div className="nav-av hide-on-mobile">...</div>
+        ) : session?.user ? (
+          <div className="nav-av hide-on-mobile" onClick={() => router.push("/profile")}>
+            {session.user.image ? (
+              <img src={session.user.image} alt="Avatar" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+            ) : (
+              session.user.name?.charAt(0).toUpperCase() || 'U'
+            )}
+          </div>
+        ) : (
+          <button className="btn btn-honey btn-sm hide-on-mobile" onClick={() => signIn("google", { callbackUrl: "/profile" })}>
+            Login
+          </button>
+        )}
       </div>
     </nav>
 
@@ -148,24 +164,46 @@ export function Navbar() {
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: 'auto' }}>
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-              <div className="nav-av" onClick={() => { setIsMobileMenuOpen(false); router.push("/profile"); }}>RK</div>
-              <div style={{ flex: 1, cursor: 'pointer' }} onClick={() => { setIsMobileMenuOpen(false); router.push("/profile"); }}>
-                <div style={{ fontWeight: 700, color: 'var(--t)' }}>Raka Kusuma</div>
-                <div style={{ fontSize: '13px', color: 'var(--t2)' }}>Computer Science</div>
+            {session?.user ? (
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <div className="nav-av" onClick={() => { setIsMobileMenuOpen(false); router.push("/profile"); }}>
+                  {session.user.image ? (
+                    <img src={session.user.image} alt="Avatar" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                  ) : (
+                    session.user.name?.charAt(0).toUpperCase() || 'U'
+                  )}
+                </div>
+                <div style={{ flex: 1, cursor: 'pointer' }} onClick={() => { setIsMobileMenuOpen(false); router.push("/profile"); }}>
+                  <div style={{ fontWeight: 700, color: 'var(--t)' }}>{session.user.name || 'User'}</div>
+                  <div style={{ fontSize: '13px', color: 'var(--t2)' }}>{session.user.email}</div>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button className="nav-icon" onClick={() => { setIsMobileMenuOpen(false); router.push("/notifications"); }}>
+                     <i className="ph-fill ph-bell lc"></i><span className="unread"></span>
+                  </button>
+                  <button className="nav-icon" onClick={() => { setIsMobileMenuOpen(false); router.push("/settings"); }}>
+                     <i className="ph-fill ph-gear lc"></i>
+                  </button>
+                  <button className="nav-icon" onClick={toggleTheme}>
+                     {theme === "dark" ? <i className="ph-fill ph-sun lc"></i> : <i className="ph-fill ph-moon lc"></i>}
+                  </button>
+                  <button className="nav-icon" onClick={() => signOut({ callbackUrl: "/" })}>
+                    <i className="ph-fill ph-sign-out lc"></i>
+                  </button>
+                </div>
               </div>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button className="nav-icon" onClick={() => { setIsMobileMenuOpen(false); router.push("/notifications"); }}>
-                   <i className="ph-fill ph-bell lc"></i><span className="unread"></span>
-                </button>
-                <button className="nav-icon" onClick={() => { setIsMobileMenuOpen(false); router.push("/settings"); }}>
-                   <i className="ph-fill ph-gear lc"></i>
-                </button>
-                <button className="nav-icon" onClick={toggleTheme}>
-                   {theme === "dark" ? <i className="ph-fill ph-sun lc"></i> : <i className="ph-fill ph-moon lc"></i>}
-                </button>
-              </div>
-            </div>
+            ) : (
+              <button 
+                className="btn btn-honey btn-lg" 
+                style={{ width: '100%', marginBottom: '16px' }}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  signIn("google", { callbackUrl: "/profile" });
+                }}
+              >
+                Login with Google
+              </button>
+            )}
             <button 
               className="btn btn-honey btn-lg" 
               style={{ width: '100%' }}
