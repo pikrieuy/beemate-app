@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, X } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 
 type ExpandingSearchDockProps = {
   value?: string;
@@ -15,13 +15,9 @@ export function ExpandingSearchDock({
   onChange,
   placeholder = "Cari...",
 }: ExpandingSearchDockProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(Boolean(value));
   const inputRef = useRef<HTMLInputElement>(null);
-
-  // If there's already a query, keep expanded
-  useEffect(() => {
-    if (value) setIsExpanded(true);
-  }, []);
+  const shouldExpand = isExpanded || Boolean(value);
 
   const handleExpand = () => {
     setIsExpanded(true);
@@ -36,7 +32,7 @@ export function ExpandingSearchDock({
   return (
     <div style={{ position: "relative", height: 36 }}>
       <AnimatePresence mode="wait">
-        {!isExpanded ? (
+        {!shouldExpand ? (
           <motion.button
             key="icon"
             initial={{ scale: 0.8, opacity: 0 }}

@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { cn } from "@/lib/utils";
 import { 
   motion, 
   useMotionValue, 
   useMotionTemplate, 
-  useAnimationFrame 
+  useAnimationFrame,
+  type MotionValue
 } from "framer-motion";
 
 export const TheInfiniteGrid = () => {
@@ -65,7 +65,7 @@ export const TheInfiniteGrid = () => {
   );
 };
 
-const GridPattern = ({ offsetX, offsetY }: { offsetX: any, offsetY: any }) => {
+const GridPattern = ({ offsetX, offsetY }: { offsetX: MotionValue<number>; offsetY: MotionValue<number> }) => {
   return (
     <svg className="w-full h-full">
       <defs>

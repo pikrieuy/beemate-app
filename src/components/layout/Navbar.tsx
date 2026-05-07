@@ -1,7 +1,8 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import Image from "next/image";
+import { useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { PostModal } from "@/components/ui/PostModal";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,16 +10,15 @@ import { motion, AnimatePresence } from "framer-motion";
 export function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState(() => {
+    if (typeof document === "undefined") {
+      return "dark";
+    }
+    return document.documentElement.getAttribute("data-theme") || "dark";
+  });
   const [isPostOpen, setIsPostOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: session, status } = useSession();
-
-  useEffect(() => {
-    const root = document.documentElement;
-    const currentTheme = root.getAttribute("data-theme") || "dark";
-    setTheme(currentTheme);
-  }, []);
 
   const toggleTheme = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
@@ -37,17 +37,19 @@ export function Navbar() {
     <>
     <nav id="nav">
       <div className="logo" onClick={() => router.push("/")} style={{ gap: '8px' }}>
-        <img 
-          src={theme === 'dark' ? "/logo-dark.png" : "/logo.png"} 
-          alt="BeeMate Logo" 
-          style={{ 
-            height: '44px', 
-            width: 'auto', 
-            objectFit: 'contain', 
-            transform: 'scale(1)', 
-            transformOrigin: 'left center',
-            transition: 'opacity 0.3s ease'
-          }} 
+        <Image
+          src={theme === "dark" ? "/logo-dark.png" : "/logo.png"}
+          alt="BeeMate Logo"
+          width={120}
+          height={44}
+          style={{
+            height: "44px",
+            width: "auto",
+            objectFit: "contain",
+            transform: "scale(1)",
+            transformOrigin: "left center",
+            transition: "opacity 0.3s ease",
+          }}
         />
       </div>
       
@@ -96,7 +98,14 @@ export function Navbar() {
         ) : session?.user ? (
           <div className="nav-av hide-on-mobile" onClick={() => router.push("/profile")}>
             {session.user.image ? (
-              <img src={session.user.image} alt="Avatar" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+              <Image
+                src={session.user.image}
+                alt="Avatar"
+                width={40}
+                height={40}
+                unoptimized
+                style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }}
+              />
             ) : (
               session.user.name?.charAt(0).toUpperCase() || 'U'
             )}
@@ -129,7 +138,13 @@ export function Navbar() {
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <img src={theme === 'dark' ? "/logo-dark.png" : "/logo.png"} alt="Logo" style={{ height: '32px' }} />
+              <Image
+                src={theme === "dark" ? "/logo-dark.png" : "/logo.png"}
+                alt="Logo"
+                width={88}
+                height={32}
+                style={{ height: "32px", width: "auto" }}
+              />
             </div>
             <button 
               onClick={() => setIsMobileMenuOpen(false)}
@@ -168,7 +183,14 @@ export function Navbar() {
               <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                 <div className="nav-av" onClick={() => { setIsMobileMenuOpen(false); router.push("/profile"); }}>
                   {session.user.image ? (
-                    <img src={session.user.image} alt="Avatar" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                    <Image
+                      src={session.user.image}
+                      alt="Avatar"
+                      width={40}
+                      height={40}
+                      unoptimized
+                      style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }}
+                    />
                   ) : (
                     session.user.name?.charAt(0).toUpperCase() || 'U'
                   )}
