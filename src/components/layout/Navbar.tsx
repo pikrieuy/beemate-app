@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { PostModal } from "@/components/ui/PostModal";
 import { motion, AnimatePresence } from "framer-motion";
+import { NotificationBell } from "./NotificationBell";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -27,10 +28,10 @@ export function Navbar() {
   };
 
   const navLinks = [
-    { label: "Explore", path: "/explore" },
+    { label: "Dashboard", path: "/dashboard" },
     { label: "People", path: "/people" },
-    { label: "Lomba", path: "/competitions" },
-    { label: "Tim Saya", path: "/myteams" }
+    { label: "Teams", path: "/teams" },
+    { label: "Competitions", path: "/competitions" }
   ];
 
   return (
@@ -67,9 +68,7 @@ export function Navbar() {
       </div>
 
       <div className="nav-r">
-        <button className="nav-icon hide-on-mobile" onClick={() => router.push("/notifications")}>
-          <i className="ph-fill ph-bell lc"></i><span className="unread"></span>
-        </button>
+        <NotificationBell />
         <button className="nav-icon hide-on-mobile" onClick={toggleTheme} title="Toggle tema">
           {theme === "dark" ? (
              <i className="ph-fill ph-sun lc"></i>

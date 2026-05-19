@@ -126,8 +126,8 @@ export default function LandingPage() {
           transition={{ duration: 0.4, delay: 0.45 }}
           style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", marginBottom: 52 }}
         >
-          <button className="btn btn-honey btn-lg" onClick={() => router.push("/explore")}>
-            <i className="ph-fill ph-squares-four lc"></i> Explore Projects
+          <button className="btn btn-honey btn-lg" onClick={() => router.push("/dashboard")}>
+            <i className="ph-fill ph-squares-four lc"></i> Get Started
           </button>
           <button className="btn btn-dark btn-lg" onClick={() => router.push("/people")}>
             <i className="ph-fill ph-users lc"></i> Browse People
@@ -336,7 +336,7 @@ export default function LandingPage() {
             <div className="cta-title">Siap bangun tim impianmu?</div>
             <div className="cta-sub">Bergabung dengan 1,240+ Binusians yang sudah menemukan partner terbaik mereka di BeeMate.</div>
           </div>
-          <button className="btn btn-honey btn-xl" onClick={() => router.push("/explore")}>
+          <button className="btn btn-honey btn-xl" onClick={() => router.push("/dashboard")}>
             Mulai Sekarang <i className="ph-fill ph-arrow-right lc"></i>
           </button>
         </motion.div>

@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🐝 BeeMate
 
-## Getting Started
+Platform untuk mempertemukan **Hacker, Hustler, dan Hipster** untuk membentuk tim dan mengikuti kompetisi.
 
-First, run the development server:
+## 🚀 Quick Start
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📚 Documentation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**New to the project?** Start with **[DOCS_GUIDE.md](./DOCS_GUIDE.md)** for navigation help.
 
-## Learn More
+**Key Documents:**
+- **[MASTER_PLAN.md](./MASTER_PLAN.md)** - Complete development roadmap (13 phases)
+- **[NEXT_STEPS.md](./NEXT_STEPS.md)** - Current phase guide (Phase 3)
+- **[QUICK_REFERENCE.md](./QUICK_REFERENCE.md)** - One-page cheat sheet
+- **[SERVER_ACTIONS.md](./SERVER_ACTIONS.md)** - Backend API documentation
+- **[QUICK_START_ACTIONS.md](./QUICK_START_ACTIONS.md)** - Quick examples
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠️ Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4
+- **Database:** PostgreSQL (Supabase)
+- **ORM:** Prisma 7
+- **Auth:** NextAuth v5 (Google OAuth)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## ✅ Progress
 
-## Deploy on Vercel
+- ✅ Phase 1: Database Setup
+- ✅ Phase 2: Server Actions (28 functions)
+- ✅ Phase 3: Core UI Pages (Profile, People)
+- ✅ Phase 4: Team Management (Complete workflow)
+- 🔜 Phase 5: Competition System (Next)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Overall:** 60% Complete
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See [PROGRESS_SUMMARY.md](./PROGRESS_SUMMARY.md) for details.
+
+## 📁 Project Structure
+
+```
+src/
+├── app/              # Next.js pages
+├── components/       # React components
+├── actions/          # Server Actions (28 functions)
+├── lib/              # Utilities
+└── types/            # TypeScript types
+```
+
+## 🎯 Current Focus
+
+**Phase 5: Competition System**
+- Competitions List
+- Create Competition (ADMIN only)
+- Competition Detail
+- Edit/Delete (ADMIN only)
+
+See [MASTER_PLAN.md](./MASTER_PLAN.md) for full roadmap.
+
+## 🔐 Environment Variables
+
+Copy `.env.example` to `.env` and fill in:
+- `DATABASE_URL` - Supabase connection string
+- `DIRECT_URL` - Supabase direct connection
+- `AUTH_SECRET` - NextAuth secret
+- `AUTH_GOOGLE_ID` - Google OAuth Client ID
+- `AUTH_GOOGLE_SECRET` - Google OAuth Secret
+
+## 📖 Learn More
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Prisma Documentation](https://www.prisma.io/docs)
+- [Supabase Documentation](https://supabase.com/docs)
+
+## 🚀 Deploy
+
+Deploy to Vercel (Phase 13):
+
+```bash
+vercel deploy
+```
