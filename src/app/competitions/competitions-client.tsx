@@ -201,50 +201,56 @@ export function CompetitionsClient({ competitions, userEmail, isAdmin }: Competi
         <div className="main">
 
           {/* Header */}
-          <div className="page-head">
-            <div>
-              <h1 style={{
-                fontFamily: "'Sora', sans-serif",
-                fontSize: "clamp(26px, 4vw, 34px)",
-                fontWeight: 900,
-                margin: "0 0 6px 0",
-                color: "var(--t)",
-                lineHeight: 1.25,
-                paddingBottom: "4px", /* prevent gradient clip */
-              }}>
-                {tab === "competitions" ? (
-                  <>Kompetisi{" "}
-                    <span style={{
-                      background: "linear-gradient(90deg, var(--ho), #ffbe4d)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      display: "inline-block",
-                    }}>&amp; Lomba</span>
-                  </>
-                ) : (
-                  <>Open{" "}
-                    <span style={{
-                      background: "linear-gradient(90deg, var(--bl), #93c5fd)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      display: "inline-block",
-                    }}>Projects</span>
-                  </>
-                )}
-              </h1>
-              <div className="page-sub">
-                {tab === "competitions"
-                  ? `${filteredComps.length} kompetisi ditemukan`
-                  : `${filteredProjs.length} proyek mencari anggota`}
+          <div style={{ marginBottom: "16px" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", flexWrap: "wrap" }}>
+              <div>
+                <h1 style={{
+                  fontFamily: "'Sora', sans-serif",
+                  fontSize: "clamp(26px, 4vw, 34px)",
+                  fontWeight: 900,
+                  margin: "0 0 4px 0",
+                  color: "var(--t)",
+                  lineHeight: 1.3,
+                  overflow: "visible",
+                }}>
+                  {tab === "competitions" ? (
+                    <>
+                      Kompetisi{" "}
+                      <span style={{
+                        backgroundImage: "linear-gradient(90deg, var(--ho), #ffbe4d)",
+                        WebkitBackgroundClip: "text",
+                        backgroundClip: "text",
+                        color: "transparent",
+                        WebkitTextFillColor: "transparent",
+                      }}>&amp; Lomba</span>
+                    </>
+                  ) : (
+                    <>
+                      Open{" "}
+                      <span style={{
+                        backgroundImage: "linear-gradient(90deg, var(--bl), #93c5fd)",
+                        WebkitBackgroundClip: "text",
+                        backgroundClip: "text",
+                        color: "transparent",
+                        WebkitTextFillColor: "transparent",
+                      }}>Projects</span>
+                    </>
+                  )}
+                </h1>
+                <div className="page-sub">
+                  {tab === "competitions"
+                    ? `${filteredComps.length} kompetisi ditemukan`
+                    : `${filteredProjs.length} proyek mencari anggota`}
+                </div>
               </div>
-            </div>
 
-            {/* Search — same style as People page */}
-            <ExpandingSearchDock
-              value={search}
-              onChange={setSearch}
-              placeholder={tab === "competitions" ? "Cari kompetisi..." : "Cari proyek, skill..."}
-            />
+              {/* Search — same style as People page */}
+              <ExpandingSearchDock
+                value={search}
+                onChange={setSearch}
+                placeholder={tab === "competitions" ? "Cari kompetisi..." : "Cari proyek, skill..."}
+              />
+            </div>
           </div>
 
           {/* ── COMPETITIONS TAB ── */}
