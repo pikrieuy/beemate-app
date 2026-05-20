@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import { deleteCompetition } from "@/actions";
 
 interface Competition {
@@ -28,9 +29,57 @@ interface CompetitionDetailClientProps {
   canEdit: boolean;
 }
 
+function ConfirmDialog({ message, onConfirm, onCancel }: { message: string; onConfirm: () => void; onCancel: () => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      style={{
+        position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        zIndex: 99999, padding: "20px",
+      }}
+      onClick={onCancel}
+    >
+      <motion.div
+        initial={{ scale: 0.95, y: 8 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95 }}
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: "var(--bg2)", border: "1px solid var(--b)",
+          borderRadius: "20px", padding: "28px", maxWidth: "400px", width: "100%",
+        }}
+      >
+        <div style={{ fontSize: "14px", color: "var(--t)", lineHeight: 1.6, marginBottom: "20px" }}>{message}</div>
+        <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
+          <button className="btn btn-dark btn-sm" onClick={onCancel}>Batal</button>
+          <button
+            className="btn btn-sm"
+            style={{ background: "var(--rdb)", color: "var(--rd)", border: "1px solid var(--rbd)" }}
+            onClick={onConfirm}
+          >
+            Ya, hapus
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export function CompetitionDetailClient({ competition, canEdit }: CompetitionDetailClientProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const handleDelete = async () => {
+    setLoading(true);
+    const result = await deleteCompetition(competition.id);
+    if (result.success) {
+      router.push("/competitions");
+    } else {
+      setErrorMsg(result.error ?? "Gagal menghapus kompetisi");
+      setLoading(false);
+    }
+  };
 
   const formatDate = (date: Date | null) => {
     if (!date) return "No deadline";
@@ -60,24 +109,31 @@ export function CompetitionDetailClient({ competition, canEdit }: CompetitionDet
 
   const timeRemaining = getTimeRemaining(competition.deadline);
 
-  const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this competition? This action cannot be undone.")) {
-      return;
-    }
-
-    setLoading(true);
-    const result = await deleteCompetition(competition.id);
-    
-    if (result.success) {
-      router.push("/competitions");
-    } else {
-      alert(result.error);
-      setLoading(false);
-    }
-  };
-
   return (
-    <div className="page on" style={{ minHeight: '100vh', padding: '24px' }}>
+    <>
+      <AnimatePresence>
+        {showConfirm && (
+          <ConfirmDialog
+            message={`Hapus kompetisi "${competition.title}"? Tindakan ini tidak bisa dibatalkan.`}
+            onConfirm={() => { setShowConfirm(false); handleDelete(); }}
+            onCancel={() => setShowConfirm(false)}
+          />
+        )}
+        {errorMsg && (
+          <motion.div
+            initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            style={{
+              position: "fixed", top: "72px", left: "50%", transform: "translateX(-50%)",
+              zIndex: 9999, padding: "12px 24px", borderRadius: "12px",
+              background: "var(--rdb)", border: "1px solid var(--rbd)",
+              color: "var(--rd)", fontWeight: 700, fontSize: "13px",
+            }}
+          >
+            {errorMsg}
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <div className="page on" style={{ minHeight: '100vh', padding: '24px' }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         {/* Back Button */}
         <Link 
@@ -175,7 +231,7 @@ export function CompetitionDetailClient({ competition, canEdit }: CompetitionDet
                     border: '1px solid #ef4444', 
                     color: '#ef4444' 
                   }}
-                  onClick={handleDelete}
+                  onClick={() => setShowConfirm(true)}
                   disabled={loading}
                 >
                   <i className="ph-fill ph-trash"></i>
@@ -303,5 +359,6 @@ export function CompetitionDetailClient({ competition, canEdit }: CompetitionDet
         </div>
       </div>
     </div>
+    </>
   );
 }

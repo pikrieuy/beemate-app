@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import { deleteTeam, leaveTeam, removeMemberFromTeam } from "@/actions";
 import { InviteMemberModal } from "./invite-member-modal";
 
@@ -44,72 +45,157 @@ interface TeamDetailClientProps {
   isMember: boolean;
 }
 
+// ── Confirm Dialog ────────────────────────────────────────────────────────────
+function ConfirmDialog({
+  message, onConfirm, onCancel, danger = true,
+}: {
+  message: string; onConfirm: () => void; onCancel: () => void; danger?: boolean;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      style={{
+        position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        zIndex: 99999, padding: "20px",
+      }}
+      onClick={onCancel}
+    >
+      <motion.div
+        initial={{ scale: 0.95, y: 8 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.95, y: 8 }}
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: "var(--bg2)", border: "1px solid var(--b)",
+          borderRadius: "20px", padding: "28px", maxWidth: "400px", width: "100%",
+        }}
+      >
+        <div style={{ fontSize: "14px", color: "var(--t)", lineHeight: 1.6, marginBottom: "20px" }}>
+          {message}
+        </div>
+        <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
+          <button
+            className="btn btn-dark btn-sm"
+            onClick={onCancel}
+          >
+            Batal
+          </button>
+          <button
+            className="btn btn-sm"
+            style={danger ? {
+              background: "var(--rdb)", color: "var(--rd)",
+              border: "1px solid var(--rbd)",
+            } : {
+              background: "var(--hbg)", color: "var(--ho)",
+              border: "1px solid var(--hbd)",
+            }}
+            onClick={onConfirm}
+          >
+            Ya, lanjutkan
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+function useToast() {
+  const [toast, setToast] = useState<{ text: string; ok: boolean } | null>(null);
+  const show = (text: string, ok = true) => {
+    setToast({ text, ok });
+    setTimeout(() => setToast(null), 3000);
+  };
+  return { toast, show };
+}
+
 export function TeamDetailClient({ team, currentUserId, isLeader, isMember }: TeamDetailClientProps) {
   const router = useRouter();
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [confirm, setConfirm] = useState<{ msg: string; action: () => Promise<void> } | null>(null);
+  const { toast, show: showToast } = useToast();
 
   const getInitials = (name: string | null) => {
     if (!name) return "??";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
+    return name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
   };
 
-  const handleDeleteTeam = async () => {
-    if (!confirm("Are you sure you want to delete this team? This action cannot be undone.")) {
-      return;
-    }
-
-    setLoading(true);
-    const result = await deleteTeam(team.id);
-    
-    if (result.success) {
-      router.push("/teams");
-    } else {
-      alert(result.error);
-      setLoading(false);
-    }
+  const handleDeleteTeam = () => {
+    setConfirm({
+      msg: `Hapus tim "${team.name}"? Tindakan ini tidak bisa dibatalkan.`,
+      action: async () => {
+        setLoading(true);
+        const result = await deleteTeam(team.id);
+        if (result.success) router.push("/teams");
+        else { showToast(result.error ?? "Gagal menghapus tim", false); setLoading(false); }
+      },
+    });
   };
 
-  const handleLeaveTeam = async () => {
-    if (!confirm("Are you sure you want to leave this team?")) {
-      return;
-    }
-
-    setLoading(true);
-    const result = await leaveTeam(team.id);
-    
-    if (result.success) {
-      router.push("/teams");
-    } else {
-      alert(result.error);
-      setLoading(false);
-    }
+  const handleLeaveTeam = () => {
+    setConfirm({
+      msg: `Keluar dari tim "${team.name}"?`,
+      action: async () => {
+        setLoading(true);
+        const result = await leaveTeam(team.id);
+        if (result.success) router.push("/teams");
+        else { showToast(result.error ?? "Gagal keluar dari tim", false); setLoading(false); }
+      },
+    });
   };
 
-  const handleRemoveMember = async (userId: string, userName: string | null) => {
-    if (!confirm(`Remove ${userName || "this member"} from the team?`)) {
-      return;
-    }
-
-    const result = await removeMemberFromTeam(team.id, userId);
-    
-    if (result.success) {
-      router.refresh();
-    } else {
-      alert(result.error);
-    }
+  const handleRemoveMember = (userId: string, userName: string | null) => {
+    setConfirm({
+      msg: `Keluarkan ${userName || "anggota ini"} dari tim?`,
+      action: async () => {
+        const result = await removeMemberFromTeam(team.id, userId);
+        if (result.success) router.refresh();
+        else showToast(result.error ?? "Gagal mengeluarkan anggota", false);
+      },
+    });
   };
 
-  const acceptedMembers = team.members.filter(m => m.joinStatus === "ACCEPTED");
-  const pendingMembers = team.members.filter(m => m.joinStatus === "PENDING");
+  const acceptedMembers = team.members.filter((m) => m.joinStatus === "ACCEPTED");
+  const pendingMembers = team.members.filter((m) => m.joinStatus === "PENDING");
 
   return (
     <>
+      {/* Toast */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            style={{
+              position: "fixed", top: "72px", left: "50%", transform: "translateX(-50%)",
+              zIndex: 9999, padding: "12px 24px", borderRadius: "12px",
+              background: toast.ok ? "var(--gnb)" : "var(--rdb)",
+              border: `1px solid ${toast.ok ? "var(--gbd)" : "var(--rbd)"}`,
+              color: toast.ok ? "var(--gn)" : "var(--rd)",
+              fontWeight: 700, fontSize: "13px", whiteSpace: "nowrap",
+            }}
+          >
+            {toast.text}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Confirm Dialog */}
+      <AnimatePresence>
+        {confirm && (
+          <ConfirmDialog
+            message={confirm.msg}
+            onConfirm={async () => { setConfirm(null); await confirm.action(); }}
+            onCancel={() => setConfirm(null)}
+          />
+        )}
+      </AnimatePresence>
+
       <div className="page on" style={{ minHeight: '100vh', padding: '24px' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           {/* Back Button */}

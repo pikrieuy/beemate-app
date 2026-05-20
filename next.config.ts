@@ -2,8 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   typescript: {
-    // seed.ts is a local-only script, not part of the app build
-    ignoreBuildErrors: true,
+    // Only ignore errors in seed.ts (local-only script, not part of app build)
+    // ignoreBuildErrors was removed — TS errors are now surfaced properly
   },
   images: {
     remotePatterns: [

@@ -58,6 +58,23 @@ export async function updateUserProfile(data: {
       return { success: false, error: "Not authenticated" }
     }
 
+    // Server-side validation
+    if (data.name !== undefined) {
+      if (data.name.trim().length < 2) return { success: false, error: "Nama minimal 2 karakter" }
+      if (data.name.trim().length > 50) return { success: false, error: "Nama maksimal 50 karakter" }
+    }
+    if (data.bio !== undefined && data.bio.length > 500) {
+      return { success: false, error: "Bio maksimal 500 karakter" }
+    }
+    if (data.portfolioUrl !== undefined && data.portfolioUrl) {
+      try { new URL(data.portfolioUrl) } catch {
+        return { success: false, error: "URL portfolio tidak valid" }
+      }
+    }
+    if (data.skills !== undefined && data.skills.length > 20) {
+      return { success: false, error: "Maksimal 20 skills" }
+    }
+
     const user = await prisma.user.update({
       where: { email: session.user.email },
       data: {

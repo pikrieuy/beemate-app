@@ -87,7 +87,6 @@ export function Navbar() {
         <button 
           className="nav-icon show-on-mobile" 
           onClick={() => setIsMobileMenuOpen(true)}
-          style={{ display: 'none' }}
         >
           <i className="ph-fill ph-list lc" style={{ fontSize: '24px' }}></i>
         </button>
@@ -95,18 +94,33 @@ export function Navbar() {
         {status === "loading" ? (
           <div className="nav-av hide-on-mobile">...</div>
         ) : session?.user ? (
-          <div className="nav-av hide-on-mobile" onClick={() => router.push("/profile")}>
-            {session.user.image ? (
-              <Image
-                src={session.user.image}
-                alt="Avatar"
-                width={40}
-                height={40}
-                unoptimized
-                style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }}
-              />
-            ) : (
-              session.user.name?.charAt(0).toUpperCase() || 'U'
+          <div style={{ position: "relative", display: "inline-flex" }} className="hide-on-mobile">
+            <div className="nav-av" onClick={() => router.push("/profile")}>
+              {session.user.image ? (
+                <Image
+                  src={session.user.image}
+                  alt="Avatar"
+                  width={40}
+                  height={40}
+                  unoptimized
+                  style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }}
+                />
+              ) : (
+                session.user.name?.charAt(0).toUpperCase() || 'U'
+              )}
+            </div>
+            {(session.user as any).role === "ADMIN" && (
+              <div style={{
+                position: "absolute", bottom: "-2px", right: "-2px",
+                background: "#ef4444", color: "#fff",
+                fontSize: "8px", fontWeight: 800,
+                padding: "1px 4px", borderRadius: "4px",
+                border: "1.5px solid var(--bg)",
+                lineHeight: 1.4, letterSpacing: "0.03em",
+                pointerEvents: "none",
+              }}>
+                ADMIN
+              </div>
             )}
           </div>
         ) : (

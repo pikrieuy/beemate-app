@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache"
 import { NotificationType } from "@prisma/client"
 
 /**
- * Create a notification
+ * Create a notification (internal use — called by other server actions)
  */
 export async function createNotification(data: {
   recipientId: string
@@ -15,6 +15,16 @@ export async function createNotification(data: {
   message: string
 }) {
   try {
+    // Validate inputs
+    if (!data.recipientId) return { success: false, error: "recipientId required" }
+    if (!data.message?.trim()) return { success: false, error: "message required" }
+
+    // Auth check — must be called from an authenticated context
+    const session = await auth()
+    if (!session?.user?.email) {
+      return { success: false, error: "Not authenticated" }
+    }
+
     const notification = await prisma.notification.create({
       data: {
         recipientId: data.recipientId,

@@ -16,6 +16,12 @@ export function InviteMemberModal({ teamId, teamName, onClose }: InviteMemberMod
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [inviting, setInviting] = useState<string | null>(null);
+  const [toastMsg, setToastMsg] = useState<{ text: string; ok: boolean } | null>(null);
+
+  const showToast = (text: string, ok: boolean) => {
+    setToastMsg({ text, ok });
+    setTimeout(() => setToastMsg(null), 3000);
+  };
 
   useEffect(() => {
     async function loadUsers() {
@@ -38,13 +44,12 @@ export function InviteMemberModal({ teamId, teamName, onClose }: InviteMemberMod
   const handleInvite = async (userId: string) => {
     setInviting(userId);
     const result = await inviteUserToTeam(teamId, userId);
-    
     if (result.success) {
-      alert("Invitation sent!");
+      showToast("Undangan berhasil dikirim ✓", true);
       router.refresh();
-      onClose();
+      setTimeout(onClose, 1200);
     } else {
-      alert(result.error);
+      showToast(result.error ?? "Gagal mengirim undangan", false);
       setInviting(null);
     }
   };
@@ -89,6 +94,19 @@ export function InviteMemberModal({ teamId, teamName, onClose }: InviteMemberMod
         }}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Toast */}
+        {toastMsg && (
+          <div style={{
+            position: "sticky", top: 0, zIndex: 10,
+            padding: "10px 16px", borderRadius: "10px", marginBottom: "16px",
+            background: toastMsg.ok ? "var(--gnb)" : "var(--rdb)",
+            border: `1px solid ${toastMsg.ok ? "var(--gbd)" : "var(--rbd)"}`,
+            color: toastMsg.ok ? "var(--gn)" : "var(--rd)",
+            fontWeight: 700, fontSize: "13px", textAlign: "center",
+          }}>
+            {toastMsg.text}
+          </div>
+        )}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <div>
             <h2 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--t)', marginBottom: '4px' }}>

@@ -13,6 +13,7 @@ interface ProfileClientProps {
     skills: string[];
     title: string | null;
     portfolioUrl: string | null;
+    role?: string;
   };
   teams: {
     asLeader: any[];
@@ -101,6 +102,29 @@ export function ProfileClient({ user, teams }: ProfileClientProps) {
               <h1 style={{ fontSize: '36px', fontWeight: 900, color: 'var(--t)', marginBottom: '8px', letterSpacing: '-0.5px' }}>
                 {user.name || "No Name"}
               </h1>
+              {/* Role badge */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                {user.role === "ADMIN" && (
+                  <span style={{
+                    background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)',
+                    color: '#ef4444', padding: '3px 10px', borderRadius: '100px',
+                    fontSize: '11px', fontWeight: 800, letterSpacing: '0.04em',
+                    display: 'flex', alignItems: 'center', gap: '4px',
+                  }}>
+                    <i className="ph-fill ph-shield-check" style={{ fontSize: '12px' }} /> ADMIN
+                  </span>
+                )}
+                {user.role === "USER" && (
+                  <span style={{
+                    background: 'var(--hbg)', border: '1px solid var(--hbd)',
+                    color: 'var(--ho)', padding: '3px 10px', borderRadius: '100px',
+                    fontSize: '11px', fontWeight: 700,
+                    display: 'flex', alignItems: 'center', gap: '4px',
+                  }}>
+                    <i className="ph-fill ph-user" style={{ fontSize: '12px' }} /> Member
+                  </span>
+                )}
+              </div>
               <div style={{ fontSize: '16px', color: 'var(--t2)', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span><i className="ph-fill ph-envelope lc"></i> {user.email}</span>
                 {user.title && (

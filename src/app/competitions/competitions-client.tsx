@@ -80,7 +80,7 @@ export function CompetitionsClient({ competitions, userEmail, isAdmin }: Competi
   const [projFilter, setProjFilter] = useState("all");
   const [search, setSearch] = useState("");
 
-  const adminUser = isAdmin || userEmail.includes("admin");
+  const adminUser = isAdmin;
 
   /* filtered competitions */
   const filteredComps = useMemo(() => {
