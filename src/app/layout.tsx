@@ -9,9 +9,37 @@ const sora = Sora({ subsets: ["latin"], weight: ["300", "400", "500", "600", "70
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["500", "600", "700", "800"], variable: "--font-jakarta" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "600"], variable: "--font-jetbrains" });
 
+const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://beemate.vercel.app";
+
 export const metadata: Metadata = {
-  title: "BeeMate — Find Your Hive",
-  description: "Platform matchmaking mutakhir kampus.",
+  metadataBase: new URL(appUrl),
+  title: {
+    default: "BeeMate — Find Your Hive",
+    template: "%s | BeeMate",
+  },
+  description:
+    "Platform untuk mempertemukan Hacker, Hustler, dan Hipster — bentuk tim, ikuti kompetisi, dan temukan rekan kerja kampus.",
+  keywords: ["hackathon", "startup team", "kampus", "kompetisi", "tim", "BeeMate"],
+  authors: [{ name: "BeeMate" }],
+  openGraph: {
+    type: "website",
+    locale: "id_ID",
+    url: appUrl,
+    siteName: "BeeMate",
+    title: "BeeMate — Find Your Hive",
+    description:
+      "Platform matchmaking untuk Hacker, Hustler, dan Hipster di kampus.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "BeeMate — Find Your Hive",
+    description:
+      "Platform matchmaking untuk Hacker, Hustler, dan Hipster di kampus.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 import { Providers } from "@/components/layout/providers";

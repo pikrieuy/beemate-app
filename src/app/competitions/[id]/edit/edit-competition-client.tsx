@@ -117,7 +117,7 @@ export function EditCompetitionClient({ competition }: EditCompetitionClientProp
                 Banner Image (optional)
               </label>
               <ImageUpload
-                endpoint="competitionBanner"
+                folder="banners"
                 currentImageUrl={formData.imageUrl || null}
                 onUploadComplete={(url) => setFormData({ ...formData, imageUrl: url })}
                 onUploadError={(err) => alert(`Upload failed: ${err.message}`)}

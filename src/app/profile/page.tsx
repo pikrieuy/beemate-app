@@ -6,7 +6,7 @@ export default async function ProfilePage() {
   // Fetch user data from database
   const userResult = await getCurrentUser();
   
-  if (!userResult.success) {
+  if (!userResult.success || !userResult.data) {
     redirect("/api/auth/signin");
   }
   
@@ -14,7 +14,7 @@ export default async function ProfilePage() {
   
   // Fetch user's teams
   const teamsResult = await getUserTeams();
-  const teams = teamsResult.success ? teamsResult.data : null;
+  const teams = teamsResult.success ? (teamsResult.data ?? null) : null;
   
   return <ProfileClient user={user} teams={teams} />;
 }

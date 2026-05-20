@@ -32,15 +32,11 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ## ✅ Progress
 
-- ✅ Phase 1: Database Setup
-- ✅ Phase 2: Server Actions (28 functions)
-- ✅ Phase 3: Core UI Pages (Profile, People)
-- ✅ Phase 4: Team Management (Complete workflow)
-- 🔜 Phase 5: Competition System (Next)
+- ✅ Phases 1–9: Full MVP (Profile, Teams, Competitions, Dashboard, Admin, Uploads)
+- ✅ Phase 10–12: Build fixes + deployment prep
+- 🔜 Phase 13: Deploy to Vercel → see **[DEPLOYMENT.md](./DEPLOYMENT.md)**
 
-**Overall:** 60% Complete
-
-See [PROGRESS_SUMMARY.md](./PROGRESS_SUMMARY.md) for details.
+**Overall:** ~95% — `npm run build` passes ✅
 
 ## 📁 Project Structure
 
@@ -53,24 +49,9 @@ src/
 └── types/            # TypeScript types
 ```
 
-## 🎯 Current Focus
-
-**Phase 5: Competition System**
-- Competitions List
-- Create Competition (ADMIN only)
-- Competition Detail
-- Edit/Delete (ADMIN only)
-
-See [MASTER_PLAN.md](./MASTER_PLAN.md) for full roadmap.
-
 ## 🔐 Environment Variables
 
-Copy `.env.example` to `.env` and fill in:
-- `DATABASE_URL` - Supabase connection string
-- `DIRECT_URL` - Supabase direct connection
-- `AUTH_SECRET` - NextAuth secret
-- `AUTH_GOOGLE_ID` - Google OAuth Client ID
-- `AUTH_GOOGLE_SECRET` - Google OAuth Secret
+Copy [`.env.example`](./.env.example) to `.env` and fill in all values.
 
 ## 📖 Learn More
 
@@ -80,8 +61,4 @@ Copy `.env.example` to `.env` and fill in:
 
 ## 🚀 Deploy
 
-Deploy to Vercel (Phase 13):
-
-```bash
-vercel deploy
-```
+Follow **[DEPLOYMENT.md](./DEPLOYMENT.md)** for the full Vercel + Supabase + OAuth checklist.

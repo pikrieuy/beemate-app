@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { signOut } from "next-auth/react";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("account");
@@ -40,6 +41,27 @@ export default function SettingsPage() {
                 {tab.label}
               </button>
             ))}
+          </div>
+
+          {/* Sign Out */}
+          <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid var(--b)' }}>
+            <button
+              onClick={() => signOut({ callbackUrl: "/" })}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '12px',
+                padding: '16px 20px', borderRadius: '16px', border: 'none',
+                background: 'transparent',
+                color: 'var(--rd)',
+                fontWeight: 600, fontSize: '15px', cursor: 'pointer',
+                textAlign: 'left', width: '100%',
+                transition: 'background 0.15s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--rdb)')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+            >
+              <i className="ph-fill ph-sign-out" style={{ fontSize: '20px' }}></i>
+              Sign Out
+            </button>
           </div>
         </div>
 

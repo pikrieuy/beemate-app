@@ -9,7 +9,7 @@ export default async function PublicProfilePage({
 }) {
   const result = await getUserById(params.id);
 
-  if (!result.success) {
+  if (!result.success || !result.data) {
     notFound();
   }
 

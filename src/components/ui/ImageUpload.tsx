@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { useUploadThing } from "@/lib/uploadthing";
+
+export type ImageUploadFolder = "avatars" | "banners";
 
 interface ImageUploadProps {
-  endpoint: "avatarUploader" | "competitionBanner";
+  folder: ImageUploadFolder;
   currentImageUrl?: string | null;
   onUploadComplete: (url: string) => void;
   onUploadError?: (error: Error) => void;
@@ -14,7 +15,7 @@ interface ImageUploadProps {
 }
 
 export function ImageUpload({
-  endpoint,
+  folder,
   currentImageUrl,
   onUploadComplete,
   onUploadError,
@@ -25,36 +26,62 @@ export function ImageUpload({
   const [preview, setPreview] = useState<string | null>(currentImageUrl || null);
   const [isDragging, setIsDragging] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { startUpload, isUploading } = useUploadThing(endpoint, {
-    onUploadProgress: (p) => setUploadProgress(p),
-    onClientUploadComplete: (res) => {
-      if (res?.[0]?.url) {
-        onUploadComplete(res[0].url);
-        setUploadProgress(0);
-      }
-    },
-    onUploadError: (err) => {
-      console.error("Upload error:", err);
-      onUploadError?.(err);
-      setUploadProgress(0);
-    },
-  });
+  const uploadFile = (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", folder);
 
-  const handleFile = async (file: File) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/api/upload");
+
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) {
+        setUploadProgress(Math.round((e.loaded / e.total) * 100));
+      }
+    };
+
+    xhr.onload = () => {
+      setIsUploading(false);
+      setUploadProgress(0);
+
+      try {
+        const body = JSON.parse(xhr.responseText) as { url?: string; error?: string };
+        if (xhr.status >= 200 && xhr.status < 300 && body.url) {
+          setPreview(body.url);
+          onUploadComplete(body.url);
+        } else {
+          onUploadError?.(new Error(body.error || "Upload failed"));
+        }
+      } catch {
+        onUploadError?.(new Error("Upload failed"));
+      }
+    };
+
+    xhr.onerror = () => {
+      setIsUploading(false);
+      setUploadProgress(0);
+      onUploadError?.(new Error("Network error during upload"));
+    };
+
+    setIsUploading(true);
+    setUploadProgress(0);
+    xhr.send(formData);
+  };
+
+  const handleFile = (file: File) => {
     if (!file.type.startsWith("image/")) {
       alert("Please select an image file");
       return;
     }
 
-    // Show local preview immediately
     const reader = new FileReader();
     reader.onload = (e) => setPreview(e.target?.result as string);
     reader.readAsDataURL(file);
 
-    // Upload to Uploadthing
-    await startUpload([file]);
+    uploadFile(file);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,13 +97,16 @@ export function ImageUpload({
   };
 
   const isCircle = shape === "circle";
+  const maxLabel = folder === "avatars" ? "4MB" : "8MB";
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
-      {/* Preview / Drop Zone */}
       <div
         onClick={() => !isUploading && fileInputRef.current?.click()}
-        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setIsDragging(true);
+        }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         style={{
@@ -108,7 +138,6 @@ export function ImageUpload({
                 transition: "opacity 0.2s",
               }}
             />
-            {/* Hover overlay */}
             {!isUploading && (
               <div
                 style={{
@@ -126,7 +155,6 @@ export function ImageUpload({
                   fontSize: "13px",
                   fontWeight: 600,
                 }}
-                className="upload-hover-overlay"
                 onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
                 onMouseLeave={(e) => (e.currentTarget.style.opacity = "0")}
               >
@@ -149,14 +177,11 @@ export function ImageUpload({
           >
             <i className="ph-fill ph-image-square" style={{ fontSize: isCircle ? "32px" : "40px" }}></i>
             {!isCircle && (
-              <span style={{ fontSize: "13px" }}>
-                Drop image here or click to browse
-              </span>
+              <span style={{ fontSize: "13px" }}>Drop image here or click to browse</span>
             )}
           </div>
         )}
 
-        {/* Upload progress overlay */}
         {isUploading && (
           <div
             style={{
@@ -197,7 +222,6 @@ export function ImageUpload({
         )}
       </div>
 
-      {/* Label & hint */}
       <div style={{ textAlign: "center" }}>
         <button
           type="button"
@@ -215,7 +239,7 @@ export function ImageUpload({
           {isUploading ? "Uploading..." : label}
         </button>
         <div style={{ fontSize: "11px", color: "var(--t3)", marginTop: "6px" }}>
-          JPG, PNG, WebP · Max {endpoint === "avatarUploader" ? "4MB" : "8MB"}
+          JPG, PNG, WebP · Max {maxLabel} · Supabase Storage
         </div>
       </div>
 

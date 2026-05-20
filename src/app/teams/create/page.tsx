@@ -29,10 +29,10 @@ export default function CreateTeamPage() {
       description: description.trim() || undefined,
     });
 
-    if (result.success) {
+    if (result.success && result.data?.id) {
       router.push(`/teams/${result.data.id}`);
     } else {
-      setError(result.error);
+      setError(result.error ?? "Failed to create team");
       setLoading(false);
     }
   };

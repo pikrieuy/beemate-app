@@ -31,7 +31,7 @@ export function PeopleClient({ initialUsers }: PeopleClientProps) {
         setLoading(true);
         const result = await searchUsers(search, 100);
         if (result.success) {
-          setUsers(result.data);
+          setUsers(result.data ?? []);
         }
         setLoading(false);
       } else {

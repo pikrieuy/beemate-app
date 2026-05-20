@@ -12,8 +12,8 @@ export default async function NotificationsPage() {
     redirect("/api/auth/signin");
   }
 
-  const notifications = notificationsResult.data;
-  const invitations = invitationsResult.success ? invitationsResult.data : [];
+  const notifications = notificationsResult.data ?? [];
+  const invitations = invitationsResult.success ? (invitationsResult.data ?? []) : [];
 
   return <NotificationsClient notifications={notifications} invitations={invitations} />;
 }

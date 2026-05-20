@@ -13,15 +13,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     ...authConfig.callbacks,
     async session({ session, token }) {
       if (token.sub && session.user) {
-        session.user.id = token.sub
+        session.user.id = token.sub;
       }
-      return session
+      // Sync image & name from token into session (updated via updateSession())
+      if (token.image) session.user.image = token.image as string;
+      if (token.name) session.user.name = token.name as string;
+      return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
-        token.sub = user.id
+        token.sub = user.id;
       }
-      return token
+      // When updateSession() is called from the client, sync the new values into JWT
+      if (trigger === "update" && session) {
+        if (session.image) token.image = session.image;
+        if (session.name) token.name = session.name;
+      }
+      return token;
     },
   },
 })

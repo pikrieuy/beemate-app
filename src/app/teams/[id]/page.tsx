@@ -12,11 +12,11 @@ export default async function TeamDetailPage({
     getCurrentUser(),
   ]);
 
-  if (!teamResult.success) {
+  if (!teamResult.success || !teamResult.data) {
     notFound();
   }
 
-  if (!userResult.success) {
+  if (!userResult.success || !userResult.data) {
     redirect("/api/auth/signin");
   }
 

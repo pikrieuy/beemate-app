@@ -23,7 +23,7 @@ export function InviteMemberModal({ teamId, teamName, onClose }: InviteMemberMod
         setLoading(true);
         const result = await searchUsers(search, 20);
         if (result.success) {
-          setUsers(result.data);
+          setUsers(result.data ?? []);
         }
         setLoading(false);
       } else {

@@ -14,6 +14,7 @@ export const authConfig = {
   ],
   pages: {
     signIn: "/api/auth/signin",
+    error: "/auth/error",
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
@@ -25,7 +26,16 @@ export const authConfig = {
         return true
       }
 
-      const protectedRoutes = ["/profile", "/settings", "/myteams", "/notifications"]
+      const protectedRoutes = [
+        "/profile",
+        "/settings",
+        "/myteams",
+        "/notifications",
+        "/dashboard",
+        "/teams/create",
+        "/competitions/create",
+        "/admin",
+      ]
       const isProtectedRoute = protectedRoutes.some((route) =>
         pathname.startsWith(route)
       )
