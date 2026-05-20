@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { PROJECTS } from "@/lib/data";
+import { ExpandingSearchDock } from "@/components/ui/ExpandingSearchDock";
 
 interface Competition {
   id: string;
@@ -205,12 +206,30 @@ export function CompetitionsClient({ competitions, userEmail, isAdmin }: Competi
               <h1 style={{
                 fontFamily: "'Sora', sans-serif",
                 fontSize: "clamp(26px, 4vw, 34px)",
-                fontWeight: 900, margin: "0 0 6px 0", color: "var(--t)",
+                fontWeight: 900,
+                margin: "0 0 6px 0",
+                color: "var(--t)",
+                lineHeight: 1.25,
+                paddingBottom: "4px", /* prevent gradient clip */
               }}>
                 {tab === "competitions" ? (
-                  <>Kompetisi <span style={{ background: "linear-gradient(90deg, var(--ho), #ffbe4d)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>&amp; Lomba</span></>
+                  <>Kompetisi{" "}
+                    <span style={{
+                      background: "linear-gradient(90deg, var(--ho), #ffbe4d)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      display: "inline-block",
+                    }}>&amp; Lomba</span>
+                  </>
                 ) : (
-                  <>Open <span style={{ background: "linear-gradient(90deg, var(--bl), #93c5fd)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Projects</span></>
+                  <>Open{" "}
+                    <span style={{
+                      background: "linear-gradient(90deg, var(--bl), #93c5fd)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      display: "inline-block",
+                    }}>Projects</span>
+                  </>
                 )}
               </h1>
               <div className="page-sub">
@@ -220,35 +239,12 @@ export function CompetitionsClient({ competitions, userEmail, isAdmin }: Competi
               </div>
             </div>
 
-            {/* Search */}
-            <div style={{ position: "relative" }}>
-              <i className="ph-fill ph-magnifying-glass" style={{
-                position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)",
-                color: "var(--t3)", fontSize: "15px", pointerEvents: "none",
-              }} />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder={tab === "competitions" ? "Cari kompetisi..." : "Cari proyek, skill..."}
-                style={{
-                  padding: "10px 36px 10px 36px",
-                  borderRadius: "12px", border: "1px solid var(--b)",
-                  background: "var(--bg2)", color: "var(--t)", fontSize: "13px",
-                  outline: "none", width: "220px", transition: "border-color 0.15s",
-                }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = "var(--ho)")}
-                onBlur={(e) => (e.currentTarget.style.borderColor = "var(--b)")}
-              />
-              {search && (
-                <button onClick={() => setSearch("")} style={{
-                  position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)",
-                  background: "transparent", border: "none", color: "var(--t3)", cursor: "pointer",
-                }}>
-                  <i className="ph-fill ph-x-circle" />
-                </button>
-              )}
-            </div>
+            {/* Search — same style as People page */}
+            <ExpandingSearchDock
+              value={search}
+              onChange={setSearch}
+              placeholder={tab === "competitions" ? "Cari kompetisi..." : "Cari proyek, skill..."}
+            />
           </div>
 
           {/* ── COMPETITIONS TAB ── */}
