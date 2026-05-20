@@ -17,6 +17,8 @@ interface User {
 
 interface PeopleClientProps {
   initialUsers: User[];
+  recommended: User[];
+  currentUserId: string | null;
 }
 
 /* ── Role config ── */
@@ -81,7 +83,7 @@ function getRoleConfig(title: string | null) {
   return ROLES.find((r) => r.key === title) ?? null;
 }
 
-export function PeopleClient({ initialUsers }: PeopleClientProps) {
+export function PeopleClient({ initialUsers, recommended, currentUserId }: PeopleClientProps) {
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [search, setSearch] = useState("");
   const [filterTitle, setFilterTitle] = useState("all");
@@ -181,6 +183,38 @@ export function PeopleClient({ initialUsers }: PeopleClientProps) {
             </div>
           </div>
 
+          {/* Recommendations — only show when not searching/filtering */}
+          {!search && filterTitle === "all" && recommended.length > 0 && (
+            <div style={{ marginBottom: "28px" }}>
+              <div style={{
+                display: "flex", alignItems: "center", gap: "8px",
+                marginBottom: "12px",
+              }}>
+                <i className="ph-fill ph-sparkle" style={{ fontSize: "14px", color: "var(--ho)" }} />
+                <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--t3)", textTransform: "uppercase", letterSpacing: "1px" }}>
+                  Rekomendasi untuk kamu
+                </span>
+                <span style={{
+                  fontSize: "10px", padding: "2px 8px", borderRadius: "6px",
+                  background: "var(--hbg)", color: "var(--ho)", border: "1px solid var(--hbd)",
+                  fontWeight: 700,
+                }}>
+                  Skill Komplementer
+                </span>
+              </div>
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+                gap: "12px",
+              }}>
+                {recommended.map((user, i) => (
+                  <PersonCard key={user.id} user={user} index={i} highlighted />
+                ))}
+              </div>
+              <div style={{ height: "1px", background: "var(--b)", margin: "24px 0 0" }} />
+            </div>
+          )}
+
           {/* Loading */}
           {loading && (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: "16px" }}>
@@ -247,7 +281,7 @@ export function PeopleClient({ initialUsers }: PeopleClientProps) {
 }
 
 /* ── Person Card ── */
-function PersonCard({ user, index }: { user: User; index: number }) {
+function PersonCard({ user, index, highlighted = false }: { user: User; index: number; highlighted?: boolean }) {
   const [hovered, setHovered] = useState(false);
   const roleConfig = getRoleConfig(user.title);
   const avatarGradient = getAvatarColor(user.id);
@@ -263,8 +297,10 @@ function PersonCard({ user, index }: { user: User; index: number }) {
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
           style={{
-            background: "var(--bg2)",
-            border: `1px solid ${hovered ? (roleConfig?.badge?.border ?? "var(--hbd)") : "var(--b)"}`,
+            background: highlighted
+              ? "linear-gradient(135deg, var(--bg2), rgba(245, 166, 35, 0.03))"
+              : "var(--bg2)",
+            border: `1px solid ${hovered ? (roleConfig?.badge?.border ?? "var(--hbd)") : highlighted ? "var(--hbd)" : "var(--b)"}`,
             borderRadius: "20px",
             padding: "22px",
             cursor: "pointer",
@@ -272,6 +308,8 @@ function PersonCard({ user, index }: { user: User; index: number }) {
             transform: hovered ? "translateY(-5px)" : "translateY(0)",
             boxShadow: hovered
               ? `0 12px 32px ${roleConfig?.badge?.bg ?? "rgba(245,166,35,0.12)"}, 0 4px 12px rgba(0,0,0,0.15)`
+              : highlighted
+              ? "0 4px 20px rgba(245,166,35,0.05)"
               : "none",
             display: "flex",
             flexDirection: "column",
