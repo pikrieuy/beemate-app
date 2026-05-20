@@ -158,10 +158,10 @@ export function PublicProfileClient({ user, currentUserId }: PublicProfileClient
               </a>
             )}
 
-            {/* Invite to Team Button (TODO: Implement later) */}
-            <div style={{ marginTop: '32px' }}>
+            {/* Invite to Team Button */}
+            <div style={{ marginTop: '24px' }}>
               <button 
-                className="btn btn-honey"
+                className="btn btn-honey btn-sm"
                 onClick={() => alert('Invite to team feature coming soon!')}
               >
                 <i className="ph-fill ph-user-plus"></i> Invite to Team

@@ -602,12 +602,12 @@ function DevRecCard({
           "Mengundang..."
         ) : isAlreadyInvited ? (
           <>
-            <i className="ph-fill ph-check-circle" style={{ marginRight: "6px" }}></i>
+            <i className="ph-fill ph-check-circle"></i>
             Sudah Diundang
           </>
         ) : (
           <>
-            <i className="ph-fill ph-paper-plane-tilt" style={{ marginRight: "6px" }}></i>
+            <i className="ph-fill ph-paper-plane-tilt"></i>
             Undang Instan
           </>
         )}
@@ -781,7 +781,7 @@ function TeamRecCard({
           "Mengirim..."
         ) : (
           <>
-            <i className="ph-bold ph-plus-circle" style={{ marginRight: "6px" }}></i>
+            <i className="ph-bold ph-plus-circle"></i>
             Minta Bergabung
           </>
         )}
