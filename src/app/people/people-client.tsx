@@ -280,15 +280,7 @@ function PersonCard({ user, index }: { user: User; index: number }) {
             overflow: "hidden",
           }}
         >
-          {/* Corner glow */}
-          <div style={{
-            position: "absolute", top: 0, right: 0,
-            width: "100px", height: "100px",
-            background: `radial-gradient(circle at top right, ${roleConfig?.badge?.bg ?? "rgba(245,166,35,0.1)"} 0%, transparent 70%)`,
-            opacity: hovered ? 1 : 0,
-            transition: "opacity 0.22s",
-            pointerEvents: "none",
-          }} />
+          {/* Corner glow removed */}
 
           {/* Top: avatar + role badge */}
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "12px" }}>
