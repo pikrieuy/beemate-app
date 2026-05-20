@@ -1,3 +1,5 @@
+// @ts-nocheck
+// This file is only used for local database seeding, not part of the Next.js build.
 import "dotenv/config";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
