@@ -90,7 +90,7 @@
 - [ ] Buat tim & undang anggota di production
 - [ ] Admin: buat kompetisi + upload banner di production
 - [ ] Test di mobile viewport
-- [ ] Settings page — connect ke session/database (masih hardcoded)
+- [x] Settings page — connect ke session/database (selesai)
 
 ---
 
