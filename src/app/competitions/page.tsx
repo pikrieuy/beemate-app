@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { getCompetitions } from "@/actions";
 import { CompetitionsClient } from "./competitions-client";
 import { redirect } from "next/navigation";
+import prisma from "@/lib/prisma";
 
 export default async function CompetitionsPage() {
   const session = await auth();
@@ -10,7 +11,13 @@ export default async function CompetitionsPage() {
     redirect("/auth/signin");
   }
 
-  const result = await getCompetitions({ upcoming: false });
+  const [result, user] = await Promise.all([
+    getCompetitions({ upcoming: false }),
+    prisma.user.findUnique({
+      where: { email: session.user.email },
+      select: { role: true },
+    }),
+  ]);
 
   if (!result.success || !result.data) {
     return (
@@ -22,5 +29,11 @@ export default async function CompetitionsPage() {
     );
   }
 
-  return <CompetitionsClient competitions={result.data.competitions} userEmail={session.user.email} />;
+  return (
+    <CompetitionsClient
+      competitions={result.data.competitions}
+      userEmail={session.user.email}
+      isAdmin={user?.role === "ADMIN"}
+    />
+  );
 }
