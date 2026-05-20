@@ -28,7 +28,6 @@ export function Navbar() {
   };
 
   const navLinks = [
-    { label: "Explore", path: "/explore" },
     { label: "Dashboard", path: "/dashboard" },
     { label: "People", path: "/people" },
     { label: "Teams", path: "/teams" },
