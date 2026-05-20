@@ -24,6 +24,8 @@
 - [x] Profile Page (`/profile`) — edit, skills, avatar
 - [x] Public Profile Page (`/profile/[id]`)
 - [x] People Directory (`/people`) — search, filter by title
+- [x] People recommendation system based on complementary roles (Hacker <-> Hustler/Hipster)
+- [x] Skill endorsements system with optimistic updates & live counters
 
 ## Phase 4: Team Management ✅
 - [x] Teams List (`/teams`) — search, sort, filter ukuran
