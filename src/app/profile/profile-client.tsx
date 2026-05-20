@@ -240,8 +240,109 @@ export function ProfileClient({ user, teams }: ProfileClientProps) {
               )}
               
               {activeTab === 'portfolio' && (
-                <div style={{ textAlign: 'center', padding: '40px', color: 'var(--t2)' }}>
-                  <p>Portfolio section coming soon...</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+
+                  {/* Portfolio URL */}
+                  {user.portfolioUrl ? (
+                    <div style={{
+                      background: 'var(--bg2)', border: '1px solid var(--hbd)',
+                      borderRadius: '16px', padding: '20px',
+                      display: 'flex', alignItems: 'center', gap: '16px',
+                    }}>
+                      <div style={{
+                        width: '44px', height: '44px', borderRadius: '12px',
+                        background: 'var(--hbg)', color: 'var(--ho)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: '22px', flexShrink: 0,
+                      }}>
+                        <i className="ph-fill ph-link" />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: '12px', color: 'var(--t3)', fontWeight: 600, marginBottom: '3px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                          Portfolio Link
+                        </div>
+                        <a
+                          href={user.portfolioUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            fontSize: '14px', color: 'var(--ho)', fontWeight: 700,
+                            textDecoration: 'none', overflow: 'hidden',
+                            textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block',
+                          }}
+                        >
+                          {user.portfolioUrl}
+                        </a>
+                      </div>
+                      <a href={user.portfolioUrl} target="_blank" rel="noopener noreferrer">
+                        <button className="btn btn-dark btn-sm">
+                          <i className="ph-fill ph-arrow-square-out" /> Buka
+                        </button>
+                      </a>
+                    </div>
+                  ) : (
+                    <div style={{
+                      background: 'var(--bg2)', border: '1px dashed var(--b)',
+                      borderRadius: '16px', padding: '20px',
+                      display: 'flex', alignItems: 'center', gap: '14px',
+                    }}>
+                      <i className="ph-fill ph-link-break" style={{ fontSize: '22px', color: 'var(--t3)' }} />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: '13px', color: 'var(--t2)' }}>
+                          Belum ada portfolio link.{' '}
+                          <button
+                            onClick={() => setShowEditModal(true)}
+                            style={{ background: 'none', border: 'none', color: 'var(--ho)', fontWeight: 700, cursor: 'pointer', fontSize: '13px', padding: 0 }}
+                          >
+                            Tambahkan di Edit Profile →
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Achievement / Project cards — data contoh */}
+                  <div>
+                    <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--t3)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '12px' }}>
+                      Pencapaian & Proyek
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '12px' }}>
+                      {[
+                        { icon: 'ph-trophy', color: 'var(--ho)', bg: 'var(--hbg)', border: 'var(--hbd)', title: 'Hackathon Kampus 2024', desc: 'Juara 2 — Tim 4 orang', tag: 'Kompetisi' },
+                        { icon: 'ph-code', color: 'var(--bl)', bg: 'var(--blb)', border: 'var(--bbd)', title: 'Proyek Capstone', desc: 'Sistem manajemen inventori', tag: 'Proyek' },
+                        { icon: 'ph-certificate', color: 'var(--pu)', bg: 'var(--pub)', border: 'var(--pbd)', title: 'Google UX Design', desc: 'Coursera Certificate', tag: 'Sertifikat' },
+                      ].map((item) => (
+                        <div key={item.title} style={{
+                          background: 'var(--bg2)', border: `1px solid ${item.border}`,
+                          borderRadius: '14px', padding: '16px',
+                          display: 'flex', gap: '12px', alignItems: 'flex-start',
+                        }}>
+                          <div style={{
+                            width: '38px', height: '38px', borderRadius: '10px',
+                            background: item.bg, color: item.color,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: '18px', flexShrink: 0,
+                          }}>
+                            <i className={`ph-fill ${item.icon}`} />
+                          </div>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--t)', marginBottom: '3px' }}>{item.title}</div>
+                            <div style={{ fontSize: '11px', color: 'var(--t2)', marginBottom: '6px' }}>{item.desc}</div>
+                            <span style={{
+                              fontSize: '10px', fontWeight: 700, padding: '2px 8px',
+                              borderRadius: '6px', background: item.bg, color: item.color,
+                              border: `1px solid ${item.border}`,
+                            }}>
+                              {item.tag}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <p style={{ fontSize: '11px', color: 'var(--t3)', marginTop: '12px' }}>
+                      * Data contoh — fitur upload pencapaian akan hadir di update berikutnya.
+                    </p>
+                  </div>
                 </div>
               )}
 

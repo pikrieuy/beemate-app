@@ -251,3 +251,52 @@ export async function getAllUsers() {
     return { success: false, error: "Failed to get users" }
   }
 }
+
+/**
+ * Delete current user account and all associated data
+ */
+export async function deleteAccount() {
+  try {
+    const session = await auth()
+    if (!session?.user?.email) {
+      return { success: false, error: "Not authenticated" }
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+      select: { id: true },
+    })
+
+    if (!user) {
+      return { success: false, error: "User not found" }
+    }
+
+    // Delete in order to respect FK constraints:
+    // 1. Notifications (sent & received)
+    await prisma.notification.deleteMany({
+      where: { OR: [{ recipientId: user.id }, { senderId: user.id }] },
+    })
+
+    // 2. TeamMember records
+    await prisma.teamMember.deleteMany({ where: { userId: user.id } })
+
+    // 3. Teams led by this user — transfer or delete
+    //    For simplicity: delete teams where user is leader (cascades members)
+    await prisma.team.deleteMany({ where: { leaderId: user.id } })
+
+    // 4. Competitions authored by this user
+    await prisma.competition.deleteMany({ where: { authorId: user.id } })
+
+    // 5. Auth accounts & sessions
+    await prisma.account.deleteMany({ where: { userId: user.id } })
+    await prisma.session.deleteMany({ where: { userId: user.id } })
+
+    // 6. Finally delete the user
+    await prisma.user.delete({ where: { id: user.id } })
+
+    return { success: true }
+  } catch (error) {
+    console.error("Error deleting account:", error)
+    return { success: false, error: "Gagal menghapus akun. Coba lagi." }
+  }
+}

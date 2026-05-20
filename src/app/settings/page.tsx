@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { signOut, useSession } from "next-auth/react";
-import { updateUserProfile } from "@/actions/user.actions";
+import { updateUserProfile, deleteAccount } from "@/actions/user.actions";
 
 // ─── Toast helper ────────────────────────────────────────────────────────────
 function useToast() {
@@ -65,13 +65,29 @@ export default function SettingsPage() {
   // Account form state
   const [name, setName] = useState(session?.user?.name ?? "");
 
-  // Notification prefs state (UI only — no backend yet, shows intent)
-  const [notifPrefs, setNotifPrefs] = useState({
-    teamInvite: true,
-    inviteAccepted: true,
-    newCompetition: true,
-    weeklyDigest: false,
+  // Notification prefs — persisted to localStorage
+  const NOTIF_KEY = "beemate_notif_prefs";
+  const [notifPrefs, setNotifPrefs] = useState(() => {
+    if (typeof window === "undefined") return { teamInvite: true, inviteAccepted: true, newCompetition: true, weeklyDigest: false };
+    try {
+      const saved = localStorage.getItem(NOTIF_KEY);
+      return saved ? JSON.parse(saved) : { teamInvite: true, inviteAccepted: true, newCompetition: true, weeklyDigest: false };
+    } catch { return { teamInvite: true, inviteAccepted: true, newCompetition: true, weeklyDigest: false }; }
   });
+  const [notifSaved, setNotifSaved] = useState(false);
+
+  const updateNotifPref = (key: string, value: boolean) => {
+    const next = { ...notifPrefs, [key]: value };
+    setNotifPrefs(next);
+    localStorage.setItem(NOTIF_KEY, JSON.stringify(next));
+    setNotifSaved(true);
+    setTimeout(() => setNotifSaved(false), 2000);
+  };
+
+  // Delete account state
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteInput, setDeleteInput] = useState("");
+  const [isDeleting, startDeleteTransition] = useTransition();
 
   const tabs = [
     { id: "account",       label: "Akun & Profil",     icon: "ph-user" },
@@ -329,36 +345,45 @@ export default function SettingsPage() {
               {/* ── Tab: Notifikasi ── */}
               {activeTab === "notifications" && (
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {notifSaved && (
+                    <div style={{
+                      padding: "10px 16px", borderRadius: "10px",
+                      background: "var(--gnb)", border: "1px solid var(--gbd)",
+                      color: "var(--gn)", fontWeight: 700, fontSize: "12px",
+                    }}>
+                      ✓ Preferensi disimpan
+                    </div>
+                  )}
                   <PrefRow
                     icon="ph-users"
                     label="Undangan Tim"
                     desc="Notifikasi saat kamu diundang ke sebuah tim"
                     checked={notifPrefs.teamInvite}
-                    onChange={v => setNotifPrefs(p => ({ ...p, teamInvite: v }))}
+                    onChange={v => updateNotifPref("teamInvite", v)}
                   />
                   <PrefRow
                     icon="ph-check-circle"
                     label="Undangan Diterima"
                     desc="Notifikasi saat undanganmu diterima anggota"
                     checked={notifPrefs.inviteAccepted}
-                    onChange={v => setNotifPrefs(p => ({ ...p, inviteAccepted: v }))}
+                    onChange={v => updateNotifPref("inviteAccepted", v)}
                   />
                   <PrefRow
                     icon="ph-trophy"
                     label="Kompetisi Baru"
                     desc="Notifikasi saat ada kompetisi baru ditambahkan"
                     checked={notifPrefs.newCompetition}
-                    onChange={v => setNotifPrefs(p => ({ ...p, newCompetition: v }))}
+                    onChange={v => updateNotifPref("newCompetition", v)}
                   />
                   <PrefRow
                     icon="ph-newspaper"
                     label="Digest Mingguan"
                     desc="Ringkasan aktivitas platform setiap minggu"
                     checked={notifPrefs.weeklyDigest}
-                    onChange={v => setNotifPrefs(p => ({ ...p, weeklyDigest: v }))}
+                    onChange={v => updateNotifPref("weeklyDigest", v)}
                   />
-                  <p style={{ fontSize: "11px", color: "var(--t3)", marginTop: "8px" }}>
-                    Preferensi notifikasi email akan tersedia di update berikutnya.
+                  <p style={{ fontSize: "11px", color: "var(--t3)", marginTop: "4px" }}>
+                    Preferensi disimpan di perangkat ini. Notifikasi email akan hadir di update berikutnya.
                   </p>
                 </div>
               )}
@@ -414,19 +439,75 @@ export default function SettingsPage() {
                       Danger Zone
                     </div>
                     <p style={{ fontSize: "12px", color: "var(--t2)", marginBottom: "14px", lineHeight: 1.6 }}>
-                      Menghapus akun akan menghapus semua data profilmu secara permanen. Tim yang kamu pimpin akan kehilangan leader.
+                      Menghapus akun akan menghapus semua data profilmu secara permanen. Tim yang kamu pimpin akan ikut terhapus.
                     </p>
-                    <button
-                      onClick={() => show("Fitur hapus akun belum tersedia. Hubungi admin.", "err")}
-                      style={{
-                        padding: "9px 18px", borderRadius: "10px", border: "1px solid var(--rbd)",
-                        background: "transparent", color: "var(--rd)",
-                        fontWeight: 700, fontSize: "13px", cursor: "pointer",
-                      }}
-                    >
-                      <i className="ph-fill ph-trash" style={{ marginRight: "6px" }} />
-                      Hapus Akun
-                    </button>
+
+                    {!showDeleteConfirm ? (
+                      <button
+                        onClick={() => setShowDeleteConfirm(true)}
+                        style={{
+                          padding: "9px 18px", borderRadius: "10px", border: "1px solid var(--rbd)",
+                          background: "transparent", color: "var(--rd)",
+                          fontWeight: 700, fontSize: "13px", cursor: "pointer",
+                        }}
+                      >
+                        <i className="ph-fill ph-trash" style={{ marginRight: "6px" }} />
+                        Hapus Akun
+                      </button>
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                        <p style={{ fontSize: "12px", color: "var(--rd)", fontWeight: 600 }}>
+                          Ketik <strong>HAPUS</strong> untuk konfirmasi:
+                        </p>
+                        <input
+                          type="text"
+                          value={deleteInput}
+                          onChange={e => setDeleteInput(e.target.value)}
+                          placeholder="Ketik HAPUS"
+                          style={{
+                            background: "var(--bg)", border: "1px solid var(--rbd)",
+                            padding: "10px 14px", borderRadius: "10px",
+                            color: "var(--t)", fontSize: "13px", outline: "none",
+                          }}
+                        />
+                        <div style={{ display: "flex", gap: "8px" }}>
+                          <button
+                            onClick={() => { setShowDeleteConfirm(false); setDeleteInput(""); }}
+                            className="btn btn-dark btn-sm"
+                          >
+                            Batal
+                          </button>
+                          <button
+                            disabled={deleteInput !== "HAPUS" || isDeleting}
+                            onClick={() => {
+                              if (deleteInput !== "HAPUS") return;
+                              startDeleteTransition(async () => {
+                                const result = await deleteAccount();
+                                if (result.success) {
+                                  await signOut({ callbackUrl: "/" });
+                                } else {
+                                  show(result.error ?? "Gagal menghapus akun", "err");
+                                  setShowDeleteConfirm(false);
+                                  setDeleteInput("");
+                                }
+                              });
+                            }}
+                            style={{
+                              padding: "7px 16px", borderRadius: "10px",
+                              border: "1px solid var(--rbd)",
+                              background: deleteInput === "HAPUS" ? "var(--rd)" : "transparent",
+                              color: deleteInput === "HAPUS" ? "#fff" : "var(--rd)",
+                              fontWeight: 700, fontSize: "13px",
+                              cursor: deleteInput === "HAPUS" ? "pointer" : "not-allowed",
+                              opacity: isDeleting ? 0.7 : 1,
+                              transition: "all 0.15s",
+                            }}
+                          >
+                            {isDeleting ? "Menghapus..." : "Ya, Hapus Akun"}
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
