@@ -36,9 +36,12 @@ export const authConfig = {
         "/competitions/create",
         "/admin",
       ]
-      const isProtectedRoute = protectedRoutes.some((route) =>
-        pathname.startsWith(route)
-      )
+      const isProtectedRoute = protectedRoutes.some((route) => {
+        if (route === "/profile") {
+          return pathname === "/profile"
+        }
+        return pathname.startsWith(route)
+      })
 
       if (isProtectedRoute && !isLoggedIn) {
         const loginUrl = new URL("/api/auth/signin", nextUrl.origin)
