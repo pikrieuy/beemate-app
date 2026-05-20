@@ -468,7 +468,7 @@ export function TeamKanban({ teamId, members, leader }: TeamKanbanProps) {
                           justifyContent: "space-between",
                           marginTop: "12px",
                           background: "var(--bg2)",
-                          borderRadius: "8px",
+                          borderRadius: "100px",
                           padding: "2px",
                         }}
                       >
@@ -588,7 +588,7 @@ export function TeamKanban({ teamId, members, leader }: TeamKanbanProps) {
                     style={{
                       width: "100%",
                       padding: "10px 14px",
-                      borderRadius: "10px",
+                    borderRadius: "14px",
                       border: "1px solid var(--bdr)",
                       background: "var(--bg)",
                       color: "var(--t)",
@@ -608,7 +608,7 @@ export function TeamKanban({ teamId, members, leader }: TeamKanbanProps) {
                     style={{
                       width: "100%",
                       padding: "10px 14px",
-                      borderRadius: "10px",
+                      borderRadius: "14px",
                       border: "1px solid var(--bdr)",
                       background: "var(--bg)",
                       color: "var(--t)",
@@ -626,7 +626,7 @@ export function TeamKanban({ teamId, members, leader }: TeamKanbanProps) {
                       style={{
                         width: "100%",
                         padding: "10px",
-                        borderRadius: "10px",
+                        borderRadius: "14px",
                         border: "1px solid var(--bdr)",
                         background: "var(--bg)",
                         color: "var(--t)",
@@ -648,7 +648,7 @@ export function TeamKanban({ teamId, members, leader }: TeamKanbanProps) {
                       style={{
                         width: "100%",
                         padding: "8px 10px",
-                        borderRadius: "10px",
+                        borderRadius: "14px",
                         border: "1px solid var(--bdr)",
                         background: "var(--bg)",
                         color: "var(--t)",

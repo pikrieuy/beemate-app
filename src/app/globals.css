@@ -193,13 +193,14 @@ a{color:inherit;text-decoration:none}
   font-weight:700;border:none;cursor:pointer;transition:all .15s;
   display:inline-flex;align-items:center;justify-content:center;
   gap:6px;white-space:nowrap;font-family:inherit;letter-spacing:-.1px;
+  border-radius:100px;
 }
 .btn:active{transform:scale(.97)}
-.btn-xs{padding:4px 10px;font-size:11px;border-radius:7px}
-.btn-sm{padding:6px 13px;font-size:12px;border-radius:9px}
-.btn-md{padding:8px 17px;font-size:12px;border-radius:10px}
-.btn-lg{padding:10px 22px;font-size:13px;border-radius:11px}
-.btn-xl{padding:13px 26px;font-size:14px;border-radius:12px}
+.btn-xs{padding:4px 10px;font-size:11px;border-radius:100px}
+.btn-sm{padding:6px 13px;font-size:12px;border-radius:100px}
+.btn-md{padding:8px 17px;font-size:12px;border-radius:100px}
+.btn-lg{padding:10px 22px;font-size:13px;border-radius:100px}
+.btn-xl{padding:13px 26px;font-size:14px;border-radius:100px}
 .btn-honey{
   background:linear-gradient(135deg,var(--ho),var(--ho2));
   color:#1a0f00;box-shadow:0 2px 12px rgba(245,166,35,.2);
@@ -217,7 +218,7 @@ a{color:inherit;text-decoration:none}
 
 .bdg{
   font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
-  padding:3px 8px;border-radius:6px;display:inline-flex;align-items:center;gap:3px;
+  padding:3px 8px;border-radius:100px;display:inline-flex;align-items:center;gap:3px;
   font-family: var(--font-jetbrains), 'JetBrains Mono', monospace;
 }
 .bdg-h{background:var(--hbg);color:var(--ho)}
@@ -234,7 +235,7 @@ a{color:inherit;text-decoration:none}
 
 .chip{
   display:inline-flex;align-items:center;gap:4px;
-  font-size:11px;font-weight:600;padding:4px 9px;border-radius:7px;
+  font-size:11px;font-weight:600;padding:4px 9px;border-radius:100px;
   background:var(--bg4);color:var(--t2);border:1px solid var(--b);
   cursor:pointer;transition:all .12s;user-select:none;
 }
@@ -534,13 +535,13 @@ textarea.inp{resize:vertical;min-height:75px;line-height:1.6}
 .proj-needs-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin-bottom:5px}
 .proj-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:11px}
 .proj-tag{
-  font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;
+  font-size:10px;font-weight:600;padding:3px 8px;border-radius:100px;
   background:var(--bg4);color:var(--t2);border:1px solid var(--b);
 }
 .proj-tag.open{background:var(--hbg);color:var(--ho);border-color:var(--hbd)}
 .proj-foot{display:flex;align-items:center;justify-content:space-between;padding-top:11px;border-top:1px solid var(--b)}
 .apply-btn{
-  font-weight:700;font-size:11px;padding:6px 12px;border-radius:8px;
+  font-weight:700;font-size:11px;padding:6px 12px;border-radius:100px;
   background:var(--ho);color:#1a0f00;border:none;cursor:pointer;
   transition:all .15s;
 }
@@ -560,7 +561,7 @@ textarea.inp{resize:vertical;min-height:75px;line-height:1.6}
   position:sticky;top:0;background:var(--bg2);z-index:1;border-bottom:1px solid var(--b);
 }
 .dp-close{
-  width:26px;height:26px;border-radius:8px;background:var(--bg4);
+  width:26px;height:26px;border-radius:100px;background:var(--bg4);
   border:1px solid var(--b);color:var(--t2);cursor:pointer;
   display:flex;align-items:center;justify-content:center;font-size:12px;
   transition:all .15s;flex-shrink:0;
@@ -601,7 +602,7 @@ textarea.inp{resize:vertical;min-height:75px;line-height:1.6}
 .invite-btn{
   width:100%;padding:7px;font-size:10px;font-weight:700;
   background:var(--bg4);color:var(--t2);border:1px solid var(--b);
-  border-radius:8px;cursor:pointer;transition:all .15s;
+  border-radius:100px;cursor:pointer;transition:all .15s;
 }
 .invite-btn:hover{background:var(--hbg);color:var(--ho);border-color:var(--hbd)}
 

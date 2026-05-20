@@ -233,7 +233,7 @@ export function MatchmakingClient({ currentUser, userTeams }: MatchmakingClientP
             gap: "8px", 
             background: "var(--bg2)", 
             padding: "6px", 
-            borderRadius: "14px", 
+            borderRadius: "100px", 
             border: "1px solid var(--bdr)",
             marginBottom: "36px",
             width: "max-content",
@@ -248,8 +248,8 @@ export function MatchmakingClient({ currentUser, userTeams }: MatchmakingClientP
               border: "none",
               color: activeTab === "find-members" ? "var(--t)" : "var(--t3)",
               fontWeight: activeTab === "find-members" ? 800 : 500,
-              padding: "10px 20px",
-              borderRadius: "10px",
+              padding: "10px 24px",
+              borderRadius: "100px",
               cursor: userTeams.length > 0 ? "pointer" : "not-allowed",
               fontSize: "14px",
               display: "flex",
@@ -269,8 +269,8 @@ export function MatchmakingClient({ currentUser, userTeams }: MatchmakingClientP
               border: "none",
               color: activeTab === "find-teams" ? "var(--t)" : "var(--t3)",
               fontWeight: activeTab === "find-teams" ? 800 : 500,
-              padding: "10px 20px",
-              borderRadius: "10px",
+              padding: "10px 24px",
+              borderRadius: "100px",
               cursor: "pointer",
               fontSize: "14px",
               display: "flex",
@@ -315,8 +315,8 @@ export function MatchmakingClient({ currentUser, userTeams }: MatchmakingClientP
                     value={selectedTeamId}
                     onChange={(e) => setSelectedTeamId(e.target.value)}
                     style={{
-                      padding: "10px 16px",
-                      borderRadius: "12px",
+                      padding: "10px 20px",
+                      borderRadius: "100px",
                       border: "1px solid var(--bdr)",
                       background: "var(--bg)",
                       color: "var(--t)",
@@ -461,9 +461,7 @@ function DevRecCard({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: hovered
-          ? `linear-gradient(145deg, var(--bg2) 0%, ${glowColor} 100%)`
-          : "var(--bg2)",
+        background: "var(--bg2)",
         border: `1px solid ${hovered ? borderColor : "var(--bdr)"}`,
         borderRadius: "24px",
         padding: "24px",
@@ -471,11 +469,22 @@ function DevRecCard({
         flexDirection: "column",
         position: "relative",
         overflow: "hidden",
-        transition: "all 0.22s ease",
-        transform: hovered ? "translateY(-5px)" : "translateY(0)",
+        transition: "border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease",
+        transform: hovered ? "translateY(-6px)" : "translateY(0)",
         boxShadow: hovered ? `0 12px 32px ${glowColor}, 0 4px 12px rgba(0,0,0,0.2)` : "none",
       }}
     >
+      {/* Dynamic Hover Gradient Overlay */}
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        background: `linear-gradient(145deg, transparent 0%, ${glowColor} 100%)`,
+        opacity: hovered ? 1 : 0,
+        transition: "opacity 0.3s ease",
+        pointerEvents: "none",
+        zIndex: 0,
+      }} />
+
       {/* Corner Glow Accent */}
       <div style={{
         position: "absolute", top: 0, right: 0,
@@ -483,7 +492,8 @@ function DevRecCard({
         background: `radial-gradient(circle at top right, ${glowColor} 0%, transparent 70%)`,
         pointerEvents: "none",
         opacity: hovered ? 1 : 0,
-        transition: "opacity 0.22s",
+        transition: "opacity 0.3s ease",
+        zIndex: 0,
       }} />
 
       {/* Score Glow Badge */}
@@ -499,6 +509,7 @@ function DevRecCard({
           padding: "4px 10px",
           borderRadius: "100px",
           border: "1px solid rgba(245, 166, 35, 0.25)",
+          zIndex: 1
         }}
       >
         Match Score: {score}
@@ -564,8 +575,8 @@ function DevRecCard({
                   style={{
                     background: "rgba(255, 255, 255, 0.04)",
                     border: "1px solid var(--bdr)",
-                    borderRadius: "8px",
-                    padding: "4px 8px",
+                    borderRadius: "100px",
+                    padding: "4px 10px",
                     fontSize: "11px",
                     color: "var(--t2)",
                   }}
@@ -639,9 +650,7 @@ function TeamRecCard({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: hovered
-          ? `linear-gradient(145deg, var(--bg2) 0%, ${glowColor} 100%)`
-          : "var(--bg2)",
+        background: "var(--bg2)",
         border: `1px solid ${hovered ? borderColor : "var(--bdr)"}`,
         borderRadius: "24px",
         padding: "24px",
@@ -649,11 +658,22 @@ function TeamRecCard({
         flexDirection: "column",
         position: "relative",
         overflow: "hidden",
-        transition: "all 0.22s ease",
-        transform: hovered ? "translateY(-5px)" : "translateY(0)",
+        transition: "border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease",
+        transform: hovered ? "translateY(-6px)" : "translateY(0)",
         boxShadow: hovered ? `0 12px 32px ${glowColor}, 0 4px 12px rgba(0,0,0,0.2)` : "none",
       }}
     >
+      {/* Dynamic Hover Gradient Overlay */}
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        background: `linear-gradient(145deg, transparent 0%, ${glowColor} 100%)`,
+        opacity: hovered ? 1 : 0,
+        transition: "opacity 0.3s ease",
+        pointerEvents: "none",
+        zIndex: 0,
+      }} />
+
       {/* Corner Glow Accent */}
       <div style={{
         position: "absolute", top: 0, right: 0,
@@ -661,7 +681,8 @@ function TeamRecCard({
         background: `radial-gradient(circle at top right, ${glowColor} 0%, transparent 70%)`,
         pointerEvents: "none",
         opacity: hovered ? 1 : 0,
-        transition: "opacity 0.22s",
+        transition: "opacity 0.3s ease",
+        zIndex: 0,
       }} />
 
       {/* Match Score */}
@@ -677,6 +698,7 @@ function TeamRecCard({
           padding: "4px 10px",
           borderRadius: "100px",
           border: "1px solid rgba(245, 166, 35, 0.25)",
+          zIndex: 1
         }}
       >
         Match: {score}
@@ -735,8 +757,8 @@ function TeamRecCard({
                   background: "rgba(245, 166, 35, 0.12)",
                   border: "1px solid var(--ho)",
                   color: "var(--ho)",
-                  borderRadius: "8px",
-                  padding: "4px 8px",
+                  borderRadius: "100px",
+                  padding: "4px 10px",
                   fontSize: "11px",
                   fontWeight: 700
                 }}

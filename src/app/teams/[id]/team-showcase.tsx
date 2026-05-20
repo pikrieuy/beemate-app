@@ -225,7 +225,7 @@ export function ProjectShowcase({ teamId, isMember, isLeader }: ProjectShowcaseP
               background: "var(--rdb)",
               border: "1px solid var(--rbd)",
               color: "var(--rd)",
-              borderRadius: "12px",
+              borderRadius: "16px",
               fontSize: "14px",
               marginBottom: "20px",
             }}
@@ -259,7 +259,7 @@ export function ProjectShowcase({ teamId, isMember, isLeader }: ProjectShowcaseP
               style={{
                 width: "100%",
                 padding: "12px 16px",
-                borderRadius: "12px",
+                borderRadius: "16px",
                 border: "1px solid var(--bdr)",
                 background: "var(--bg)",
                 color: "var(--t)",
@@ -280,7 +280,7 @@ export function ProjectShowcase({ teamId, isMember, isLeader }: ProjectShowcaseP
               style={{
                 width: "100%",
                 padding: "12px 16px",
-                borderRadius: "12px",
+                borderRadius: "16px",
                 border: "1px solid var(--bdr)",
                 background: "var(--bg)",
                 color: "var(--t)",
@@ -303,7 +303,7 @@ export function ProjectShowcase({ teamId, isMember, isLeader }: ProjectShowcaseP
                 style={{
                   width: "100%",
                   padding: "12px 16px",
-                  borderRadius: "12px",
+                  borderRadius: "16px",
                   border: "1px solid var(--bdr)",
                   background: "var(--bg)",
                   color: "var(--t)",
@@ -323,7 +323,7 @@ export function ProjectShowcase({ teamId, isMember, isLeader }: ProjectShowcaseP
                 style={{
                   width: "100%",
                   padding: "12px 16px",
-                  borderRadius: "12px",
+                  borderRadius: "16px",
                   border: "1px solid var(--bdr)",
                   background: "var(--bg)",
                   color: "var(--t)",
@@ -609,7 +609,7 @@ export function ProjectShowcase({ teamId, isMember, isLeader }: ProjectShowcaseP
                     style={{
                       width: "100%",
                       padding: "12px 16px",
-                      borderRadius: "12px",
+                      borderRadius: "16px",
                       border: "1px solid var(--bdr)",
                       background: "var(--bg)",
                       color: "var(--t)",
@@ -701,7 +701,7 @@ export function ProjectShowcase({ teamId, isMember, isLeader }: ProjectShowcaseP
                                   fontSize: "10px",
                                   fontWeight: 800,
                                   padding: "2px 6px",
-                                  borderRadius: "4px",
+                                  borderRadius: "100px",
                                   textTransform: "uppercase",
                                 }}
                               >

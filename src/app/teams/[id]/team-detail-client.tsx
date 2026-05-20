@@ -177,7 +177,7 @@ export function TeamDetailClient({ team, currentUserId, isLeader, isMember }: Te
             exit={{ opacity: 0, y: -12 }}
             style={{
               position: "fixed", top: "72px", left: "50%", transform: "translateX(-50%)",
-              zIndex: 9999, padding: "12px 24px", borderRadius: "12px",
+              zIndex: 9999, padding: "12px 24px", borderRadius: "100px",
               background: toast.ok ? "var(--gnb)" : "var(--rdb)",
               border: `1px solid ${toast.ok ? "var(--gbd)" : "var(--rbd)"}`,
               color: toast.ok ? "var(--gn)" : "var(--rd)",
@@ -486,7 +486,7 @@ export function TeamDetailClient({ team, currentUserId, isLeader, isMember }: Te
                             style={{
                               background: 'rgba(245, 166, 35, 0.05)',
                               border: '1px solid rgba(245, 166, 35, 0.2)',
-                              borderRadius: '12px',
+                              borderRadius: '20px',
                               padding: '16px',
                               display: 'flex',
                               alignItems: 'center',

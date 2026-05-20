@@ -158,7 +158,7 @@ export function TeamsClient({ initialTeams }: TeamsClientProps) {
                     placeholder="Nama, deskripsi, leader..."
                     style={{
                       width: "100%", padding: "10px 36px 10px 36px",
-                      borderRadius: "10px", border: "1px solid var(--b)",
+                      borderRadius: "100px", border: "1px solid var(--b)",
                       background: "var(--bg3)", color: "var(--t)", fontSize: "13px",
                       outline: "none", transition: "border-color 0.15s",
                     }}
@@ -193,7 +193,7 @@ export function TeamsClient({ initialTeams }: TeamsClientProps) {
                       onClick={() => setSort(opt.key)}
                       style={{
                         display: "flex", alignItems: "center", gap: "8px",
-                        padding: "9px 12px", borderRadius: "9px", border: "none",
+                        padding: "9px 14px", borderRadius: "100px", border: "none",
                         background: sort === opt.key ? "var(--hbg)" : "transparent",
                         color: sort === opt.key ? "var(--ho)" : "var(--t2)",
                         fontSize: "13px", fontWeight: sort === opt.key ? 700 : 500,
@@ -223,7 +223,7 @@ export function TeamsClient({ initialTeams }: TeamsClientProps) {
                       onClick={() => setSizeFilter(opt.key)}
                       style={{
                         display: "flex", alignItems: "center", justifyContent: "space-between",
-                        padding: "9px 12px", borderRadius: "9px", border: "none",
+                        padding: "9px 14px", borderRadius: "100px", border: "none",
                         background: sizeFilter === opt.key ? "var(--hbg)" : "transparent",
                         color: sizeFilter === opt.key ? "var(--ho)" : "var(--t2)",
                         fontSize: "13px", fontWeight: sizeFilter === opt.key ? 700 : 500,
