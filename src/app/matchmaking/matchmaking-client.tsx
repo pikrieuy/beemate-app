@@ -363,136 +363,15 @@ export function MatchmakingClient({ currentUser, userTeams }: MatchmakingClientP
               ) : devRecs.length > 0 ? (
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "24px" }}>
                   {devRecs.map(({ user: u, score, isAlreadyInvited }) => (
-                    <motion.div
+                    <DevRecCard
                       key={u.id}
-                      style={{
-                        background: "var(--bg2)",
-                        border: "1px solid var(--bdr)",
-                        borderRadius: "24px",
-                        padding: "24px",
-                        display: "flex",
-                        flexDirection: "column",
-                        position: "relative",
-                        overflow: "hidden",
-                      }}
-                      whileHover={{ y: -4 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      {/* Score Glow Badge */}
-                      <div
-                        style={{
-                          position: "absolute",
-                          top: "24px",
-                          right: "24px",
-                          background: "linear-gradient(135deg, rgba(245, 166, 35, 0.15) 0%, rgba(255, 192, 77, 0.15) 100%)",
-                          color: "var(--ho)",
-                          fontSize: "12px",
-                          fontWeight: 800,
-                          padding: "4px 10px",
-                          borderRadius: "100px",
-                          border: "1px solid rgba(245, 166, 35, 0.25)",
-                        }}
-                      >
-                        Match Score: {score}
-                      </div>
-
-                      {/* User Info */}
-                      <div style={{ display: "flex", gap: "16px", alignItems: "center", marginBottom: "20px" }}>
-                        <div
-                          style={{
-                            width: "52px",
-                            height: "52px",
-                            borderRadius: "50%",
-                            overflow: "hidden",
-                            border: "1px solid var(--bdr)",
-                          }}
-                        >
-                          {u.image ? (
-                            <img src={u.image} alt={u.name || "User"} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                          ) : (
-                            <div style={{ width: "100%", height: "100%", background: "var(--ho)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "18px" }}>
-                              {u.name?.[0].toUpperCase() || "U"}
-                            </div>
-                          )}
-                        </div>
-                        <div>
-                          <h3 style={{ fontSize: "16px", fontWeight: 800, color: "var(--t)", margin: "0 0 6px 0" }}>
-                            {u.name}
-                          </h3>
-                          {u.title ? renderRoleBadge(u.title) : (
-                            <span style={{ fontSize: "11px", color: "var(--t3)", fontStyle: "italic" }}>Belum menentukan role</span>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Bio */}
-                      <p 
-                        style={{ 
-                          fontSize: "13px", 
-                          color: "var(--t2)", 
-                          lineHeight: 1.6, 
-                          margin: "0 0 20px 0",
-                          display: "-webkit-box",
-                          WebkitLineClamp: 3,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
-                          flex: 1
-                        }}
-                      >
-                        {u.bio || "Tidak ada biodata dibagikan."}
-                      </p>
-
-                      {/* Skills */}
-                      <div style={{ marginBottom: "24px" }}>
-                        <div style={{ fontSize: "11px", color: "var(--t3)", textTransform: "uppercase", fontWeight: 800, letterSpacing: "0.03em", marginBottom: "8px" }}>Skills:</div>
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                          {u.skills.length > 0 ? (
-                            u.skills.map((skill: string) => {
-                              return (
-                                <span
-                                  key={skill}
-                                  style={{
-                                    background: "rgba(255, 255, 255, 0.04)",
-                                    border: "1px solid var(--bdr)",
-                                    borderRadius: "8px",
-                                    padding: "4px 8px",
-                                    fontSize: "11px",
-                                    color: "var(--t2)",
-                                  }}
-                                >
-                                  {skill}
-                                </span>
-                              );
-                            })
-                          ) : (
-                            <span style={{ fontSize: "12px", color: "var(--t3)", fontStyle: "italic" }}>Tidak ada keahlian dicantumkan</span>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Invite Button */}
-                      <button
-                        onClick={() => handleInvite(u.id)}
-                        disabled={isAlreadyInvited || actionLoading === `invite-${u.id}`}
-                        className={`btn ${isAlreadyInvited ? "btn-dark" : "btn-honey"}`}
-                        style={{ width: "100%", justifyContent: "center" }}
-                      >
-                        {actionLoading === `invite-${u.id}` ? (
-                          "Mengundang..."
-                        ) : isAlreadyInvited ? (
-                          <>
-                            <i className="ph-fill ph-check-circle" style={{ marginRight: "6px" }}></i>
-                            Sudah Diundang
-                          </>
-                        ) : (
-                          <>
-                            <i className="ph-fill ph-paper-plane-tilt" style={{ marginRight: "6px" }}></i>
-                            Undang Instan
-                          </>
-                        )}
-                      </button>
-
-                    </motion.div>
+                      u={u}
+                      score={score}
+                      isAlreadyInvited={isAlreadyInvited}
+                      actionLoading={actionLoading}
+                      handleInvite={handleInvite}
+                      renderRoleBadge={renderRoleBadge}
+                    />
                   ))}
                 </div>
               ) : (
@@ -519,135 +398,17 @@ export function MatchmakingClient({ currentUser, userTeams }: MatchmakingClientP
                 </div>
               ) : teamRecs.length > 0 ? (
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "24px" }}>
-                  {teamRecs.map(({ team: t, score, matchingSkills }) => {
-                    // Cek role yang sudah ada di tim
-                    const teamRoles: string[] = [];
-                    if (t.leader.title) teamRoles.push(t.leader.title.toUpperCase());
-                    t.members.forEach((m: any) => {
-                      if (m.user.title) teamRoles.push(m.user.title.toUpperCase());
-                    });
-
-                    // Cari role yang masih kosong
-                    const missing = ["HACKER", "HUSTLER", "HIPSTER"].filter(r => !teamRoles.includes(r));
-
-                    return (
-                      <motion.div
-                        key={t.id}
-                        style={{
-                          background: "var(--bg2)",
-                          border: "1px solid var(--bdr)",
-                          borderRadius: "24px",
-                          padding: "24px",
-                          display: "flex",
-                          flexDirection: "column",
-                          position: "relative",
-                          overflow: "hidden",
-                        }}
-                        whileHover={{ y: -4 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        {/* Match Score */}
-                        <div
-                          style={{
-                            position: "absolute",
-                            top: "24px",
-                            right: "24px",
-                            background: "linear-gradient(135deg, rgba(245, 166, 35, 0.15) 0%, rgba(255, 192, 77, 0.15) 100%)",
-                            color: "var(--ho)",
-                            fontSize: "12px",
-                            fontWeight: 800,
-                            padding: "4px 10px",
-                            borderRadius: "100px",
-                            border: "1px solid rgba(245, 166, 35, 0.25)",
-                          }}
-                        >
-                          Match: {score}
-                        </div>
-
-                        {/* Team Name & Leader */}
-                        <div style={{ marginBottom: "20px" }}>
-                          <h3 style={{ fontSize: "18px", fontWeight: 900, color: "var(--t)", margin: "0 0 6px 0" }}>
-                            {t.name}
-                          </h3>
-                          <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", color: "var(--t3)" }}>
-                            <span>Leader: <strong>{t.leader.name}</strong></span>
-                          </div>
-                        </div>
-
-                        {/* Description */}
-                        <p
-                          style={{
-                            fontSize: "13px",
-                            color: "var(--t2)",
-                            lineHeight: 1.6,
-                            margin: "0 0 20px 0",
-                            display: "-webkit-box",
-                            WebkitLineClamp: 3,
-                            WebkitBoxOrient: "vertical",
-                            overflow: "hidden",
-                            flex: 1
-                          }}
-                        >
-                          {t.description || "Tidak ada deskripsi tim dibagikan."}
-                        </p>
-
-                        {/* Role Needs */}
-                        <div style={{ marginBottom: "20px" }}>
-                          <div style={{ fontSize: "11px", color: "var(--t3)", textTransform: "uppercase", fontWeight: 800, letterSpacing: "0.03em", marginBottom: "8px" }}>Membutuhkan Peran:</div>
-                          <div style={{ display: "flex", gap: "6px" }}>
-                            {missing.length > 0 ? (
-                              missing.map(r => renderRoleBadge(r))
-                            ) : (
-                              <span style={{ fontSize: "12px", color: "var(--t3)", fontStyle: "italic" }}>Tim sudah terisi lengkap</span>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Matching Skills */}
-                        {matchingSkills.length > 0 && (
-                          <div style={{ marginBottom: "24px" }}>
-                            <div style={{ fontSize: "11px", color: "var(--t3)", textTransform: "uppercase", fontWeight: 800, letterSpacing: "0.03em", marginBottom: "8px" }}>Keahlian Anda yang Cocok:</div>
-                            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                              {matchingSkills.map((skill: string) => (
-                                <span
-                                  key={skill}
-                                  style={{
-                                    background: "rgba(245, 166, 35, 0.12)",
-                                    border: "1px solid var(--ho)",
-                                    color: "var(--ho)",
-                                    borderRadius: "8px",
-                                    padding: "4px 8px",
-                                    fontSize: "11px",
-                                    fontWeight: 700
-                                  }}
-                                >
-                                  {skill}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Action Request Join */}
-                        <button
-                          onClick={() => handleJoinRequest(t.id)}
-                          disabled={actionLoading === `join-${t.id}`}
-                          className="btn btn-honey"
-                          style={{ width: "100%", justifyContent: "center" }}
-                        >
-                          {actionLoading === `join-${t.id}` ? (
-                            "Mengirim..."
-                          ) : (
-                            <>
-                              <i className="ph-bold ph-plus-circle" style={{ marginRight: "6px" }}></i>
-                              Minta Bergabung
-                            </>
-                          )}
-                        </button>
-
-                      </motion.div>
-                    );
-                  })}
+                  {teamRecs.map(({ team: t, score, matchingSkills }) => (
+                    <TeamRecCard
+                      key={t.id}
+                      t={t}
+                      score={score}
+                      matchingSkills={matchingSkills}
+                      actionLoading={actionLoading}
+                      handleJoinRequest={handleJoinRequest}
+                      renderRoleBadge={renderRoleBadge}
+                    />
+                  ))}
                 </div>
               ) : (
                 <div style={{ background: "var(--bg2)", border: "1px solid var(--bdr)", borderRadius: "24px", padding: "60px 24px", textAlign: "center" }}>
@@ -662,5 +423,347 @@ export function MatchmakingClient({ currentUser, userTeams }: MatchmakingClientP
 
       </div>
     </div>
+  );
+}
+
+function DevRecCard({
+  u,
+  score,
+  isAlreadyInvited,
+  actionLoading,
+  handleInvite,
+  renderRoleBadge
+}: {
+  u: any;
+  score: number;
+  isAlreadyInvited: boolean;
+  actionLoading: string | null;
+  handleInvite: (userId: string) => void;
+  renderRoleBadge: (role: string) => React.ReactNode;
+}) {
+  const [hovered, setHovered] = useState(false);
+  const r = u.title?.toUpperCase();
+  let glowColor = "rgba(245, 166, 35, 0.15)";
+  let borderColor = "var(--bdr)";
+  if (r === "HUSTLER") {
+    glowColor = "rgba(45, 214, 122, 0.15)";
+    borderColor = "rgba(45, 214, 122, 0.4)";
+  } else if (r === "HIPSTER") {
+    glowColor = "rgba(167, 139, 250, 0.15)";
+    borderColor = "rgba(167, 139, 250, 0.4)";
+  } else if (r === "HACKER") {
+    glowColor = "rgba(245, 166, 35, 0.15)";
+    borderColor = "rgba(245, 166, 35, 0.4)";
+  }
+
+  return (
+    <motion.div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: hovered
+          ? `linear-gradient(145deg, var(--bg2) 0%, ${glowColor} 100%)`
+          : "var(--bg2)",
+        border: `1px solid ${hovered ? borderColor : "var(--bdr)"}`,
+        borderRadius: "24px",
+        padding: "24px",
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        overflow: "hidden",
+        transition: "all 0.22s ease",
+        transform: hovered ? "translateY(-5px)" : "translateY(0)",
+        boxShadow: hovered ? `0 12px 32px ${glowColor}, 0 4px 12px rgba(0,0,0,0.2)` : "none",
+      }}
+    >
+      {/* Corner Glow Accent */}
+      <div style={{
+        position: "absolute", top: 0, right: 0,
+        width: "80px", height: "80px",
+        background: `radial-gradient(circle at top right, ${glowColor} 0%, transparent 70%)`,
+        pointerEvents: "none",
+        opacity: hovered ? 1 : 0,
+        transition: "opacity 0.22s",
+      }} />
+
+      {/* Score Glow Badge */}
+      <div
+        style={{
+          position: "absolute",
+          top: "24px",
+          right: "24px",
+          background: "linear-gradient(135deg, rgba(245, 166, 35, 0.15) 0%, rgba(255, 192, 77, 0.15) 100%)",
+          color: "var(--ho)",
+          fontSize: "12px",
+          fontWeight: 800,
+          padding: "4px 10px",
+          borderRadius: "100px",
+          border: "1px solid rgba(245, 166, 35, 0.25)",
+        }}
+      >
+        Match Score: {score}
+      </div>
+
+      {/* User Info */}
+      <div style={{ display: "flex", gap: "16px", alignItems: "center", marginBottom: "20px", position: "relative", zIndex: 1 }}>
+        <div
+          style={{
+            width: "52px",
+            height: "52px",
+            borderRadius: "50%",
+            overflow: "hidden",
+            border: "1px solid var(--bdr)",
+          }}
+        >
+          {u.image ? (
+            <img src={u.image} alt={u.name || "User"} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          ) : (
+            <div style={{ width: "100%", height: "100%", background: "var(--ho)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "18px" }}>
+              {u.name?.[0].toUpperCase() || "U"}
+            </div>
+          )}
+        </div>
+        <div>
+          <h3 style={{ fontSize: "16px", fontWeight: 800, color: "var(--t)", margin: "0 0 6px 0" }}>
+            {u.name}
+          </h3>
+          {u.title ? renderRoleBadge(u.title) : (
+            <span style={{ fontSize: "11px", color: "var(--t3)", fontStyle: "italic" }}>Belum menentukan role</span>
+          )}
+        </div>
+      </div>
+
+      {/* Bio */}
+      <p 
+        style={{ 
+          fontSize: "13px", 
+          color: "var(--t2)", 
+          lineHeight: 1.6, 
+          margin: "0 0 20px 0",
+          display: "-webkit-box",
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden",
+          flex: 1,
+          position: "relative",
+          zIndex: 1
+        }}
+      >
+        {u.bio || "Tidak ada biodata dibagikan."}
+      </p>
+
+      {/* Skills */}
+      <div style={{ marginBottom: "24px", position: "relative", zIndex: 1 }}>
+        <div style={{ fontSize: "11px", color: "var(--t3)", textTransform: "uppercase", fontWeight: 800, letterSpacing: "0.03em", marginBottom: "8px" }}>Skills:</div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+          {u.skills.length > 0 ? (
+            u.skills.map((skill: string) => {
+              return (
+                <span
+                  key={skill}
+                  style={{
+                    background: "rgba(255, 255, 255, 0.04)",
+                    border: "1px solid var(--bdr)",
+                    borderRadius: "8px",
+                    padding: "4px 8px",
+                    fontSize: "11px",
+                    color: "var(--t2)",
+                  }}
+                >
+                  {skill}
+                </span>
+              );
+            })
+          ) : (
+            <span style={{ fontSize: "12px", color: "var(--t3)", fontStyle: "italic" }}>Tidak ada keahlian dicantumkan</span>
+          )}
+        </div>
+      </div>
+
+      {/* Invite Button */}
+      <button
+        onClick={() => handleInvite(u.id)}
+        disabled={isAlreadyInvited || actionLoading === `invite-${u.id}`}
+        className={`btn ${isAlreadyInvited ? "btn-dark" : "btn-honey"}`}
+        style={{ width: "100%", justifyContent: "center", position: "relative", zIndex: 1 }}
+      >
+        {actionLoading === `invite-${u.id}` ? (
+          "Mengundang..."
+        ) : isAlreadyInvited ? (
+          <>
+            <i className="ph-fill ph-check-circle" style={{ marginRight: "6px" }}></i>
+            Sudah Diundang
+          </>
+        ) : (
+          <>
+            <i className="ph-fill ph-paper-plane-tilt" style={{ marginRight: "6px" }}></i>
+            Undang Instan
+          </>
+        )}
+      </button>
+    </motion.div>
+  );
+}
+
+function TeamRecCard({
+  t,
+  score,
+  matchingSkills,
+  actionLoading,
+  handleJoinRequest,
+  renderRoleBadge
+}: {
+  t: any;
+  score: number;
+  matchingSkills: string[];
+  actionLoading: string | null;
+  handleJoinRequest: (teamId: string) => void;
+  renderRoleBadge: (role: string) => React.ReactNode;
+}) {
+  const [hovered, setHovered] = useState(false);
+  const glowColor = "rgba(245, 166, 35, 0.15)";
+  const borderColor = "var(--ho)";
+
+  // Cek role yang sudah ada di tim
+  const teamRoles: string[] = [];
+  if (t.leader.title) teamRoles.push(t.leader.title.toUpperCase());
+  t.members.forEach((m: any) => {
+    if (m.user.title) teamRoles.push(m.user.title.toUpperCase());
+  });
+
+  // Cari role yang masih kosong
+  const missing = ["HACKER", "HUSTLER", "HIPSTER"].filter(r => !teamRoles.includes(r));
+
+  return (
+    <motion.div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: hovered
+          ? `linear-gradient(145deg, var(--bg2) 0%, ${glowColor} 100%)`
+          : "var(--bg2)",
+        border: `1px solid ${hovered ? borderColor : "var(--bdr)"}`,
+        borderRadius: "24px",
+        padding: "24px",
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        overflow: "hidden",
+        transition: "all 0.22s ease",
+        transform: hovered ? "translateY(-5px)" : "translateY(0)",
+        boxShadow: hovered ? `0 12px 32px ${glowColor}, 0 4px 12px rgba(0,0,0,0.2)` : "none",
+      }}
+    >
+      {/* Corner Glow Accent */}
+      <div style={{
+        position: "absolute", top: 0, right: 0,
+        width: "80px", height: "80px",
+        background: `radial-gradient(circle at top right, ${glowColor} 0%, transparent 70%)`,
+        pointerEvents: "none",
+        opacity: hovered ? 1 : 0,
+        transition: "opacity 0.22s",
+      }} />
+
+      {/* Match Score */}
+      <div
+        style={{
+          position: "absolute",
+          top: "24px",
+          right: "24px",
+          background: "linear-gradient(135deg, rgba(245, 166, 35, 0.15) 0%, rgba(255, 192, 77, 0.15) 100%)",
+          color: "var(--ho)",
+          fontSize: "12px",
+          fontWeight: 800,
+          padding: "4px 10px",
+          borderRadius: "100px",
+          border: "1px solid rgba(245, 166, 35, 0.25)",
+        }}
+      >
+        Match: {score}
+      </div>
+
+      {/* Team Name & Leader */}
+      <div style={{ marginBottom: "20px", position: "relative", zIndex: 1 }}>
+        <h3 style={{ fontSize: "18px", fontWeight: 900, color: "var(--t)", margin: "0 0 6px 0" }}>
+          {t.name}
+        </h3>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", color: "var(--t3)" }}>
+          <span>Leader: <strong>{t.leader.name}</strong></span>
+        </div>
+      </div>
+
+      {/* Description */}
+      <p
+        style={{
+          fontSize: "13px",
+          color: "var(--t2)",
+          lineHeight: 1.6,
+          margin: "0 0 20px 0",
+          display: "-webkit-box",
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden",
+          flex: 1,
+          position: "relative",
+          zIndex: 1
+        }}
+      >
+        {t.description || "Tidak ada deskripsi tim dibagikan."}
+      </p>
+
+      {/* Role Needs */}
+      <div style={{ marginBottom: "20px", position: "relative", zIndex: 1 }}>
+        <div style={{ fontSize: "11px", color: "var(--t3)", textTransform: "uppercase", fontWeight: 800, letterSpacing: "0.03em", marginBottom: "8px" }}>Membutuhkan Peran:</div>
+        <div style={{ display: "flex", gap: "6px" }}>
+          {missing.length > 0 ? (
+            missing.map(r => renderRoleBadge(r))
+          ) : (
+            <span style={{ fontSize: "12px", color: "var(--t3)", fontStyle: "italic" }}>Tim sudah terisi lengkap</span>
+          )}
+        </div>
+      </div>
+
+      {/* Matching Skills */}
+      {matchingSkills.length > 0 && (
+        <div style={{ marginBottom: "24px", position: "relative", zIndex: 1 }}>
+          <div style={{ fontSize: "11px", color: "var(--t3)", textTransform: "uppercase", fontWeight: 800, letterSpacing: "0.03em", marginBottom: "8px" }}>Keahlian Anda yang Cocok:</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+            {matchingSkills.map((skill: string) => (
+              <span
+                key={skill}
+                style={{
+                  background: "rgba(245, 166, 35, 0.12)",
+                  border: "1px solid var(--ho)",
+                  color: "var(--ho)",
+                  borderRadius: "8px",
+                  padding: "4px 8px",
+                  fontSize: "11px",
+                  fontWeight: 700
+                }}
+              >
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Action Request Join */}
+      <button
+        onClick={() => handleJoinRequest(t.id)}
+        disabled={actionLoading === `join-${t.id}`}
+        className="btn btn-honey"
+        style={{ width: "100%", justifyContent: "center", position: "relative", zIndex: 1 }}
+      >
+        {actionLoading === `join-${t.id}` ? (
+          "Mengirim..."
+        ) : (
+          <>
+            <i className="ph-bold ph-plus-circle" style={{ marginRight: "6px" }}></i>
+            Minta Bergabung
+          </>
+        )}
+      </button>
+    </motion.div>
   );
 }

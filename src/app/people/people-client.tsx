@@ -297,7 +297,9 @@ function PersonCard({ user, index, highlighted = false }: { user: User; index: n
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
           style={{
-            background: highlighted
+            background: hovered
+              ? `linear-gradient(145deg, var(--bg2) 0%, ${roleConfig?.badge?.bg ?? "rgba(245, 166, 35, 0.15)"} 100%)`
+              : highlighted
               ? "linear-gradient(135deg, var(--bg2), rgba(245, 166, 35, 0.03))"
               : "var(--bg2)",
             border: `1px solid ${hovered ? (roleConfig?.badge?.border ?? "var(--hbd)") : highlighted ? "var(--hbd)" : "var(--b)"}`,

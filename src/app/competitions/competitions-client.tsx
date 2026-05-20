@@ -305,7 +305,9 @@ function CompetitionCard({ competition, index, onClick }: { competition: Competi
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: "var(--bg2)",
+        background: hovered
+          ? `linear-gradient(145deg, var(--bg2) 0%, rgba(245, 166, 35, 0.15) 100%)`
+          : "var(--bg2)",
         border: `1px solid ${hovered ? "var(--hbd)" : "var(--b)"}`,
         borderRadius: "20px", overflow: "hidden", cursor: "pointer",
         transition: "all 0.2s ease",
@@ -409,7 +411,9 @@ function ProjectCard({ project, index }: { project: typeof PROJECTS[0]; index: n
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: "var(--bg2)",
+        background: hovered
+          ? `linear-gradient(145deg, var(--bg2) 0%, ${badge.bg} 100%)`
+          : "var(--bg2)",
         border: `1px solid ${hovered ? badge.color + "60" : "var(--b)"}`,
         borderRadius: "20px", padding: "20px", cursor: "pointer",
         transition: "all 0.2s ease",
