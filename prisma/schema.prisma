@@ -96,6 +96,9 @@ model User {
   notificationsSent     Notification[] @relation("Sender")
   endorsementsSent     Endorsement[] @relation("EndorsementSender")
   endorsementsReceived Endorsement[] @relation("EndorsementRecipient")
+  messages             Message[]
+  assignedTasks        Task[]
+  projects             Project[]
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -110,6 +113,9 @@ model Team {
   leader      User     @relation("TeamLeader", fields: [leaderId], references: [id])
   
   members     TeamMember[]
+  messages    Message[]
+  tasks       Task[]
+  project     Project?
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -171,4 +177,60 @@ model Endorsement {
   createdAt   DateTime @default(now())
 
   @@unique([senderId, recipientId, skill])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  
+  teamId    String
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  
+  senderId  String
+  sender    User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([teamId])
+  @@index([senderId])
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  title       String
+  description String?   @db.Text
+  status      String    @default("TODO") // "TODO", "IN_PROGRESS", "DONE"
+  priority    String    @default("MEDIUM") // "LOW", "MEDIUM", "HIGH"
+  dueDate     DateTime?
+  
+  teamId      String
+  team        Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  
+  assigneeId  String?
+  assignee    User?     @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([teamId])
+  @@index([assigneeId])
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  imageUrl    String?
+  demoUrl     String?
+  githubUrl   String?
+  
+  teamId      String?  @unique
+  team        Team?    @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  
+  userId      String   // Creator
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
 }

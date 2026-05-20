@@ -6,6 +6,9 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { deleteTeam, leaveTeam, removeMemberFromTeam } from "@/actions";
 import { InviteMemberModal } from "./invite-member-modal";
+import { TeamChat } from "./team-chat";
+import { TeamKanban } from "./team-kanban";
+import { ProjectShowcase } from "./team-showcase";
 
 interface TeamMember {
   id: string;
@@ -118,6 +121,7 @@ export function TeamDetailClient({ team, currentUserId, isLeader, isMember }: Te
   const [loading, setLoading] = useState(false);
   const [confirm, setConfirm] = useState<{ msg: string; action: () => Promise<void> } | null>(null);
   const { toast, show: showToast } = useToast();
+  const [activeTab, setActiveTab] = useState<"members" | "chat" | "kanban" | "showcase">("members");
 
   const getInitials = (name: string | null) => {
     if (!name) return "??";
@@ -309,181 +313,272 @@ export function TeamDetailClient({ team, currentUserId, isLeader, isMember }: Te
             </div>
           </div>
 
-          {/* Members Section */}
+          {/* Tabs Navigation */}
           <div style={{
-            background: 'var(--bg2)',
-            border: '1px solid var(--bdr)',
-            borderRadius: '24px',
-            padding: '32px'
+            display: 'flex',
+            gap: '8px',
+            marginBottom: '28px',
+            overflowX: 'auto',
+            paddingBottom: '8px',
+            borderBottom: '1px solid var(--bdr)'
           }}>
-            <h2 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--t)', marginBottom: '24px' }}>
-              Team Members ({acceptedMembers.length})
-            </h2>
+            {[
+              { id: 'members', label: 'Anggota Tim', icon: 'ph-fill ph-users' },
+              { id: 'showcase', label: 'Project Showcase', icon: 'ph-fill ph-rocket' },
+              ...((isLeader || isMember) ? [
+                { id: 'chat', label: 'Chat Room', icon: 'ph-fill ph-chat-circle-text' },
+                { id: 'kanban', label: 'Papan Tugas (Kanban)', icon: 'ph-fill ph-kanban' },
+              ] : [])
+            ].map(tab => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`btn btn-sm`}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    borderRadius: '100px',
+                    padding: '10px 20px',
+                    fontWeight: 700,
+                    fontSize: '14px',
+                    whiteSpace: 'nowrap',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    background: isActive ? 'linear-gradient(135deg, #f5a623, #ffb83d)' : 'var(--bg2)',
+                    border: isActive ? 'none' : '1px solid var(--bdr)',
+                    color: isActive ? '#fff' : 'var(--t2)',
+                  }}
+                >
+                  <i className={tab.icon} style={{ fontSize: '16px' }}></i>
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
 
-            {acceptedMembers.length > 0 ? (
-              <div style={{ display: 'grid', gap: '16px' }}>
-                {acceptedMembers.map(member => (
-                  <div 
-                    key={member.id}
-                    style={{
-                      background: 'var(--bg)',
-                      border: '1px solid var(--bdr)',
-                      borderRadius: '16px',
-                      padding: '20px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between'
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                      {member.user.image ? (
-                        <img 
-                          src={member.user.image} 
-                          alt={member.user.name || "Member"} 
+          {/* Active Tab Content */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.15 }}
+            >
+              {activeTab === "members" && (
+                <div style={{
+                  background: 'var(--bg2)',
+                  border: '1px solid var(--bdr)',
+                  borderRadius: '24px',
+                  padding: '32px'
+                }}>
+                  <h2 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--t)', marginBottom: '24px' }}>
+                    Team Members ({acceptedMembers.length})
+                  </h2>
+
+                  {acceptedMembers.length > 0 ? (
+                    <div style={{ display: 'grid', gap: '16px' }}>
+                      {acceptedMembers.map(member => (
+                        <div 
+                          key={member.id}
                           style={{
-                            width: '56px',
-                            height: '56px',
-                            borderRadius: '50%',
-                            objectFit: 'cover'
-                          }}
-                        />
-                      ) : (
-                        <div style={{
-                          width: '56px',
-                          height: '56px',
-                          borderRadius: '50%',
-                          background: 'linear-gradient(135deg, #f5a623, #ffc04d)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '20px',
-                          fontWeight: 800,
-                          color: '#fff'
-                        }}>
-                          {getInitials(member.user.name)}
-                        </div>
-                      )}
-                      <div>
-                        <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--t)', marginBottom: '4px' }}>
-                          {member.user.name || "Unknown"}
-                        </div>
-                        {member.user.title && (
-                          <div style={{ fontSize: '13px', color: 'var(--t2)', marginBottom: '8px' }}>
-                            {member.user.title}
-                          </div>
-                        )}
-                        {member.user.skills && member.user.skills.length > 0 && (
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                            {member.user.skills.slice(0, 3).map(skill => (
-                              <span
-                                key={skill}
-                                style={{
-                                  background: 'var(--bg2)',
-                                  border: '1px solid var(--bdr)',
-                                  padding: '3px 8px',
-                                  borderRadius: '100px',
-                                  fontSize: '11px',
-                                  color: 'var(--t)',
-                                  fontWeight: 600
-                                }}
-                              >
-                                {skill}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    
-                    {isLeader && member.userId !== currentUserId && (
-                      <button
-                        className="btn btn-sm"
-                        style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid #ef4444', color: '#ef4444' }}
-                        onClick={() => handleRemoveMember(member.userId, member.user.name)}
-                      >
-                        <i className="ph-fill ph-x"></i> Remove
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div style={{ textAlign: 'center', padding: '40px', color: 'var(--t2)' }}>
-                <i className="ph-fill ph-users" style={{ fontSize: '48px', marginBottom: '16px', display: 'block' }}></i>
-                <p>No members yet. {isLeader && "Invite some people to join your team!"}</p>
-              </div>
-            )}
-
-            {/* Pending Invitations (Leader only) */}
-            {isLeader && pendingMembers.length > 0 && (
-              <div style={{ marginTop: '32px', paddingTop: '32px', borderTop: '1px solid var(--bdr)' }}>
-                <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--t)', marginBottom: '16px' }}>
-                  Pending Invitations ({pendingMembers.length})
-                </h3>
-                <div style={{ display: 'grid', gap: '12px' }}>
-                  {pendingMembers.map(member => (
-                    <div 
-                      key={member.id}
-                      style={{
-                        background: 'rgba(245, 166, 35, 0.05)',
-                        border: '1px solid rgba(245, 166, 35, 0.2)',
-                        borderRadius: '12px',
-                        padding: '16px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between'
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        {member.user.image ? (
-                          <img 
-                            src={member.user.image} 
-                            alt={member.user.name || "Member"} 
-                            style={{
-                              width: '40px',
-                              height: '40px',
-                              borderRadius: '50%',
-                              objectFit: 'cover'
-                            }}
-                          />
-                        ) : (
-                          <div style={{
-                            width: '40px',
-                            height: '40px',
-                            borderRadius: '50%',
-                            background: 'linear-gradient(135deg, #f5a623, #ffc04d)',
+                            background: 'var(--bg)',
+                            border: '1px solid var(--bdr)',
+                            borderRadius: '16px',
+                            padding: '20px',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '16px',
-                            fontWeight: 800,
-                            color: '#fff'
-                          }}>
-                            {getInitials(member.user.name)}
+                            justifyContent: 'space-between'
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                            {member.user.image ? (
+                              <img 
+                                src={member.user.image} 
+                                alt={member.user.name || "Member"} 
+                                style={{
+                                  width: '56px',
+                                  height: '56px',
+                                  borderRadius: '50%',
+                                  objectFit: 'cover'
+                                }}
+                              />
+                            ) : (
+                              <div style={{
+                                width: '56px',
+                                height: '56px',
+                                borderRadius: '50%',
+                                background: 'linear-gradient(135deg, #f5a623, #ffc04d)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '20px',
+                                fontWeight: 800,
+                                color: '#fff'
+                              }}>
+                                {getInitials(member.user.name)}
+                              </div>
+                            )}
+                            <div>
+                              <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--t)', marginBottom: '4px' }}>
+                                {member.user.name || "Unknown"}
+                              </div>
+                              {member.user.title && (
+                                <div style={{ fontSize: '13px', color: 'var(--t2)', marginBottom: '8px' }}>
+                                  {member.user.title}
+                                </div>
+                              )}
+                              {member.user.skills && member.user.skills.length > 0 && (
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                  {member.user.skills.slice(0, 3).map(skill => (
+                                    <span
+                                      key={skill}
+                                      style={{
+                                        background: 'var(--bg2)',
+                                        border: '1px solid var(--bdr)',
+                                        padding: '3px 8px',
+                                        borderRadius: '100px',
+                                        fontSize: '11px',
+                                        color: 'var(--t)',
+                                        fontWeight: 600
+                                      }}
+                                    >
+                                      {skill}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        )}
-                        <div>
-                          <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--t)' }}>
-                            {member.user.name || "Unknown"}
-                          </div>
-                          <div style={{ fontSize: '12px', color: 'var(--t2)' }}>
-                            Waiting for response...
-                          </div>
+                          
+                          {isLeader && member.userId !== currentUserId && (
+                            <button
+                              className="btn btn-sm"
+                              style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid #ef4444', color: '#ef4444' }}
+                              onClick={() => handleRemoveMember(member.userId, member.user.name)}
+                            >
+                              <i className="ph-fill ph-x"></i> Remove
+                            </button>
+                          )}
                         </div>
-                      </div>
-                      <button
-                        className="btn btn-sm"
-                        style={{ background: 'var(--bg)', border: '1px solid var(--bdr)', color: 'var(--t)' }}
-                        onClick={() => handleRemoveMember(member.userId, member.user.name)}
-                      >
-                        Cancel
-                      </button>
+                      ))}
                     </div>
-                  ))}
+                  ) : (
+                    <div style={{ textAlign: 'center', padding: '40px', color: 'var(--t2)' }}>
+                      <i className="ph-fill ph-users" style={{ fontSize: '48px', marginBottom: '16px', display: 'block' }}></i>
+                      <p>No members yet. {isLeader && "Invite some people to join your team!"}</p>
+                    </div>
+                  )}
+
+                  {/* Pending Invitations (Leader only) */}
+                  {isLeader && pendingMembers.length > 0 && (
+                    <div style={{ marginTop: '32px', paddingTop: '32px', borderTop: '1px solid var(--bdr)' }}>
+                      <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--t)', marginBottom: '16px' }}>
+                        Pending Invitations ({pendingMembers.length})
+                      </h3>
+                      <div style={{ display: 'grid', gap: '12px' }}>
+                        {pendingMembers.map(member => (
+                          <div 
+                            key={member.id}
+                            style={{
+                              background: 'rgba(245, 166, 35, 0.05)',
+                              border: '1px solid rgba(245, 166, 35, 0.2)',
+                              borderRadius: '12px',
+                              padding: '16px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between'
+                            }}
+                          >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                              {member.user.image ? (
+                                <img 
+                                  src={member.user.image} 
+                                  alt={member.user.name || "Member"} 
+                                  style={{
+                                    width: '40px',
+                                    height: '40px',
+                                    borderRadius: '50%',
+                                    objectFit: 'cover'
+                                  }}
+                                />
+                              ) : (
+                                <div style={{
+                                  width: '40px',
+                                  height: '40px',
+                                  borderRadius: '50%',
+                                  background: 'linear-gradient(135deg, #f5a623, #ffc04d)',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  fontSize: '16px',
+                                  fontWeight: 800,
+                                  color: '#fff'
+                                }}>
+                                  {getInitials(member.user.name)}
+                                </div>
+                              )}
+                              <div>
+                                <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--t)' }}>
+                                  {member.user.name || "Unknown"}
+                                </div>
+                                <div style={{ fontSize: '12px', color: 'var(--t2)' }}>
+                                  Waiting for response...
+                                </div>
+                              </div>
+                            </div>
+                            <button
+                              className="btn btn-sm"
+                              style={{ background: 'var(--bg)', border: '1px solid var(--bdr)', color: 'var(--t)' }}
+                              onClick={() => handleRemoveMember(member.userId, member.user.name)}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+
+              {activeTab === "chat" && (isLeader || isMember) && (
+                <TeamChat
+                  teamId={team.id}
+                  currentUserId={currentUserId}
+                  members={team.members}
+                  leader={{
+                    id: team.leaderId,
+                    name: team.leader.name,
+                    image: team.leader.image,
+                  }}
+                />
+              )}
+
+              {activeTab === "kanban" && (isLeader || isMember) && (
+                <TeamKanban
+                  teamId={team.id}
+                  members={team.members}
+                  leader={{
+                    id: team.leaderId,
+                    name: team.leader.name,
+                    image: team.leader.image,
+                  }}
+                />
+              )}
+
+              {activeTab === "showcase" && (
+                <ProjectShowcase
+                  teamId={team.id}
+                  isMember={isMember}
+                  isLeader={isLeader}
+                />
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
 
