@@ -4,14 +4,15 @@ import { getCompetitionById } from "@/actions";
 import { redirect } from "next/navigation";
 import { CompetitionDetailClient } from "./competition-detail-client";
 
-export default async function CompetitionDetailPage({ params }: { params: { id: string } }) {
+export default async function CompetitionDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await auth();
   
   if (!session?.user?.email) {
     redirect("/auth/signin");
   }
 
-  const result = await getCompetitionById(params.id);
+  const result = await getCompetitionById(id);
 
   if (!result.success || !result.data) {
     return (

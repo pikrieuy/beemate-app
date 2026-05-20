@@ -5,10 +5,12 @@ import { TeamDetailClient } from "./team-detail-client";
 export default async function TeamDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
+
   const [teamResult, userResult] = await Promise.all([
-    getTeamById(params.id),
+    getTeamById(id),
     getCurrentUser(),
   ]);
 

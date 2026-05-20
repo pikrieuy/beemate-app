@@ -5,9 +5,10 @@ import { PublicProfileClient } from "./public-profile-client";
 export default async function PublicProfilePage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const result = await getUserById(params.id);
+  const { id } = await params;
+  const result = await getUserById(id);
 
   if (!result.success || !result.data) {
     notFound();

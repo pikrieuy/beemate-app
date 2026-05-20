@@ -4,14 +4,15 @@ import { getCompetitionById } from "@/actions";
 import { redirect } from "next/navigation";
 import { EditCompetitionClient } from "./edit-competition-client";
 
-export default async function EditCompetitionPage({ params }: { params: { id: string } }) {
+export default async function EditCompetitionPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await auth();
   
   if (!session?.user?.email) {
     redirect("/auth/signin");
   }
 
-  const result = await getCompetitionById(params.id);
+  const result = await getCompetitionById(id);
 
   if (!result.success || !result.data) {
     redirect("/competitions");
@@ -26,7 +27,7 @@ export default async function EditCompetitionPage({ params }: { params: { id: st
   const canEdit = user && (user.id === result.data.authorId || user.role === "ADMIN");
 
   if (!canEdit) {
-    redirect(`/competitions/${params.id}`);
+    redirect(`/competitions/${id}`);
   }
 
   return <EditCompetitionClient competition={result.data} />;
