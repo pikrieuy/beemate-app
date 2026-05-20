@@ -563,8 +563,8 @@ src/
 - Video call integration
 - Team collaboration tools
 - Project showcase
-- Skill endorsements
-- Recommendation system
+- [x] Skill endorsements (COMPLETED)
+- [x] Recommendation system (COMPLETED)
 
 ### Phase 15: Mobile App
 - React Native app
