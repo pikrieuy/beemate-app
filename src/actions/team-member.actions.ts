@@ -4,6 +4,7 @@ import { auth } from "@/auth"
 import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 import { createNotification } from "./notification.actions"
+import { sendTeamInviteEmail, sendInviteAcceptedEmail } from "@/lib/email"
 
 /**
  * Invite user to team
@@ -77,6 +78,21 @@ export async function inviteUserToTeam(teamId: string, userId: string) {
       message: `${currentUser.name} invited you to join team "${team.name}"`,
     })
 
+    // Send email notification (fire-and-forget, non-blocking)
+    const invitedUser = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { email: true, name: true },
+    })
+    if (invitedUser?.email) {
+      sendTeamInviteEmail({
+        recipientEmail: invitedUser.email,
+        recipientName: invitedUser.name ?? "Pengguna",
+        senderName: currentUser.name ?? "Seseorang",
+        teamName: team.name,
+        teamDescription: team.description,
+      }).catch(() => {}); // silently ignore email errors
+    }
+
     revalidatePath(`/teams/${teamId}`)
     return { success: true, data: teamMember }
   } catch (error) {
@@ -147,6 +163,21 @@ export async function acceptTeamInvitation(teamId: string) {
       type: "ACCEPT",
       message: `${user.name} accepted your invitation to join "${teamMember.team.name}"`,
     })
+
+    // Send email to team leader (fire-and-forget)
+    const leader = await prisma.user.findUnique({
+      where: { id: teamMember.team.leaderId },
+      select: { email: true, name: true },
+    })
+    if (leader?.email) {
+      sendInviteAcceptedEmail({
+        recipientEmail: leader.email,
+        recipientName: leader.name ?? "Leader",
+        acceptorName: user.name ?? "Seseorang",
+        teamName: teamMember.team.name,
+        teamId,
+      }).catch(() => {});
+    }
 
     revalidatePath(`/teams/${teamId}`)
     revalidatePath("/notifications")
