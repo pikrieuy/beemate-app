@@ -177,7 +177,7 @@ export function MatchmakingClient({ currentUser, userTeams }: MatchmakingClientP
 
   return (
     <div className="page on">
-      <div className="shell" style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px" }}>
+      <div className="main" style={{ maxWidth: "1200px", margin: "0 auto", padding: "24px 20px" }}>
         
         {/* Banner Alert Sukses */}
         <AnimatePresence>
