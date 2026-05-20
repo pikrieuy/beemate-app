@@ -1,191 +1,117 @@
-# BeeMate — Presentasi Produk
-
-> Platform matchmaking untuk mahasiswa yang ingin membentuk tim, ikut kompetisi, dan berkolaborasi dalam proyek.
+# BeeMate — Presentasi untuk Dosen
 
 ---
 
-## Apa itu BeeMate?
+## Masalah yang Kami Selesaikan
 
-BeeMate adalah platform web yang mempertemukan tiga tipe mahasiswa:
+Bayangkan kamu mahasiswa semester 5. Ada lomba bisnis bergengsi bulan depan — hadiahnya besar, tapi kamu butuh tim. Kamu butuh teman yang jago coding, satu lagi yang bisa desain, dan satu lagi yang paham bisnis.
 
-- **Hacker** — Developer, engineer, programmer
-- **Hustler** — Business, marketing, product
-- **Hipster** — Designer, creative, UI/UX
+**Masalahnya:** kamu tidak tahu siapa yang bisa diajak. Grup WA angkatan ramai tapi tidak ada yang respon. Akhirnya kamu ikut lomba seadanya, atau malah tidak ikut sama sekali.
 
-Tujuannya sederhana: mahasiswa sering punya ide atau mau ikut lomba, tapi susah cari tim yang tepat. BeeMate menjadi jembatan itu.
+**Ini masalah nyata yang dialami hampir semua mahasiswa.**
 
 ---
 
-## Fitur yang Sudah Jalan ✅
+## Solusi: BeeMate
 
-### 1. Autentikasi — Google OAuth
-- Login satu klik dengan akun Google
-- Session aman dengan JWT (NextAuth v5)
-- Redirect otomatis ke halaman profil setelah login pertama
+BeeMate adalah **platform web untuk mencari teman tim** — khusus untuk mahasiswa yang mau ikut kompetisi, hackathon, atau mengerjakan proyek bersama.
 
-### 2. Profil Pengguna
-- Upload foto profil (tersimpan di Supabase Storage)
-- Isi bio, title (Hacker/Hustler/Hipster), skills, portfolio URL
-- Foto langsung update di navbar tanpa reload
-- Halaman profil publik — bisa dilihat orang lain
+Analoginya seperti **LinkedIn, tapi khusus untuk cari tim lomba kampus.**
 
-### 3. People Directory (`/people`)
-- Lihat semua pengguna terdaftar
-- Filter berdasarkan role: Hacker, Hustler, Hipster
-- Search real-time by nama atau skill
-- Kartu profil dengan avatar, role badge berwarna, skill chips
-- Klik kartu → langsung ke profil lengkap
-
-### 4. Team Management (`/teams`)
-- Browse semua tim yang ada
-- Sidebar filter: sort by terbaru/terlama/anggota/nama, filter ukuran tim
-- Buat tim baru dengan nama dan deskripsi
-- Halaman detail tim: info, daftar anggota, skill tiap anggota
-- **Leader bisa:** undang anggota, hapus anggota, hapus tim
-- **Member bisa:** keluar dari tim
-
-### 5. Sistem Undangan Tim
-- Leader cari user → kirim undangan
-- User terima notifikasi → bisa Accept atau Reject
-- Status undangan: Pending / Accepted / Rejected
-- Badge notifikasi real-time di navbar (update tiap 30 detik)
-
-### 6. Kompetisi & Open Projects (`/competitions`)
-- **Tab Kompetisi:** lomba/hackathon yang diposting admin, filter upcoming/past
-- **Tab Open Projects:** proyek mahasiswa yang cari anggota, filter by tipe
-- Sidebar bergaya icon berwarna per kategori
-- Search terintegrasi untuk kedua tab
-- Admin bisa post kompetisi baru dengan banner image
-
-### 7. Dashboard (`/dashboard`)
-- Greeting personal berdasarkan waktu
-- Stats card animasi: tim dibuat, tim diikuti, undangan masuk, kompetisi aktif
-- Hero card dengan efek tilt 3D saat hover
-- Section: Tim Kamu, Undangan Masuk, Kompetisi Mendatang
-- Quick actions: Buat Tim, Cari Orang, Kompetisi
-
-### 8. Notifikasi (`/notifications`)
-- Semua notifikasi masuk (undangan tim, dll)
-- Accept/Reject langsung dari halaman notifikasi
-- Mark as read
-
-### 9. Admin Panel (`/admin`)
-- Dashboard admin: total user, tim, kompetisi
-- Manajemen user: lihat semua user, ubah role (USER ↔ ADMIN)
-- Manajemen kompetisi: edit/hapus semua kompetisi
-- Hanya bisa diakses oleh user dengan role ADMIN
-
-### 10. Settings (`/settings`)
-- Akun & Profil
-- Tampilan (dark/light mode toggle)
-- Sign out
+Bisa diakses di: `beemate-app.vercel.app`
 
 ---
 
-## Tech Stack
+## Siapa Penggunanya?
 
-| Layer | Teknologi |
-|-------|-----------|
-| Framework | Next.js 16.2 (App Router) |
-| Language | TypeScript |
-| UI | React 19 + Framer Motion |
-| Styling | Tailwind CSS v4 + Vanilla CSS |
-| Auth | NextAuth v5 (Google OAuth) |
-| Database | PostgreSQL via Supabase |
-| ORM | Prisma v7 |
-| Storage | Supabase Storage |
-| Deployment | Vercel |
-| Icons | Phosphor Icons |
-| Fonts | Sora + Plus Jakarta Sans |
+Kami membagi mahasiswa ke dalam 3 tipe:
+
+| Tipe | Artinya | Contoh |
+|------|---------|--------|
+| 🔧 **Hacker** | Yang jago teknis | Programmer, data scientist |
+| 💼 **Hustler** | Yang jago bisnis | Marketing, business development |
+| 🎨 **Hipster** | Yang jago kreatif | Desainer, UI/UX, konten kreator |
+
+Tim yang ideal biasanya butuh kombinasi ketiganya. BeeMate membantu mereka saling menemukan.
 
 ---
 
-## Database Schema (8 Tabel)
+## Apa Saja yang Bisa Dilakukan di BeeMate?
 
-```
-User          → profil, role, skills, bio
-Account       → OAuth data (NextAuth)
-Session       → session management
-Team          → nama, deskripsi, leader
-TeamMember    → relasi user-team, status undangan
-Competition   → lomba, deadline, banner
-Notification  → notifikasi antar user
-VerificationToken → auth token
-```
+### 1. Buat Profil
+Mahasiswa daftar pakai akun Google (tidak perlu buat password baru). Lalu isi profil: foto, keahlian, bio singkat, dan link portfolio.
 
----
+### 2. Cari Orang
+Ada halaman khusus untuk browse semua mahasiswa yang terdaftar. Bisa filter berdasarkan tipe (Hacker/Hustler/Hipster) atau cari berdasarkan skill tertentu seperti "Python" atau "Figma".
 
-## Status Deployment
+### 3. Buat Tim
+Bisa buat tim dengan nama dan deskripsi. Setelah itu, undang anggota yang cocok langsung dari platform. Calon anggota akan dapat notifikasi dan bisa terima atau tolak undangan.
 
-| Komponen | Status |
-|----------|--------|
-| Web App | ✅ Live di Vercel |
-| Database | ✅ Supabase PostgreSQL |
-| File Storage | ✅ Supabase Storage |
-| Google OAuth | ✅ Production ready |
-| Auto-deploy | ✅ Push ke GitHub → langsung deploy |
+### 4. Lihat Kompetisi
+Ada halaman khusus yang menampilkan lomba-lomba aktif beserta deadline-nya. Mahasiswa bisa langsung tahu lomba apa yang sedang buka pendaftaran.
+
+### 5. Open Projects
+Selain lomba, mahasiswa juga bisa posting proyek yang butuh anggota — misalnya startup kecil-kecilan atau proyek penelitian yang butuh kolaborator.
+
+### 6. Dashboard Pribadi
+Setiap pengguna punya halaman ringkasan: tim apa yang diikuti, undangan yang masuk, dan lomba apa yang akan datang.
 
 ---
 
-## Yang Belum Ada / Masih Dummy 🔜
+## Sudah Sejauh Mana?
 
-### Data Dummy (belum connect ke database)
-- **Open Projects** di tab Competitions — masih hardcoded, belum ada tabel `Project` di database
-- **Settings page** — form nama/email masih hardcoded, belum baca dari session
+Platform ini **sudah live dan bisa diakses sekarang** di internet.
 
-### Fitur Belum Dibangun
-- Halaman profil publik belum ada tombol "Invite to Team" yang fungsional
-- Tidak ada sistem rating/review antar user
-- Tidak ada fitur chat/messaging antar anggota tim
-- Tidak ada email notification (hanya in-app)
-- Mobile app belum ada
-
----
-
-## Roadmap Pengembangan Selanjutnya
-
-### Jangka Pendek (1–2 bulan)
-1. **Connect Open Projects ke database** — buat tabel `Project`, user bisa post proyek dan cari anggota
-2. **Fix Settings page** — baca nama/email dari session, bisa update langsung
-3. **Invite to Team dari profil publik** — tombol invite langsung dari halaman profil orang lain
-4. **Mobile responsive** — optimasi tampilan untuk layar kecil
-
-### Jangka Menengah (3–6 bulan)
-5. **Real-time notifications** — pakai Supabase Realtime, tidak perlu polling 30 detik
-6. **Email notifications** — kirim email saat dapat undangan tim
-7. **Team workspace** — halaman kolaborasi tim: task list, file sharing, progress tracking
-8. **Skill endorsement** — anggota tim bisa endorse skill satu sama lain
-9. **Advanced search** — filter people by kampus, semester, ketersediaan
-
-### Jangka Panjang (6+ bulan)
-10. **Recommendation system** — AI matching berdasarkan skill dan preferensi
-11. **Competition registration** — daftar lomba langsung dari platform, bukan redirect ke link eksternal
-12. **Portfolio showcase** — user bisa upload project portfolio dengan gambar
-13. **Analytics dashboard** — statistik untuk organizer lomba
-14. **Mobile app** — React Native untuk iOS dan Android
+Yang sudah berjalan:
+- ✅ Login dengan Google
+- ✅ Buat dan edit profil lengkap dengan foto
+- ✅ Cari dan filter mahasiswa
+- ✅ Buat tim, undang anggota, kelola tim
+- ✅ Sistem notifikasi undangan (terima/tolak)
+- ✅ Halaman kompetisi dan open projects
+- ✅ Dashboard personal
+- ✅ Panel admin untuk kelola konten
 
 ---
 
-## Angka Saat Ini
+## Yang Masih Dikembangkan
 
-- **28** Server Actions (fungsi backend)
-- **8** Tabel database
-- **15+** Halaman/route
-- **100%** TypeScript
-- **0** Downtime sejak deploy
+- Fitur Open Projects masih menggunakan data contoh — belum bisa diisi oleh pengguna sendiri
+- Belum ada fitur chat antar anggota tim
+- Belum ada notifikasi lewat email
 
 ---
 
-## Demo Flow (untuk presentasi)
+## Rencana ke Depan
 
-1. Buka `beemate-app.vercel.app`
-2. Login dengan Google
-3. Lengkapi profil → upload foto, isi skills
-4. Browse People → filter by Hacker
-5. Buat tim baru → undang anggota
-6. Cek notifikasi → accept undangan
-7. Buka Competitions → lihat lomba + open projects
-8. Dashboard → lihat stats dan tim
+**3–6 bulan ke depan:**
+- Pengguna bisa posting proyek sendiri dan cari anggota
+- Notifikasi lewat email
+- Ruang kerja tim — bisa diskusi dan bagi tugas dalam satu tempat
+
+**6–12 bulan ke depan:**
+- Sistem rekomendasi — platform otomatis sarankan orang yang cocok untuk timmu
+- Daftar lomba langsung dari platform tanpa perlu pindah ke website lain
+- Aplikasi mobile (Android & iOS)
+
+---
+
+## Kenapa Ini Punya Nilai Bisnis?
+
+1. **Pasar jelas** — jutaan mahasiswa aktif di Indonesia, banyak yang ikut lomba setiap tahun
+2. **Masalah nyata** — kesulitan cari tim adalah keluhan umum yang belum ada solusi digitalnya
+3. **Model monetisasi yang mungkin:**
+   - Penyelenggara lomba bisa bayar untuk pasang kompetisi secara featured
+   - Fitur premium untuk profil yang lebih menonjol
+   - Kerjasama dengan kampus atau komunitas mahasiswa
+
+---
+
+## Ringkasan
+
+> BeeMate adalah platform digital yang membantu mahasiswa menemukan teman tim yang tepat untuk kompetisi dan proyek — cepat, mudah, dan tanpa perlu repot tanya satu per satu di grup WA.
+
+Platform sudah bisa diakses, sudah punya pengguna awal, dan siap dikembangkan lebih lanjut.
 
 ---
 
