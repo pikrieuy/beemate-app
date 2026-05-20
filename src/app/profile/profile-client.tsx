@@ -14,6 +14,10 @@ interface ProfileClientProps {
     title: string | null;
     portfolioUrl: string | null;
     role?: string;
+    endorsementsReceived?: {
+      senderId: string;
+      skill: string;
+    }[];
   };
   teams: {
     asLeader: any[];
@@ -373,22 +377,44 @@ export function ProfileClient({ user, teams }: ProfileClientProps) {
                 </div>
                 {user.skills && user.skills.length > 0 ? (
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                    {user.skills.map(skill => (
-                      <span 
-                        key={skill} 
-                        style={{ 
-                          background: 'var(--bg)', 
-                          border: '1px solid var(--bdr)', 
-                          padding: '6px 12px', 
-                          borderRadius: '100px', 
-                          fontSize: '13px', 
-                          color: 'var(--t)', 
-                          fontWeight: 600 
-                        }}
-                      >
-                        {skill}
-                      </span>
-                    ))}
+                    {user.skills.map(skill => {
+                      const count = (user.endorsementsReceived || []).filter(e => e.skill === skill).length;
+
+                      return (
+                        <span 
+                          key={skill} 
+                          style={{ 
+                            background: 'var(--bg)', 
+                            border: '1px solid var(--bdr)', 
+                            padding: '6px 12px', 
+                            borderRadius: '100px', 
+                            fontSize: '13px', 
+                            color: 'var(--t)', 
+                            fontWeight: 600,
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                          }}
+                        >
+                          <span>{skill}</span>
+                          {count > 0 && (
+                            <span style={{ 
+                              display: 'inline-flex', 
+                              alignItems: 'center', 
+                              gap: '3px',
+                              color: 'var(--ho)',
+                              fontSize: '11px',
+                              borderLeft: '1px solid var(--bdr)',
+                              paddingLeft: '6px',
+                              marginLeft: '2px',
+                            }}>
+                              <i className="ph-fill ph-thumbs-up" style={{ fontSize: '12px' }}></i>
+                              <span>{count}</span>
+                            </span>
+                          )}
+                        </span>
+                      );
+                    })}
                   </div>
                 ) : (
                   <p style={{ fontSize: '13px', color: 'var(--t2)' }}>

@@ -1,4 +1,5 @@
 import { getUserById } from "@/actions";
+import { auth } from "@/auth";
 import { notFound } from "next/navigation";
 import { PublicProfileClient } from "./public-profile-client";
 
@@ -14,7 +15,9 @@ export default async function PublicProfilePage({
     notFound();
   }
 
-  const user = result.data;
+  const user = result.data as any;
+  const session = await auth();
+  const currentUserId = session?.user?.id ?? null;
 
-  return <PublicProfileClient user={user} />;
+  return <PublicProfileClient user={user} currentUserId={currentUserId} />;
 }

@@ -27,6 +27,12 @@ export async function getCurrentUser() {
         portfolioUrl: true,
         role: true,
         createdAt: true,
+        endorsementsReceived: {
+          select: {
+            senderId: true,
+            skill: true,
+          },
+        },
       },
     })
 
@@ -125,6 +131,12 @@ export async function getUserById(userId: string) {
           select: {
             teamsCreated: true,
             teamMembers: true,
+          },
+        },
+        endorsementsReceived: {
+          select: {
+            senderId: true,
+            skill: true,
           },
         },
       },
@@ -298,5 +310,108 @@ export async function deleteAccount() {
   } catch (error) {
     console.error("Error deleting account:", error)
     return { success: false, error: "Gagal menghapus akun. Coba lagi." }
+  }
+}
+
+/**
+ * Endorse a skill of another user
+ */
+export async function endorseSkill(recipientId: string, skill: string) {
+  try {
+    const session = await auth()
+    if (!session?.user?.email) {
+      return { success: false, error: "Not authenticated" }
+    }
+
+    const sender = await prisma.user.findUnique({
+      where: { email: session.user.email },
+      select: { id: true }
+    })
+
+    if (!sender) {
+      return { success: false, error: "Sender not found" }
+    }
+
+    if (sender.id === recipientId) {
+      return { success: false, error: "Cannot endorse your own skills" }
+    }
+
+    const recipient = await prisma.user.findUnique({
+      where: { id: recipientId },
+      select: { id: true, skills: true }
+    })
+
+    if (!recipient) {
+      return { success: false, error: "Recipient not found" }
+    }
+
+    if (!recipient.skills.includes(skill)) {
+      return { success: false, error: "User does not have this skill" }
+    }
+
+    const existing = await prisma.endorsement.findUnique({
+      where: {
+        senderId_recipientId_skill: {
+          senderId: sender.id,
+          recipientId,
+          skill,
+        }
+      }
+    })
+
+    if (existing) {
+      return { success: false, error: "Already endorsed this skill" }
+    }
+
+    await prisma.endorsement.create({
+      data: {
+        senderId: sender.id,
+        recipientId,
+        skill,
+      }
+    })
+
+    revalidatePath(`/profile/${recipientId}`)
+    return { success: true }
+  } catch (error) {
+    console.error("Error endorsing skill:", error)
+    return { success: false, error: "Failed to endorse skill" }
+  }
+}
+
+/**
+ * Remove an endorsement from a skill of another user
+ */
+export async function removeEndorsement(recipientId: string, skill: string) {
+  try {
+    const session = await auth()
+    if (!session?.user?.email) {
+      return { success: false, error: "Not authenticated" }
+    }
+
+    const sender = await prisma.user.findUnique({
+      where: { email: session.user.email },
+      select: { id: true }
+    })
+
+    if (!sender) {
+      return { success: false, error: "Sender not found" }
+    }
+
+    await prisma.endorsement.delete({
+      where: {
+        senderId_recipientId_skill: {
+          senderId: sender.id,
+          recipientId,
+          skill,
+        }
+      }
+    })
+
+    revalidatePath(`/profile/${recipientId}`)
+    return { success: true }
+  } catch (error) {
+    console.error("Error removing endorsement:", error)
+    return { success: false, error: "Failed to remove endorsement" }
   }
 }

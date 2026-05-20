@@ -94,6 +94,8 @@ model User {
   
   notificationsReceived Notification[] @relation("Recipient")
   notificationsSent     Notification[] @relation("Sender")
+  endorsementsSent     Endorsement[] @relation("EndorsementSender")
+  endorsementsReceived Endorsement[] @relation("EndorsementRecipient")
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -157,4 +159,16 @@ model Notification {
   isRead      Boolean          @default(false)
 
   createdAt   DateTime         @default(now())
+}
+
+model Endorsement {
+  id          String   @id @default(cuid())
+  senderId    String
+  sender      User     @relation("EndorsementSender", fields: [senderId], references: [id], onDelete: Cascade)
+  recipientId String
+  recipient   User     @relation("EndorsementRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  skill       String   // The skill tag being endorsed
+  createdAt   DateTime @default(now())
+
+  @@unique([senderId, recipientId, skill])
 }

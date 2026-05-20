@@ -1,5 +1,8 @@
 "use client";
 
+import { useState, useTransition } from "react";
+import { endorseSkill, removeEndorsement } from "@/actions";
+
 interface PublicProfileClientProps {
   user: {
     id: string;
@@ -14,10 +17,54 @@ interface PublicProfileClientProps {
       teamsCreated: number;
       teamMembers: number;
     };
+    endorsementsReceived: {
+      senderId: string;
+      skill: string;
+    }[];
   };
+  currentUserId: string | null;
 }
 
-export function PublicProfileClient({ user }: PublicProfileClientProps) {
+export function PublicProfileClient({ user, currentUserId }: PublicProfileClientProps) {
+  const [endorsements, setEndorsements] = useState(user.endorsementsReceived || []);
+  const [isPending, startTransition] = useTransition();
+
+  const handleToggleEndorsement = (skill: string) => {
+    if (!currentUserId) {
+      alert("Kamu harus login untuk melakukan endorsement");
+      return;
+    }
+    if (currentUserId === user.id) {
+      return;
+    }
+
+    const isEndorsed = endorsements.some(
+      (e) => e.senderId === currentUserId && e.skill === skill
+    );
+
+    if (isEndorsed) {
+      setEndorsements((prev) =>
+        prev.filter((e) => !(e.senderId === currentUserId && e.skill === skill))
+      );
+      startTransition(async () => {
+        const res = await removeEndorsement(user.id, skill);
+        if (!res.success) {
+          setEndorsements((prev) => [...prev, { senderId: currentUserId, skill }]);
+        }
+      });
+    } else {
+      setEndorsements((prev) => [...prev, { senderId: currentUserId, skill }]);
+      startTransition(async () => {
+        const res = await endorseSkill(user.id, skill);
+        if (!res.success) {
+          setEndorsements((prev) =>
+            prev.filter((e) => !(e.senderId === currentUserId && e.skill === skill))
+          );
+        }
+      });
+    }
+  };
+
   const getInitials = (name: string | null) => {
     if (!name) return "??";
     return name
@@ -147,22 +194,64 @@ export function PublicProfileClient({ user }: PublicProfileClientProps) {
               </div>
               {user.skills && user.skills.length > 0 ? (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                  {user.skills.map(skill => (
-                    <span 
-                      key={skill} 
-                      style={{ 
-                        background: 'var(--bg)', 
-                        border: '1px solid var(--bdr)', 
-                        padding: '6px 12px', 
-                        borderRadius: '100px', 
-                        fontSize: '13px', 
-                        color: 'var(--t)', 
-                        fontWeight: 600 
-                      }}
-                    >
-                      {skill}
-                    </span>
-                  ))}
+                  {user.skills.map(skill => {
+                    const skillEndorsements = endorsements.filter(e => e.skill === skill);
+                    const count = skillEndorsements.length;
+                    const isEndorsedByMe = skillEndorsements.some(e => e.senderId === currentUserId);
+                    const isOwnProfile = currentUserId === user.id;
+
+                    return (
+                      <button
+                        key={skill}
+                        onClick={() => !isOwnProfile && handleToggleEndorsement(skill)}
+                        disabled={isOwnProfile || isPending}
+                        style={{
+                          background: isEndorsedByMe ? 'var(--hbg)' : 'var(--bg)',
+                          border: isEndorsedByMe ? '1px solid var(--hbd)' : '1px solid var(--bdr)',
+                          padding: '8px 14px',
+                          borderRadius: '100px',
+                          fontSize: '13px',
+                          color: isEndorsedByMe ? 'var(--ho)' : 'var(--t)',
+                          fontWeight: 600,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          cursor: isOwnProfile ? 'default' : 'pointer',
+                          transition: 'all 0.2s ease',
+                          outline: 'none',
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isOwnProfile) {
+                            e.currentTarget.style.borderColor = 'var(--hbd)';
+                            e.currentTarget.style.background = isEndorsedByMe ? 'var(--hbg)' : 'rgba(245,166,35,0.05)';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isOwnProfile) {
+                            e.currentTarget.style.borderColor = isEndorsedByMe ? 'var(--hbd)' : 'var(--bdr)';
+                            e.currentTarget.style.background = isEndorsedByMe ? 'var(--hbg)' : 'var(--bg)';
+                          }
+                        }}
+                      >
+                        <span>{skill}</span>
+                        {(count > 0 || !isOwnProfile) && (
+                          <span style={{ 
+                            display: 'inline-flex', 
+                            alignItems: 'center', 
+                            gap: '3px',
+                            color: isEndorsedByMe ? 'var(--ho)' : 'var(--t3)',
+                            fontSize: '11px',
+                            borderLeft: '1px solid var(--bdr)',
+                            paddingLeft: '6px',
+                            marginLeft: '2px',
+                          }}>
+                            <i className={isEndorsedByMe ? "ph-fill ph-thumbs-up" : "ph-bold ph-thumbs-up"} style={{ fontSize: '12px' }}></i>
+                            {count > 0 && <span>{count}</span>}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
               ) : (
                 <p style={{ fontSize: '13px', color: 'var(--t2)' }}>
