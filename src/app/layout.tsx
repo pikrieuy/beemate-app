@@ -44,6 +44,7 @@ export const metadata: Metadata = {
 };
 
 import { Providers } from "@/components/layout/providers";
+import { ToastProvider } from "@/components/ui/toast-provider";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -53,13 +54,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${sora.variable} ${jakarta.variable} ${jetbrains.variable}`}>
         <Providers>
-          <GlobalGrid />
-          <Navbar />
-          <BottomNav />
-          <div id="app">
-            {children}
-          </div>
-          <Analytics />
+          <ToastProvider>
+            <GlobalGrid />
+            <Navbar />
+            <BottomNav />
+            <div id="app">
+              {children}
+            </div>
+            <Analytics />
+          </ToastProvider>
         </Providers>
       </body>
     </html>

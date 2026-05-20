@@ -99,6 +99,8 @@ model User {
   messages             Message[]
   assignedTasks        Task[]
   projects             Project[]
+  projectComments      ProjectComment[]
+  projectLikes         ProjectLike[]
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -229,8 +231,38 @@ model Project {
   userId      String   // Creator
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
+  comments    ProjectComment[]
+  likes       ProjectLike[]
+  
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  @@index([userId])
+}
+
+model ProjectComment {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([userId])
+}
+
+model ProjectLike {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([projectId, userId])
+  @@index([projectId])
   @@index([userId])
 }

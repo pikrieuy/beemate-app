@@ -390,3 +390,69 @@ export async function getPendingInvitations() {
     return { success: false, error: "Failed to get invitations" }
   }
 }
+
+export async function requestToJoinTeam(teamId: string) {
+  try {
+    const session = await auth()
+    if (!session?.user?.email) {
+      return { success: false, error: "Not authenticated" }
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+    })
+
+    if (!user) {
+      return { success: false, error: "User tidak ditemukan" }
+    }
+
+    const team = await prisma.team.findUnique({
+      where: { id: teamId },
+    })
+
+    if (!team) {
+      return { success: false, error: "Tim tidak ditemukan" }
+    }
+
+    if (team.leaderId === user.id) {
+      return { success: false, error: "Anda adalah pemimpin tim ini" }
+    }
+
+    // Check if user already in team or has pending status
+    const existingMember = await prisma.teamMember.findUnique({
+      where: {
+        teamId_userId: {
+          teamId,
+          userId: user.id,
+        },
+      },
+    })
+
+    if (existingMember) {
+      return { success: false, error: "Anda sudah tergabung atau sudah mengirim permintaan bergabung" }
+    }
+
+    const teamMember = await prisma.teamMember.create({
+      data: {
+        teamId,
+        userId: user.id,
+        role: "MEMBER",
+        joinStatus: "PENDING",
+      },
+    })
+
+    // Notify team leader
+    await createNotification({
+      recipientId: team.leaderId,
+      senderId: user.id,
+      type: "ALERT",
+      message: `${user.name} mengajukan permintaan bergabung dengan tim "${team.name}"`,
+    })
+
+    revalidatePath(`/teams/${teamId}`)
+    return { success: true, data: teamMember }
+  } catch (error) {
+    console.error("Error requesting to join team:", error)
+    return { success: false, error: "Gagal mengirim permintaan bergabung" }
+  }
+}

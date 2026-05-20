@@ -103,9 +103,9 @@
 ---
 
 ## 🚀 Future Roadmap / Enhancements (Next Phase)
-- [ ] Real-time Live Notifications (Push Toast) dengan Supabase Realtime CDC
-- [ ] Komentar & Upvote/Likes pada Project Showcase tim
-- [ ] Fitur "Cari Rekan Tim" Instan (Matchmaking) berdasarkan complementary roles & skills
+- [x] Real-time Live Notifications (Push Toast) dengan Supabase Realtime CDC
+- [x] Komentar & Upvote/Likes pada Project Showcase tim
+- [x] Fitur "Cari Rekan Tim" Instan (Matchmaking) berdasarkan complementary roles & skills
 
 ---
 

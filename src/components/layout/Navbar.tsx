@@ -31,7 +31,8 @@ export function Navbar() {
     { label: "Dashboard", path: "/dashboard" },
     { label: "People", path: "/people" },
     { label: "Teams", path: "/teams" },
-    { label: "Competitions", path: "/competitions" }
+    { label: "Competitions", path: "/competitions" },
+    { label: "Matchmaking", path: "/matchmaking" }
   ];
 
   return (

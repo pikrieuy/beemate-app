@@ -1,7 +1,15 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { getTeamProject, createOrUpdateProject } from "@/actions"
+import { useSession } from "next-auth/react"
+import { 
+  getTeamProject, 
+  createOrUpdateProject,
+  getProjectSocials,
+  toggleProjectLike,
+  addProjectComment,
+  deleteProjectComment
+} from "@/actions"
 import { ImageUpload } from "@/components/ui/ImageUpload"
 import { motion } from "framer-motion"
 
@@ -26,6 +34,9 @@ interface ProjectData {
 }
 
 export function ProjectShowcase({ teamId, isMember, isLeader }: ProjectShowcaseProps) {
+  const { data: session } = useSession()
+  const userId = (session?.user as any)?.id
+
   const [project, setProject] = useState<ProjectData | null>(null)
   const [loading, setLoading] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
@@ -39,6 +50,13 @@ export function ProjectShowcase({ teamId, isMember, isLeader }: ProjectShowcaseP
 
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Social states
+  const [likesCount, setLikesCount] = useState(0)
+  const [hasLiked, setHasLiked] = useState(false)
+  const [comments, setComments] = useState<any[]>([])
+  const [newComment, setNewComment] = useState("")
+  const [commentSubmitting, setCommentSubmitting] = useState(false)
 
   useEffect(() => {
     fetchProject()
@@ -58,6 +76,14 @@ export function ProjectShowcase({ teamId, isMember, isLeader }: ProjectShowcaseP
         setDemoUrl(data.demoUrl || "")
         setGithubUrl(data.githubUrl || "")
         setImageUrl(data.imageUrl)
+
+        // Fetch socials
+        const socialRes = await getProjectSocials(data.id)
+        if (socialRes.success && socialRes.data) {
+          setLikesCount(socialRes.data.likesCount)
+          setHasLiked(socialRes.data.hasLiked)
+          setComments(socialRes.data.comments)
+        }
       } else {
         setProject(null)
       }
@@ -65,6 +91,52 @@ export function ProjectShowcase({ teamId, isMember, isLeader }: ProjectShowcaseP
       console.error(err)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleLike = async () => {
+    if (!project) return
+    const prevLiked = hasLiked
+    const prevCount = likesCount
+    setHasLiked(!prevLiked)
+    setLikesCount(prev => prevLiked ? prev - 1 : prev + 1)
+
+    const res = await toggleProjectLike(project.id)
+    if (!res.success) {
+      setHasLiked(prevLiked)
+      setLikesCount(prevCount)
+    }
+  }
+
+  const handleAddComment = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!project || !newComment.trim() || commentSubmitting) return
+
+    try {
+      setCommentSubmitting(true)
+      const res = await addProjectComment(project.id, newComment.trim())
+      if (res.success && res.data) {
+        setNewComment("")
+        setComments(prev => [res.data, ...prev])
+      } else {
+        alert(res.error || "Gagal mengirim komentar")
+      }
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setCommentSubmitting(false)
+    }
+  }
+
+  const handleDeleteComment = async (commentId: string) => {
+    if (!confirm("Apakah Anda yakin ingin menghapus komentar ini?")) return
+    const prevComments = [...comments]
+    setComments(prev => prev.filter(c => c.id !== commentId))
+
+    const res = await deleteProjectComment(commentId)
+    if (!res.success) {
+      setComments(prevComments)
+      alert(res.error || "Gagal menghapus komentar")
     }
   }
 
@@ -468,6 +540,222 @@ export function ProjectShowcase({ teamId, isMember, isLeader }: ProjectShowcaseP
               Tidak ada tautan proyek eksternal yang dibagikan.
             </div>
           )}
+        </div>
+
+        {/* Likes & Comments Section */}
+        <div style={{ marginTop: "40px", borderTop: "1px solid var(--bdr)", paddingTop: "32px" }}>
+          
+          {/* Like Button & Stats */}
+          <div style={{ display: "flex", alignItems: "center", gap: "20px", marginBottom: "32px" }}>
+            <button
+              onClick={handleLike}
+              style={{
+                background: hasLiked ? "rgba(245, 166, 35, 0.12)" : "var(--bg)",
+                border: hasLiked ? "1px solid var(--ho)" : "1px solid var(--bdr)",
+                borderRadius: "30px",
+                padding: "10px 24px",
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                color: hasLiked ? "var(--ho)" : "var(--t2)",
+                fontWeight: 700,
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+              className="like-btn"
+            >
+              <i className={hasLiked ? "ph-fill ph-heart" : "ph-bold ph-heart"} style={{ fontSize: "20px" }}></i>
+              <span>{hasLiked ? "Disukai" : "Sukai Proyek"}</span>
+            </button>
+            <span style={{ fontSize: "14px", color: "var(--t2)" }}>
+              <strong>{likesCount}</strong> orang menyukai proyek ini
+            </span>
+          </div>
+
+          {/* Comments Section */}
+          <div>
+            <h3 style={{ fontSize: "18px", fontWeight: 800, color: "var(--t)", marginBottom: "20px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <i className="ph-fill ph-chat-centered-text" style={{ color: "var(--ho)" }}></i>
+              Diskusi & Umpan Balik ({comments.length})
+            </h3>
+
+            {/* Comment Form */}
+            {session?.user ? (
+              <form onSubmit={handleAddComment} style={{ display: "flex", gap: "12px", marginBottom: "32px" }}>
+                <div
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                    flexShrink: 0,
+                    border: "1px solid var(--bdr)",
+                  }}
+                >
+                  {session.user.image ? (
+                    <img src={session.user.image} alt="You" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ) : (
+                    <div style={{ width: "100%", height: "100%", background: "var(--ho)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700 }}>
+                      {session.user.name?.[0].toUpperCase() || "U"}
+                    </div>
+                  )}
+                </div>
+                <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <textarea
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="Tulis pendapat atau pertanyaan Anda tentang proyek ini..."
+                    rows={2}
+                    style={{
+                      width: "100%",
+                      padding: "12px 16px",
+                      borderRadius: "12px",
+                      border: "1px solid var(--bdr)",
+                      background: "var(--bg)",
+                      color: "var(--t)",
+                      fontSize: "14px",
+                      resize: "vertical",
+                      fontFamily: "inherit",
+                    }}
+                  />
+                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <button
+                      type="submit"
+                      className="btn btn-honey btn-sm"
+                      disabled={commentSubmitting || !newComment.trim()}
+                    >
+                      {commentSubmitting ? "Mengirim..." : "Kirim Komentar"}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            ) : (
+              <div
+                style={{
+                  background: "var(--bg)",
+                  border: "1px solid var(--bdr)",
+                  borderRadius: "16px",
+                  padding: "16px 20px",
+                  textAlign: "center",
+                  fontSize: "14px",
+                  color: "var(--t2)",
+                  marginBottom: "32px",
+                }}
+              >
+                Silakan login untuk bergabung dalam diskusi proyek.
+              </div>
+            )}
+
+            {/* Comments List */}
+            <div style={{ display: "grid", gap: "20px" }}>
+              {comments.length > 0 ? (
+                comments.map((comment) => {
+                  const isCommentOwner = comment.userId === userId
+                  const isLeaderOrOwner = isCommentOwner || isLeader
+
+                  return (
+                    <div
+                      key={comment.id}
+                      style={{
+                        display: "flex",
+                        gap: "12px",
+                        background: "rgba(255, 255, 255, 0.01)",
+                        border: "1px solid var(--bdr)",
+                        borderRadius: "16px",
+                        padding: "16px",
+                      }}
+                    >
+                      {/* Avatar */}
+                      <div
+                        style={{
+                          width: "36px",
+                          height: "36px",
+                          borderRadius: "50%",
+                          overflow: "hidden",
+                          flexShrink: 0,
+                          background: "var(--bg2)",
+                        }}
+                      >
+                        {comment.user.image ? (
+                          <img src={comment.user.image} alt={comment.user.name || "User"} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        ) : (
+                          <div style={{ width: "100%", height: "100%", background: "var(--ho)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "12px" }}>
+                            {comment.user.name?.[0].toUpperCase() || "?"}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Content */}
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "10px", marginBottom: "4px" }}>
+                          <div>
+                            <span style={{ fontWeight: 700, fontSize: "14px", color: "var(--t)" }}>
+                              {comment.user.name}
+                            </span>
+                            {comment.user.title && (
+                              <span
+                                style={{
+                                  marginLeft: "8px",
+                                  background: "rgba(245, 166, 35, 0.1)",
+                                  color: "var(--ho)",
+                                  fontSize: "10px",
+                                  fontWeight: 800,
+                                  padding: "2px 6px",
+                                  borderRadius: "4px",
+                                  textTransform: "uppercase",
+                                }}
+                              >
+                                {comment.user.title}
+                              </span>
+                            )}
+                          </div>
+                          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                            <span style={{ fontSize: "11px", color: "var(--t3)" }}>
+                              {new Date(comment.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+                            </span>
+                            {isLeaderOrOwner && (
+                              <button
+                                onClick={() => handleDeleteComment(comment.id)}
+                                style={{
+                                  background: "transparent",
+                                  border: "none",
+                                  color: "#ef4444",
+                                  cursor: "pointer",
+                                  padding: "2px",
+                                  opacity: 0.7,
+                                  transition: "opacity 0.2s",
+                                }}
+                                title="Hapus komentar"
+                                onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
+                                onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.7")}
+                              >
+                                <i className="ph-bold ph-trash" style={{ fontSize: "14px" }}></i>
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                        <div style={{ fontSize: "14px", color: "var(--t)", lineHeight: 1.5, whiteSpace: "pre-wrap" }}>
+                          {comment.content}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })
+              ) : (
+                <div
+                  style={{
+                    textAlign: "center",
+                    padding: "32px 0",
+                    color: "var(--t3)",
+                    fontSize: "14px",
+                    fontStyle: "italic",
+                  }}
+                >
+                  Belum ada komentar. Jadilah yang pertama memberikan masukan!
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </motion.div>
