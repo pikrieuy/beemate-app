@@ -210,3 +210,84 @@ export async function getProjectSocials(projectId: string) {
     return { success: false, error: "Gagal memuat data interaksi sosial" }
   }
 }
+
+// ── Project CRUD ──────────────────────────────────────────────────────────────
+
+export async function createProject(data: {
+  title: string;
+  description: string;
+  imageUrl?: string;
+  demoUrl?: string;
+  githubUrl?: string;
+  teamId?: string;
+}) {
+  try {
+    const user = await getActiveUser();
+    if (!user) return { success: false, error: "Not authenticated" };
+
+    if (!data.title?.trim() || data.title.trim().length < 3)
+      return { success: false, error: "Judul minimal 3 karakter" };
+    if (!data.description?.trim() || data.description.trim().length < 10)
+      return { success: false, error: "Deskripsi minimal 10 karakter" };
+
+    const project = await prisma.project.create({
+      data: {
+        title: data.title.trim(),
+        description: data.description.trim(),
+        imageUrl: data.imageUrl?.trim() || null,
+        demoUrl: data.demoUrl?.trim() || null,
+        githubUrl: data.githubUrl?.trim() || null,
+        teamId: data.teamId || null,
+        userId: user.id,
+      },
+      include: {
+        user: { select: { id: true, name: true, image: true, title: true } },
+        _count: { select: { likes: true, comments: true } },
+      },
+    });
+
+    revalidatePath("/explore");
+    return { success: true, data: project };
+  } catch (error) {
+    console.error("Error creating project:", error);
+    return { success: false, error: "Gagal membuat proyek" };
+  }
+}
+
+export async function getProjects(options?: { limit?: number; userId?: string }) {
+  try {
+    const projects = await prisma.project.findMany({
+      where: options?.userId ? { userId: options.userId } : undefined,
+      orderBy: { createdAt: "desc" },
+      take: options?.limit ?? 20,
+      include: {
+        user: { select: { id: true, name: true, image: true, title: true } },
+        team: { select: { id: true, name: true } },
+        _count: { select: { likes: true, comments: true } },
+      },
+    });
+
+    return { success: true, data: projects };
+  } catch (error) {
+    console.error("Error getting projects:", error);
+    return { success: false, error: "Gagal memuat proyek" };
+  }
+}
+
+export async function deleteProject(projectId: string) {
+  try {
+    const user = await getActiveUser();
+    if (!user) return { success: false, error: "Not authenticated" };
+
+    const project = await prisma.project.findUnique({ where: { id: projectId } });
+    if (!project) return { success: false, error: "Proyek tidak ditemukan" };
+    if (project.userId !== user.id) return { success: false, error: "Unauthorized" };
+
+    await prisma.project.delete({ where: { id: projectId } });
+    revalidatePath("/explore");
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting project:", error);
+    return { success: false, error: "Gagal menghapus proyek" };
+  }
+}
