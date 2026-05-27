@@ -154,18 +154,22 @@ export async function getUserById(userId: string) {
 }
 
 /**
- * Search users by name or skills
+ * Search users by name or skills (with cursor-based pagination)
  */
-export async function searchUsers(query: string, limit = 10) {
+export async function searchUsers(query: string, limit = 20, cursor?: string) {
   try {
+    const where = query.trim()
+      ? {
+          OR: [
+            { name: { contains: query, mode: "insensitive" as const } },
+            { skills: { has: query } },
+            { title: { contains: query, mode: "insensitive" as const } },
+          ],
+        }
+      : {};
+
     const users = await prisma.user.findMany({
-      where: {
-        OR: [
-          { name: { contains: query, mode: "insensitive" } },
-          { skills: { has: query } },
-          { title: { contains: query, mode: "insensitive" } },
-        ],
-      },
+      where,
       select: {
         id: true,
         name: true,
@@ -174,10 +178,16 @@ export async function searchUsers(query: string, limit = 10) {
         skills: true,
         title: true,
       },
-      take: limit,
+      take: limit + 1, // Fetch one extra to determine if there's a next page
+      ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
+      orderBy: { createdAt: "desc" },
     })
 
-    return { success: true, data: users }
+    const hasMore = users.length > limit;
+    const data = hasMore ? users.slice(0, limit) : users;
+    const nextCursor = hasMore ? data[data.length - 1]?.id : undefined;
+
+    return { success: true, data, nextCursor, hasMore }
   } catch (error) {
     console.error("Error searching users:", error)
     return { success: false, error: "Failed to search users" }

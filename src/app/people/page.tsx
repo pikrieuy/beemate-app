@@ -6,9 +6,11 @@ import { PeopleClient } from "./people-client";
 export default async function PeoplePage() {
   const session = await auth();
 
-  // Fetch all users
-  const result = await searchUsers("", 100);
+  // Fetch first page of users (cursor-based pagination)
+  const result = await searchUsers("", 30);
   const users = result.success ? (result.data ?? []) : [];
+  const nextCursor = result.success ? result.nextCursor : undefined;
+  const hasMore = result.success ? result.hasMore : false;
 
   // Get current user's title for recommendations
   let currentUserTitle: string | null = null;
@@ -38,6 +40,8 @@ export default async function PeoplePage() {
       initialUsers={users}
       recommended={recommended}
       currentUserId={currentUserId}
+      initialCursor={nextCursor}
+      initialHasMore={!!hasMore}
     />
   );
 }

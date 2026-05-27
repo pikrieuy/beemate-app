@@ -3,6 +3,7 @@
 import { auth } from "@/auth"
 import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
+import { sendMessageSchema, createTaskSchema, createProjectSchema, validate } from "@/lib/validations"
 
 /**
  * Helper: Verify if user has access to team collaboration
@@ -46,9 +47,9 @@ export async function sendTeamMessage(teamId: string, content: string) {
       return { success: false, error: "Not authenticated" }
     }
 
-    if (!content?.trim()) {
-      return { success: false, error: "Pesan tidak boleh kosong" }
-    }
+    // Zod validation
+    const validation = validate(sendMessageSchema, { teamId, content })
+    if (!validation.success) return validation
 
     const access = await verifyTeamAccess(teamId, session.user.email)
     if (!access) {
@@ -164,9 +165,13 @@ export async function createTeamTask(data: {
       return { success: false, error: "Not authenticated" }
     }
 
-    if (!data.title?.trim()) {
-      return { success: false, error: "Judul tugas wajib diisi" }
-    }
+    // Zod validation
+    const validation = validate(createTaskSchema, {
+      ...data,
+      status: "TODO",
+      priority: data.priority || "MEDIUM",
+    })
+    if (!validation.success) return validation
 
     const access = await verifyTeamAccess(data.teamId, session.user.email)
     if (!access) {
@@ -378,9 +383,9 @@ export async function createOrUpdateProject(
       return { success: false, error: "Not authenticated" }
     }
 
-    if (!data.title?.trim() || !data.description?.trim()) {
-      return { success: false, error: "Judul dan deskripsi proyek wajib diisi" }
-    }
+    // Zod validation
+    const validation = validate(createProjectSchema, { ...data, teamId })
+    if (!validation.success) return validation
 
     const access = await verifyTeamAccess(teamId, session.user.email)
     if (!access) {

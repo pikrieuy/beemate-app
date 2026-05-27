@@ -9,6 +9,29 @@ const MAX_BYTES = {
 
 type UploadFolder = keyof typeof MAX_BYTES;
 
+/**
+ * Magic byte signatures for allowed image types.
+ * Validates actual file content, not just the Content-Type header.
+ */
+const MAGIC_BYTES: Record<string, number[][]> = {
+  "image/jpeg": [[0xff, 0xd8, 0xff]],
+  "image/png": [[0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]],
+  "image/gif": [
+    [0x47, 0x49, 0x46, 0x38, 0x37, 0x61], // GIF87a
+    [0x47, 0x49, 0x46, 0x38, 0x39, 0x61], // GIF89a
+  ],
+  "image/webp": [[0x52, 0x49, 0x46, 0x46]], // RIFF (WebP starts with RIFF)
+};
+
+function validateMagicBytes(buffer: Buffer, declaredType: string): boolean {
+  const signatures = MAGIC_BYTES[declaredType];
+  if (!signatures) return false;
+
+  return signatures.some((sig) =>
+    sig.every((byte, i) => buffer[i] === byte)
+  );
+}
+
 export async function POST(request: Request) {
   try {
     const session = await auth();
@@ -32,10 +55,25 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "File must be an image" }, { status: 400 });
     }
 
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    if (!allowedTypes.includes(file.type)) {
+      return NextResponse.json({ error: "Unsupported image format" }, { status: 400 });
+    }
+
     const maxSize = MAX_BYTES[folder as UploadFolder];
     if (file.size > maxSize) {
       return NextResponse.json(
         { error: `File too large (max ${folder === "avatars" ? "4MB" : "8MB"})` },
+        { status: 400 }
+      );
+    }
+
+    const buffer = Buffer.from(await file.arrayBuffer());
+
+    // Magic byte validation — ensure file content matches declared type
+    if (!validateMagicBytes(buffer, file.type)) {
+      return NextResponse.json(
+        { error: "File content does not match declared type" },
         { status: 400 }
       );
     }
@@ -45,7 +83,6 @@ export async function POST(request: Request) {
     const path = `${folder}/${session.user.id}-${Date.now()}.${safeExt}`;
 
     const supabase = createSupabaseAdmin();
-    const buffer = Buffer.from(await file.arrayBuffer());
 
     const { error: uploadError } = await supabase.storage
       .from(BEEMATE_STORAGE_BUCKET)

@@ -19,6 +19,8 @@ interface PeopleClientProps {
   initialUsers: User[];
   recommended: User[];
   currentUserId: string | null;
+  initialCursor?: string;
+  initialHasMore: boolean;
 }
 
 /* ── Role config ── */
@@ -83,26 +85,47 @@ function getRoleConfig(title: string | null) {
   return ROLES.find((r) => r.key === title) ?? null;
 }
 
-export function PeopleClient({ initialUsers, recommended, currentUserId }: PeopleClientProps) {
+export function PeopleClient({ initialUsers, recommended, currentUserId, initialCursor, initialHasMore }: PeopleClientProps) {
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [search, setSearch] = useState("");
   const [filterTitle, setFilterTitle] = useState("all");
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [cursor, setCursor] = useState<string | undefined>(initialCursor);
+  const [hasMore, setHasMore] = useState(initialHasMore);
 
   useEffect(() => {
     async function loadUsers() {
       if (search.trim()) {
         setLoading(true);
-        const result = await searchUsers(search, 100);
-        if (result.success) setUsers(result.data ?? []);
+        const result = await searchUsers(search, 30);
+        if (result.success) {
+          setUsers(result.data ?? []);
+          setCursor(result.nextCursor);
+          setHasMore(!!result.hasMore);
+        }
         setLoading(false);
       } else {
         setUsers(initialUsers);
+        setCursor(initialCursor);
+        setHasMore(initialHasMore);
       }
     }
     const timer = setTimeout(loadUsers, 300);
     return () => clearTimeout(timer);
-  }, [search, initialUsers]);
+  }, [search, initialUsers, initialCursor, initialHasMore]);
+
+  async function loadMore() {
+    if (!cursor || loadingMore) return;
+    setLoadingMore(true);
+    const result = await searchUsers(search, 30, cursor);
+    if (result.success) {
+      setUsers((prev) => [...prev, ...(result.data ?? [])]);
+      setCursor(result.nextCursor);
+      setHasMore(!!result.hasMore);
+    }
+    setLoadingMore(false);
+  }
 
   const filtered = users.filter((u) =>
     filterTitle === "all" ? true : u.title === filterTitle
@@ -264,6 +287,30 @@ export function PeopleClient({ initialUsers, recommended, currentUserId }: Peopl
                 onClick={() => { setFilterTitle("all"); setSearch(""); }}
               >
                 <i className="ph-fill ph-x-circle" /> Reset
+              </button>
+            </div>
+          )}
+
+          {/* Load More */}
+          {!loading && hasMore && filtered.length > 0 && (
+            <div style={{ textAlign: "center", marginTop: "24px" }}>
+              <button
+                className="btn btn-ghost btn-sm"
+                onClick={loadMore}
+                disabled={loadingMore}
+                style={{
+                  padding: "10px 24px",
+                  fontSize: "13px",
+                  fontWeight: 700,
+                  borderRadius: "12px",
+                  border: "1px solid var(--b)",
+                  background: "var(--bg2)",
+                  color: "var(--t2)",
+                  cursor: loadingMore ? "wait" : "pointer",
+                  opacity: loadingMore ? 0.6 : 1,
+                }}
+              >
+                {loadingMore ? "Memuat..." : "Muat Lebih Banyak"}
               </button>
             </div>
           )}

@@ -3,6 +3,7 @@
 import { auth } from "@/auth"
 import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
+import { createProjectSchema, createCommentSchema, validate } from "@/lib/validations"
 
 /**
  * Helper to get active user ID from session
@@ -76,9 +77,9 @@ export async function addProjectComment(projectId: string, content: string) {
       return { success: false, error: "Silakan login terlebih dahulu" }
     }
 
-    if (!content?.trim()) {
-      return { success: false, error: "Komentar tidak boleh kosong" }
-    }
+    // Zod validation
+    const validation = validate(createCommentSchema, { projectId, content })
+    if (!validation.success) return validation
 
     const project = await prisma.project.findUnique({
       where: { id: projectId },
@@ -225,10 +226,9 @@ export async function createProject(data: {
     const user = await getActiveUser();
     if (!user) return { success: false, error: "Not authenticated" };
 
-    if (!data.title?.trim() || data.title.trim().length < 3)
-      return { success: false, error: "Judul minimal 3 karakter" };
-    if (!data.description?.trim() || data.description.trim().length < 10)
-      return { success: false, error: "Deskripsi minimal 10 karakter" };
+    // Zod validation
+    const validation = validate(createProjectSchema, data);
+    if (!validation.success) return validation;
 
     const project = await prisma.project.create({
       data: {

@@ -14,16 +14,16 @@ BeeMate menjadi platform #1 untuk mahasiswa Indonesia mencari tim lomba dan kola
 ## 📅 Short Term (1–2 Minggu)
 
 ### Security Hardening
-- [ ] Tambah security headers (X-Frame-Options, CSP, nosniff)
-- [ ] Fix image wildcard `*.supabase.co` → restrict ke project spesifik
-- [ ] Tambah magic byte validation di upload route
-- [ ] Pin next-auth version (hapus caret range)
-- [ ] Tambah `poweredByHeader: false` di next.config.ts
+- [x] Tambah security headers (X-Frame-Options, CSP, nosniff)
+- [x] Fix image wildcard `*.supabase.co` → restrict ke project spesifik
+- [x] Tambah magic byte validation di upload route
+- [x] Pin next-auth version (hapus caret range)
+- [x] Tambah `poweredByHeader: false` di next.config.ts
 
 ### Quick Wins
 - [ ] Setup Resend (daftar, verify domain, isi API key di Vercel)
-- [ ] Hapus dead code: `PersonCard.tsx`, `api/uploadthing/`, `picsum.photos` pattern
-- [ ] Fix auth redirect di `competitions/[id]/page.tsx` (`/auth/signin` → `/api/auth/signin`)
+- [x] Hapus dead code: `PersonCard.tsx`, `api/uploadthing/`, `picsum.photos` pattern
+- [x] Fix auth redirect di `competitions/[id]/page.tsx` (`/auth/signin` → `/api/auth/signin`)
 - [ ] Tambah onboarding flow untuk user baru
 
 ### Growth
@@ -45,8 +45,8 @@ BeeMate menjadi platform #1 untuk mahasiswa Indonesia mencari tim lomba dan kola
 ### Infrastructure
 - [ ] Rate limiting (Upstash Redis free tier)
 - [ ] Error monitoring (Sentry free tier)
-- [ ] Input validation dengan Zod di semua server actions
-- [ ] Pagination di People page (cursor-based)
+- [x] Input validation dengan Zod di semua server actions
+- [x] Pagination di People page (cursor-based)
 
 ### UX
 - [ ] Onboarding wizard (isi profil → pilih role → lihat rekomendasi)
@@ -106,7 +106,7 @@ BeeMate menjadi platform #1 untuk mahasiswa Indonesia mencari tim lomba dan kola
 |------|----------|-------|
 | `/explore` page data palsu | Medium | Ganti dengan real Open Projects |
 | `confirm()`/`alert()` di beberapa tempat | Low | Sudah fix di team & competition, cek sisanya |
-| `searchUsers("")` full table scan | Medium | Tambah pagination |
+| ~~`searchUsers("")` full table scan~~ | ~~Medium~~ | ✅ Sudah pakai cursor-based pagination |
 | Notification preferences hanya localStorage | Low | Pindah ke DB kalau ada email system |
 | Landing page testimonials hardcoded | Low | Bisa diganti dengan real testimonials nanti |
 

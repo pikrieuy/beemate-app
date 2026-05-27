@@ -40,6 +40,14 @@
 - [x] createNotification auth check added
 - [x] ignoreBuildErrors removed
 - [x] Hamburger mobile menu fixed
+- [x] Security headers (X-Frame-Options, CSP, nosniff, Referrer-Policy, Permissions-Policy)
+- [x] poweredByHeader: false
+- [x] Image remotePatterns restricted to project-specific Supabase URL
+- [x] Magic byte validation on upload route
+- [x] next-auth version pinned (no caret range)
+- [x] Dead code removed (api/uploadthing/, picsum.photos in seed)
+- [x] Zod input validation on all server actions
+- [x] Cursor-based pagination on People page
 
 ---
 

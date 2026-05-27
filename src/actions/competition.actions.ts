@@ -3,6 +3,7 @@
 import { auth } from "@/auth"
 import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
+import { createCompetitionSchema, updateCompetitionSchema, validate } from "@/lib/validations"
 
 /**
  * Create a new competition
@@ -19,6 +20,10 @@ export async function createCompetition(data: {
     if (!session?.user?.email) {
       return { success: false, error: "Not authenticated" }
     }
+
+    // Zod validation
+    const validation = validate(createCompetitionSchema, data)
+    if (!validation.success) return validation
 
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
@@ -162,6 +167,10 @@ export async function updateCompetition(
     if (!session?.user?.email) {
       return { success: false, error: "Not authenticated" }
     }
+
+    // Zod validation
+    const validation = validate(updateCompetitionSchema, data)
+    if (!validation.success) return validation
 
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },

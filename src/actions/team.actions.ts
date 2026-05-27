@@ -3,6 +3,7 @@
 import { auth } from "@/auth"
 import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
+import { createTeamSchema, validate } from "@/lib/validations"
 
 /**
  * Create a new team
@@ -17,13 +18,9 @@ export async function createTeam(data: {
       return { success: false, error: "Not authenticated" }
     }
 
-    // Server-side validation
-    if (!data.name?.trim()) return { success: false, error: "Nama tim wajib diisi" }
-    if (data.name.trim().length < 2) return { success: false, error: "Nama tim minimal 2 karakter" }
-    if (data.name.trim().length > 50) return { success: false, error: "Nama tim maksimal 50 karakter" }
-    if (data.description && data.description.length > 500) {
-      return { success: false, error: "Deskripsi maksimal 500 karakter" }
-    }
+    // Zod validation
+    const validation = validate(createTeamSchema, data)
+    if (!validation.success) return validation
 
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },

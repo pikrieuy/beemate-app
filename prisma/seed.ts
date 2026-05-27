@@ -247,7 +247,7 @@ async function main() {
         title: "National Hackathon 2026",
         description:
           "Hackathon nasional 48 jam. Tema: AI for Good. Hadiah total Rp 100 juta. Tim 3-5 orang.",
-        imageUrl: "https://picsum.photos/seed/hackathon2026/1200/600",
+        imageUrl: null,
         registrationLink: "https://example.com/register/hackathon-2026",
         deadline: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000),
         authorId: admin.id,
@@ -258,7 +258,7 @@ async function main() {
         title: "Kampus Innovation Challenge",
         description:
           "Kompetisi inovasi produk kampus. Submit MVP + pitch deck. Deadline registrasi 2 minggu lagi.",
-        imageUrl: "https://picsum.photos/seed/innovation/1200/600",
+        imageUrl: null,
         registrationLink: "https://example.com/register/innovation",
         deadline: new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000),
         authorId: admin.id,
@@ -269,7 +269,7 @@ async function main() {
         title: "UI/UX Design Sprint",
         description:
           "Kompetisi desain 24 jam. Buat prototype Figma untuk masalah sosial lokal.",
-        imageUrl: "https://picsum.photos/seed/uxsprint/1200/600",
+        imageUrl: null,
         registrationLink: "https://example.com/register/ux-sprint",
         deadline: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
         authorId: admin.id,
@@ -280,7 +280,7 @@ async function main() {
         title: "Startup Weekend Bandung",
         description:
           "54 jam membangun startup dari ide ke pitch. Mentor dari industri tersedia.",
-        imageUrl: "https://picsum.photos/seed/startup-wknd/1200/600",
+        imageUrl: null,
         registrationLink: "https://example.com/register/startup-weekend",
         deadline: new Date(now.getTime() + 21 * 24 * 60 * 60 * 1000),
         authorId: admin.id,
@@ -290,7 +290,7 @@ async function main() {
       data: {
         title: "CodeFest Regional 2025 (Ended)",
         description: "Kompetisi pemrograman regional — sudah berakhir.",
-        imageUrl: "https://picsum.photos/seed/codefest/1200/600",
+        imageUrl: null,
         deadline: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000),
         authorId: admin.id,
       },
