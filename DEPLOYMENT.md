@@ -1,75 +1,56 @@
 # BeeMate — Deployment Guide
 
-**Status:** ✅ DEPLOYED  
+**Status:** ✅ DEPLOYED & LIVE  
 **Platform:** Vercel + Supabase + Google OAuth  
-**Repo:** github.com/pikrieuy/beemate-app
+**Repo:** github.com/pikrieuy/beemate-app  
+**URL:** beemate-app.vercel.app
 
 ---
 
-## Status Deployment
+## Current Infrastructure
 
-| Komponen | Status | Catatan |
-|----------|--------|---------|
+| Komponen | Status | Detail |
+|----------|--------|--------|
 | Vercel Deploy | ✅ Live | Auto-deploy dari `main` branch |
-| Supabase Database | ✅ Active | PostgreSQL di `aws-1-ap-southeast-2` |
-| Supabase Storage | ✅ Active | Bucket `beemate` — avatars & banners |
-| Google OAuth localhost | ✅ Working | `http://localhost:3000` |
-| Google OAuth production | ✅ Working | URI production sudah ditambahkan |
+| Supabase Database | ✅ Active | PostgreSQL 17 · `aws-1-ap-southeast-2` |
+| Supabase Storage | ✅ Active | Bucket `beemate` (public) |
+| Supabase Realtime | ✅ Active | Tabel `Notification` |
+| RLS | ✅ Active | Semua 8 tabel + policies |
+| Google OAuth | ✅ Working | localhost + production |
+| Vercel Analytics | ✅ Active | Tracking page views |
+| Email (Resend) | ⚠️ Optional | Perlu `RESEND_API_KEY` di Vercel env |
 
 ---
 
-## Setup Awal (sudah selesai)
+## Environment Variables (Vercel Dashboard)
 
-### 1. Database (Supabase)
-```bash
-cp .env.example .env
-# isi DATABASE_URL dan DIRECT_URL
-npx prisma db push
-npm run db:seed   # optional
-```
-
-### 2. Supabase Storage
-1. Supabase Dashboard → **SQL Editor**
-2. Jalankan [`supabase/storage-setup.sql`](./supabase/storage-setup.sql)
-3. Isi env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
-
-### 3. Google OAuth
-- Google Cloud Console → Credentials → OAuth Client
-- Authorized redirect URIs:
-  - `http://localhost:3000/api/auth/callback/google`
-  - `https://YOUR-DOMAIN.vercel.app/api/auth/callback/google`
-
-### 4. Environment Variables (Vercel)
-
-| Variable | Catatan |
-|----------|---------|
-| `DATABASE_URL` | Supabase pooler URL |
-| `DIRECT_URL` | Supabase direct URL |
+| Variable | Keterangan |
+|----------|-----------|
+| `DATABASE_URL` | Supabase pooler URL (port **6543**) |
+| `DIRECT_URL` | Supabase direct URL (port 5432) — untuk migrations |
 | `AUTH_SECRET` | `openssl rand -base64 32` |
-| `AUTH_URL` | `https://your-app.vercel.app` |
-| `AUTH_GOOGLE_ID` | Google Console |
-| `AUTH_GOOGLE_SECRET` | Google Console |
+| `AUTH_URL` | `https://beemate-app.vercel.app` |
+| `AUTH_GOOGLE_ID` | Google Console OAuth client ID |
+| `AUTH_GOOGLE_SECRET` | Google Console OAuth client secret |
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key |
 | `SUPABASE_SERVICE_ROLE_KEY` | **Server only** — jangan expose |
-| `NEXT_PUBLIC_APP_URL` | `https://your-app.vercel.app` |
-
-### 5. Deploy
-```bash
-git push origin main
-# Vercel auto-deploy dari GitHub
-```
+| `NEXT_PUBLIC_APP_URL` | `https://beemate-app.vercel.app` |
+| `RESEND_API_KEY` | (Optional) Resend email API key |
+| `RESEND_FROM_EMAIL` | (Optional) Verified sender email |
 
 ---
 
-## Redeploy / Update
+## Deploy / Redeploy
 
 ```bash
 git add .
 git commit -m "feat: ..."
-git push
-# Vercel otomatis redeploy
+git push origin main
+# Vercel otomatis build & deploy
 ```
+
+Build command: `prisma generate && next build`
 
 ---
 
@@ -79,7 +60,7 @@ git push
 UPDATE "User" SET role = 'ADMIN' WHERE email = 'your-email@gmail.com';
 ```
 
-Jalankan di Supabase Dashboard → **SQL Editor**.
+Jalankan di Supabase Dashboard → SQL Editor.
 
 ---
 
@@ -87,24 +68,20 @@ Jalankan di Supabase Dashboard → **SQL Editor**.
 
 | Masalah | Solusi |
 |---------|--------|
-| `redirect_uri_mismatch` | Tambah URI production di Google Console |
+| `redirect_uri_mismatch` | Tambah production URL di Google Console → Authorized Redirect URIs |
 | Upload gagal 500 | Cek `SUPABASE_SERVICE_ROLE_KEY` di Vercel env vars |
-| `Cannot find module '.prisma/client'` | Pastikan build script: `prisma generate && next build` |
+| `Cannot find module '.prisma/client'` | Build script harus: `prisma generate && next build` |
 | Gambar tidak tampil | Bucket harus **public**; cek `next.config.ts` remotePatterns |
-| Database error | Pakai pooler URL untuk `DATABASE_URL` |
-| Login error di production | Cek `AUTH_URL` = domain Vercel yang benar |
+| Database error | Pakai pooler URL (port 6543) untuk `DATABASE_URL` |
+| Login error production | Cek `AUTH_URL` = domain Vercel yang benar |
+| Prisma schema error | Prisma 7: `url`/`directUrl` ada di `prisma.config.ts`, BUKAN di `schema.prisma` |
+| Email tidak terkirim | Cek `RESEND_API_KEY` di Vercel env; domain harus verified di Resend |
 
 ---
 
-## Post-Deployment Checklist
+## Database Info
 
-- [x] Login Google OAuth ✅
-- [x] Upload foto profil (Supabase Storage) ✅
-- [x] Gambar tampil dengan URL `*.supabase.co/storage/...` ✅
-- [ ] Buat tim & undang anggota (test di production)
-- [ ] Admin: buat kompetisi + upload banner (test di production)
-- [ ] Test mobile viewport
-
----
-
-**Stack:** Next.js 16 + Vercel + Supabase (DB + Storage) + Google OAuth + Prisma + NextAuth v5
+- **12 performance indexes** aktif
+- **RLS** aktif di semua tabel
+- **Realtime** aktif untuk tabel Notification
+- **Schema:** 14 models (User, Team, TeamMember, Competition, Notification, Endorsement, Message, Task, Project, ProjectComment, ProjectLike, Account, Session, VerificationToken)

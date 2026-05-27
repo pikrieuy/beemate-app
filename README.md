@@ -1,64 +1,77 @@
 # 🐝 BeeMate
 
-Platform untuk mempertemukan **Hacker, Hustler, dan Hipster** untuk membentuk tim dan mengikuti kompetisi.
+Platform matchmaking untuk **Hacker, Hustler, dan Hipster** — bentuk tim, ikuti kompetisi, dan temukan rekan kerja kampus.
+
+**Live:** [beemate-app.vercel.app](https://beemate-app.vercel.app)
 
 ## 🚀 Quick Start
 
 ```bash
+cp .env.example .env   # isi semua env vars
+npm install
+npx prisma generate
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
 
-## 📚 Documentation
-
-**New to the project?** Start with **[DOCS_GUIDE.md](./DOCS_GUIDE.md)** for navigation help.
-
-**Key Documents:**
-- **[MASTER_PLAN.md](./MASTER_PLAN.md)** - Complete development roadmap (13 phases)
-- **[NEXT_STEPS.md](./NEXT_STEPS.md)** - Current phase guide (Phase 3)
-- **[QUICK_REFERENCE.md](./QUICK_REFERENCE.md)** - One-page cheat sheet
-- **[SERVER_ACTIONS.md](./SERVER_ACTIONS.md)** - Backend API documentation
-- **[QUICK_START_ACTIONS.md](./QUICK_START_ACTIONS.md)** - Quick examples
-
 ## 🛠️ Tech Stack
 
-- **Framework:** Next.js 16 (App Router)
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS v4
-- **Database:** PostgreSQL (Supabase)
-- **ORM:** Prisma 7
-- **Auth:** NextAuth v5 (Google OAuth)
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript 5 |
+| Styling | Tailwind CSS v4 + Vanilla CSS |
+| Database | PostgreSQL (Supabase) |
+| ORM | Prisma 7 |
+| Auth | NextAuth v5 (Google OAuth) |
+| Realtime | Supabase Realtime |
+| Email | Resend |
+| File Upload | Supabase Storage |
+| Analytics | Vercel Analytics |
+| Deploy | Vercel |
 
-## ✅ Progress
+## ✅ Features
 
-- ✅ Phases 1–9: Full MVP (Profile, Teams, Competitions, Dashboard, Admin, Uploads)
-- ✅ Phase 10–12: Build fixes + deployment prep
-- 🔜 Phase 13: Deploy to Vercel → see **[DEPLOYMENT.md](./DEPLOYMENT.md)**
-
-**Overall:** ~95% — `npm run build` passes ✅
+- Google OAuth login (no password needed)
+- User profiles with skills, bio, portfolio
+- People directory with role filter (Hacker/Hustler/Hipster)
+- Recommendation system (complementary skills)
+- Team creation, invite, accept/reject
+- Real-time notifications (Supabase Realtime)
+- Email notifications (Resend)
+- Competition listings with deadline countdown
+- Dashboard with stats
+- Admin panel (user & competition management)
+- File upload (avatar + banner via Supabase Storage)
+- Settings page (account, notifications, privacy, delete account)
+- Dark mode
 
 ## 📁 Project Structure
 
 ```
 src/
-├── app/              # Next.js pages
-├── components/       # React components
-├── actions/          # Server Actions (28 functions)
-├── lib/              # Utilities
-└── types/            # TypeScript types
+├── app/              # Next.js App Router pages
+├── components/       # React components (ui/, layout/, cards/)
+├── actions/          # Server Actions (8 modules)
+├── lib/              # Utilities (prisma, supabase, email)
+└── auth.ts           # NextAuth v5 config
 ```
 
 ## 🔐 Environment Variables
 
-Copy [`.env.example`](./.env.example) to `.env` and fill in all values.
+See [`.env.example`](./.env.example) for all required variables.
 
-## 📖 Learn More
+## 📖 Documentation
 
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Prisma Documentation](https://www.prisma.io/docs)
-- [Supabase Documentation](https://supabase.com/docs)
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** — Deploy guide + troubleshooting
+- **[CHECKLIST.md](./CHECKLIST.md)** — Development progress
+- **[ROADMAP.md](./ROADMAP.md)** — Future planning
 
-## 🚀 Deploy
+## 🤖 AI Agent Setup
 
-Follow **[DEPLOYMENT.md](./DEPLOYMENT.md)** for the full Vercel + Supabase + OAuth checklist.
+This project uses Agent Skills (`.kiro/skills/`) and Supabase MCP for AI-assisted development. See `AGENTS.md` for details.
+
+---
+
+*BeeMate — Find Your Hive 🐝*
