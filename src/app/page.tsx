@@ -2,7 +2,8 @@ import prisma from "@/lib/prisma";
 import { LandingClient } from "./landing-client";
 import { getTrendingSkills } from "@/actions";
 
-// Revalidate stats every 10 minutes
+// Force dynamic rendering (DB queries can't run at build time on Vercel)
+export const dynamic = "force-dynamic";
 export const revalidate = 600;
 
 export default async function LandingPage() {
