@@ -38,18 +38,18 @@ JSON format:
 {"skills":["skill1","skill2"],"title":"Hacker","bio":"ringkasan singkat"}
 
 Rules: skills max 8, title harus Hacker/Hustler/Hipster, bio max 50 kata bahasa Indonesia.`,
-      maxTokens: 300,
+      maxTokens: 1024,
     })
 
     // Parse JSON — handle various response formats from Gemini 2.5
     let jsonStr = result.trim()
-    // Remove markdown code blocks
-    jsonStr = jsonStr.replace(/```json\s*/gi, "").replace(/```\s*/g, "")
-    // Find JSON object in response (in case there's extra text)
+    // Remove markdown code blocks (```json ... ```)
+    jsonStr = jsonStr.replace(/```json\s*/gi, "").replace(/```\s*/g, "").trim()
+    // Find JSON object in response
     const jsonMatch = jsonStr.match(/\{[\s\S]*\}/)
     if (!jsonMatch) {
       console.error("AI raw response:", result)
-      return { success: false, error: `AI format error. Raw: ${result.slice(0, 200)}` }
+      return { success: false, error: `AI format error. Coba lagi.` }
     }
     const parsed = JSON.parse(jsonMatch[0])
 
