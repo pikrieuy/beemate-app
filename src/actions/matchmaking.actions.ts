@@ -2,216 +2,338 @@
 
 import { auth } from "@/auth"
 import prisma from "@/lib/prisma"
+import { generateText } from "ai"
+import { geminiFlash } from "@/lib/ai"
+
+// ==========================================
+// 1. AI SKILL EXTRACTOR
+// ==========================================
 
 /**
- * Helper to get active user ID from session
+ * Extract skills from a text (bio, LinkedIn paste, CV text).
+ * Returns suggested skills and a generated bio summary.
  */
-async function getActiveUser() {
-  const session = await auth()
-  if (!session?.user?.email) return null
-  return prisma.user.findUnique({
-    where: { email: session.user.email },
-  })
+export async function extractSkillsFromText(text: string) {
+  try {
+    const session = await auth()
+    if (!session?.user?.email) {
+      return { success: false, error: "Not authenticated" }
+    }
+
+    if (!text?.trim() || text.trim().length < 10) {
+      return { success: false, error: "Teks terlalu pendek (minimal 10 karakter)" }
+    }
+
+    if (text.length > 3000) {
+      return { success: false, error: "Teks terlalu panjang (maksimal 3000 karakter)" }
+    }
+
+    const { text: result } = await generateText({
+      model: geminiFlash,
+      prompt: `Kamu adalah AI yang mengekstrak skills dari teks profil seseorang. Analisis teks berikut dan berikan output dalam format JSON.
+
+TEKS:
+"""
+${text.trim()}
+"""
+
+Berikan output JSON (HANYA JSON, tanpa markdown code block):
+{
+  "skills": ["skill1", "skill2", ...],
+  "title": "Hacker" | "Hustler" | "Hipster",
+  "bio": "ringkasan bio 1-2 kalimat dalam Bahasa Indonesia"
+}
+
+ATURAN:
+- skills: maksimal 8 skills, gunakan nama pendek (misal "React", "UI Design", "Marketing")
+- title: tentukan berdasarkan dominasi skill:
+  - Hacker = developer/engineer/data/AI
+  - Hustler = business/marketing/sales/management
+  - Hipster = design/creative/content/UX
+- bio: ringkas, profesional, max 100 kata`,
+      maxTokens: 300,
+    })
+
+    // Parse JSON from AI response
+    const cleaned = result.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim()
+    const parsed = JSON.parse(cleaned)
+
+    return {
+      success: true,
+      data: {
+        skills: (parsed.skills ?? []).slice(0, 8) as string[],
+        title: ["Hacker", "Hustler", "Hipster"].includes(parsed.title) ? parsed.title : "Hacker",
+        bio: (parsed.bio ?? "").slice(0, 500) as string,
+      },
+    }
+  } catch (error) {
+    console.error("Error extracting skills:", error)
+    return { success: false, error: "Gagal mengekstrak skills. Coba lagi." }
+  }
+}
+
+// ==========================================
+// 2. TEAM CHEMISTRY SCORE
+// ==========================================
+
+interface ChemistryResult {
+  overallScore: number // 0-100
+  breakdown: {
+    roleBalance: number // 0-100 — apakah ada Hacker+Hustler+Hipster
+    skillDiversity: number // 0-100 — seberapa beragam skill
+    skillCoverage: number // 0-100 — coverage area (tech, business, design)
+    teamSize: number // 0-100 — optimal size (3-5 = 100)
+  }
+  strengths: string[]
+  weaknesses: string[]
+  suggestion: string
 }
 
 /**
- * Mendapatkan rekomendasi developer untuk suatu tim (untuk dibaca oleh Leader)
+ * Calculate team chemistry score based on member composition.
  */
-export async function getDeveloperRecommendationsForTeam(teamId: string) {
+export async function getTeamChemistry(teamId: string): Promise<{ success: boolean; data?: ChemistryResult; error?: string }> {
   try {
-    const user = await getActiveUser()
-    if (!user) {
-      return { success: false, error: "Silakan login terlebih dahulu" }
+    const session = await auth()
+    if (!session?.user?.email) {
+      return { success: false, error: "Not authenticated" }
     }
 
-    // Ambil detail tim beserta anggota & leadernya
     const team = await prisma.team.findUnique({
       where: { id: teamId },
       include: {
-        leader: true,
+        leader: { select: { id: true, name: true, title: true, skills: true } },
         members: {
           where: { joinStatus: "ACCEPTED" },
           include: {
-            user: true
-          }
-        }
-      }
+            user: { select: { id: true, name: true, title: true, skills: true } },
+          },
+        },
+      },
     })
 
     if (!team) {
       return { success: false, error: "Tim tidak ditemukan" }
     }
 
-    if (team.leaderId !== user.id) {
-      return { success: false, error: "Hanya pemimpin tim yang dapat melihat rekomendasi ini" }
+    // Collect all members including leader
+    const allMembers = [
+      { ...team.leader },
+      ...team.members.map((m) => m.user),
+    ]
+
+    const totalMembers = allMembers.length
+    const roles = allMembers.map((m) => m.title).filter(Boolean)
+    const allSkills = allMembers.flatMap((m) => m.skills)
+    const uniqueSkills = [...new Set(allSkills)]
+
+    // 1. Role Balance (0-100)
+    const hasHacker = roles.includes("Hacker")
+    const hasHustler = roles.includes("Hustler")
+    const hasHipster = roles.includes("Hipster")
+    const roleCount = [hasHacker, hasHustler, hasHipster].filter(Boolean).length
+    const roleBalance = Math.round((roleCount / 3) * 100)
+
+    // 2. Skill Diversity (0-100) — unique skills / total skills
+    const skillDiversity = allSkills.length > 0
+      ? Math.min(100, Math.round((uniqueSkills.length / Math.max(allSkills.length, 1)) * 100 * 1.5))
+      : 0
+
+    // 3. Skill Coverage — tech, business, design areas
+    const techSkills = ["React", "Node.js", "Python", "TypeScript", "JavaScript", "Flutter", "Docker", "AWS", "PostgreSQL", "Firebase", "REST API", "CI/CD", "Linux", "TensorFlow", "Data Analysis", "Machine Learning"]
+    const bizSkills = ["Marketing", "Sales", "Pitching", "Business Model", "Agile", "Scrum", "Leadership", "Communication", "Product", "Community", "Events", "Project Management"]
+    const designSkills = ["Figma", "UI Design", "UX", "Prototyping", "Design Systems", "Illustration", "Branding", "Motion Graphics", "Content Strategy", "Copywriting"]
+
+    const hasTech = uniqueSkills.some((s) => techSkills.some((ts) => s.toLowerCase().includes(ts.toLowerCase())))
+    const hasBiz = uniqueSkills.some((s) => bizSkills.some((bs) => s.toLowerCase().includes(bs.toLowerCase())))
+    const hasDesign = uniqueSkills.some((s) => designSkills.some((ds) => s.toLowerCase().includes(ds.toLowerCase())))
+    const coverageCount = [hasTech, hasBiz, hasDesign].filter(Boolean).length
+    const skillCoverage = Math.round((coverageCount / 3) * 100)
+
+    // 4. Team Size (optimal: 3-5)
+    let teamSize = 100
+    if (totalMembers < 2) teamSize = 30
+    else if (totalMembers === 2) teamSize = 60
+    else if (totalMembers >= 3 && totalMembers <= 5) teamSize = 100
+    else if (totalMembers === 6) teamSize = 80
+    else teamSize = 60
+
+    // Overall score (weighted)
+    const overallScore = Math.round(
+      roleBalance * 0.3 +
+      skillDiversity * 0.25 +
+      skillCoverage * 0.3 +
+      teamSize * 0.15
+    )
+
+    // Strengths & Weaknesses
+    const strengths: string[] = []
+    const weaknesses: string[] = []
+
+    if (roleBalance >= 66) strengths.push("Role balance bagus — ada kombinasi yang solid")
+    if (roleBalance < 33) weaknesses.push("Kurang variasi role — cari anggota dengan role berbeda")
+    if (skillDiversity >= 70) strengths.push("Skill beragam — tim bisa handle banyak aspek")
+    if (skillDiversity < 40) weaknesses.push("Skill terlalu mirip — butuh diversifikasi")
+    if (skillCoverage >= 66) strengths.push("Coverage lengkap — tech, bisnis, dan desain tercover")
+    if (!hasTech) weaknesses.push("Belum ada skill teknis — butuh developer")
+    if (!hasDesign) weaknesses.push("Belum ada skill desain — butuh designer")
+    if (!hasBiz) weaknesses.push("Belum ada skill bisnis — butuh hustler")
+    if (teamSize === 100) strengths.push("Ukuran tim ideal (3-5 orang)")
+    if (totalMembers < 3) weaknesses.push("Tim terlalu kecil — rekrut 1-2 orang lagi")
+
+    // AI suggestion
+    let suggestion = "Tim kamu sudah solid! Fokus ke eksekusi."
+    if (overallScore < 50) {
+      suggestion = `Rekrut ${!hasHacker ? "Hacker" : !hasHipster ? "Hipster" : "Hustler"} untuk melengkapi tim. Gunakan BeeMatch AI untuk cari kandidat.`
+    } else if (overallScore < 75) {
+      suggestion = weaknesses.length > 0 ? `Pertimbangkan: ${weaknesses[0]}` : "Tim cukup bagus, bisa mulai eksekusi."
     }
-
-    // Tentukan role yang sudah ada di tim
-    const currentRoles = new Set<string>()
-    if (team.leader.title) {
-      currentRoles.add(team.leader.title.toUpperCase())
-    }
-    team.members.forEach(m => {
-      if (m.user.title) {
-        currentRoles.add(m.user.title.toUpperCase())
-      }
-    })
-
-    // Tentukan role yang belum ada di tim
-    const allRoles = ["HACKER", "HUSTLER", "HIPSTER"]
-    const missingRoles = allRoles.filter(r => !currentRoles.has(r))
-
-    // Kumpulkan ID user yang sudah ada di tim (termasuk leader) atau yang sedang pending diundang
-    const existingMemberUsers = await prisma.teamMember.findMany({
-      where: { teamId },
-      select: { userId: true, joinStatus: true }
-    })
-    const excludedUserIds = new Set<string>()
-    excludedUserIds.add(team.leaderId)
-    existingMemberUsers.forEach(m => excludedUserIds.add(m.userId))
-
-    // Ambil daftar semua user lain di database
-    const allOtherUsers = await prisma.user.findMany({
-      where: {
-        id: {
-          notIn: Array.from(excludedUserIds)
-        }
-      },
-      select: {
-        id: true,
-        name: true,
-        image: true,
-        title: true,
-        bio: true,
-        skills: true
-      }
-    })
-
-    // Kumpulkan status undangan untuk user lain ini (apakah sudah diundang/PENDING)
-    const pendingInvites = existingMemberUsers.filter(m => m.joinStatus === "PENDING").map(m => m.userId)
-
-    // Hitung kecocokan score untuk masing-masing user
-    const recommendations = allOtherUsers.map(u => {
-      let score = 0
-      const userRole = u.title?.toUpperCase() || ""
-
-      // 1. Role komplementer: +10 poin jika memenuhi role yang belum ada di tim
-      if (userRole && missingRoles.includes(userRole)) {
-        score += 10
-      }
-
-      // 2. Keterkaitan Keahlian: +3 poin per kecocokan skill
-      const teamDescription = (team.description || "").toLowerCase()
-      const matchingSkills = u.skills.filter(skill => 
-        teamDescription.includes(skill.toLowerCase())
-      )
-      score += matchingSkills.length * 3
-
-      return {
-        user: u,
-        score,
-        isAlreadyInvited: pendingInvites.includes(u.id),
-        matchingSkills
-      }
-    })
-
-    // Urutkan berdasarkan score tertinggi, limit 10
-    recommendations.sort((a, b) => b.score - a.score)
-    const topRecommendations = recommendations.slice(0, 10)
 
     return {
       success: true,
       data: {
-        recommendations: topRecommendations,
-        missingRoles,
-        currentRoles: Array.from(currentRoles)
-      }
+        overallScore,
+        breakdown: { roleBalance, skillDiversity, skillCoverage, teamSize },
+        strengths,
+        weaknesses,
+        suggestion,
+      },
     }
   } catch (error) {
-    console.error("Error recommending developers:", error)
-    return { success: false, error: "Gagal memuat rekomendasi developer" }
+    console.error("Error calculating team chemistry:", error)
+    return { success: false, error: "Gagal menghitung chemistry tim" }
   }
 }
 
+// ==========================================
+// 3. AI COMPETITION RECOMMENDER
+// ==========================================
+
 /**
- * Mendapatkan rekomendasi tim untuk developer individu (untuk dibaca oleh Anggota)
+ * Recommend competitions based on user's skills and profile.
  */
-export async function getTeamRecommendationsForUser() {
+export async function getCompetitionRecommendations() {
   try {
-    const user = await getActiveUser()
-    if (!user) {
-      return { success: false, error: "Silakan login terlebih dahulu" }
+    const session = await auth()
+    if (!session?.user?.email) {
+      return { success: false, error: "Not authenticated" }
     }
 
-    const userRole = user.title?.toUpperCase() || ""
-    const userSkills = user.skills || []
-
-    // Cari tim yang di mana user belum bergabung dan bukan leader
-    const userMemberships = await prisma.teamMember.findMany({
-      where: { userId: user.id },
-      select: { teamId: true }
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+      select: { skills: true, title: true, bio: true },
     })
-    const excludedTeamIds = userMemberships.map(m => m.teamId)
 
-    const allOtherTeams = await prisma.team.findMany({
+    if (!user) {
+      return { success: false, error: "User not found" }
+    }
+
+    // Get upcoming competitions
+    const competitions = await prisma.competition.findMany({
       where: {
-        leaderId: { not: user.id },
-        id: { notIn: excludedTeamIds }
+        deadline: { gte: new Date() },
       },
-      include: {
-        leader: true,
-        members: {
-          where: { joinStatus: "ACCEPTED" },
-          include: {
-            user: true
-          }
-        }
-      }
+      orderBy: { deadline: "asc" },
+      take: 10,
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        deadline: true,
+      },
     })
 
-    const recommendations = allOtherTeams.map(team => {
-      let score = 0
+    if (competitions.length === 0) {
+      return { success: true, data: [] }
+    }
 
-      // Tentukan role yang ada di tim saat ini
-      const teamRoles = new Set<string>()
-      if (team.leader.title) {
-        teamRoles.add(team.leader.title.toUpperCase())
-      }
-      team.members.forEach(m => {
-        if (m.user.title) {
-          teamRoles.add(m.user.title.toUpperCase())
-        }
-      })
+    // Use AI to rank competitions by relevance
+    const competitionList = competitions
+      .map((c, i) => `${i + 1}. "${c.title}" — ${c.description.slice(0, 100)}`)
+      .join("\n")
 
-      // 1. Role komplementer: jika role user belum ada di tim, berikan poin +10
-      if (userRole && !teamRoles.has(userRole)) {
-        score += 10
-      }
+    const { text: result } = await generateText({
+      model: geminiFlash,
+      prompt: `Kamu adalah AI yang merekomendasikan kompetisi untuk mahasiswa.
 
-      // 2. Skill alignment: jika deskripsi tim memuat salah satu skill user, berikan +3 poin per skill
-      const teamDesc = (team.description || "").toLowerCase()
-      const matchingSkills = userSkills.filter(skill => 
-        teamDesc.includes(skill.toLowerCase())
-      )
-      score += matchingSkills.length * 3
+PROFIL USER:
+- Role: ${user.title ?? "Belum diisi"}
+- Skills: ${user.skills.join(", ") || "Belum diisi"}
+${user.bio ? `- Bio: ${user.bio}` : ""}
 
-      return {
-        team,
-        score,
-        matchingSkills
-      }
+KOMPETISI TERSEDIA:
+${competitionList}
+
+Berikan ranking kompetisi dari yang PALING COCOK untuk user ini. Output JSON array (HANYA JSON):
+[
+  { "index": 1, "reason": "alasan singkat 10 kata" },
+  ...
+]
+
+Urutkan dari paling cocok. Maksimal 5 kompetisi.`,
+      maxTokens: 300,
     })
 
-    // Urutkan berdasarkan score tertinggi, limit 10
-    recommendations.sort((a, b) => b.score - a.score)
-    const topRecommendations = recommendations.slice(0, 10)
+    const cleaned = result.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim()
+    const rankings = JSON.parse(cleaned) as Array<{ index: number; reason: string }>
+
+    const recommended = rankings
+      .filter((r) => r.index >= 1 && r.index <= competitions.length)
+      .map((r) => ({
+        ...competitions[r.index - 1],
+        reason: r.reason,
+      }))
+
+    return { success: true, data: recommended }
+  } catch (error) {
+    console.error("Error getting competition recommendations:", error)
+    return { success: false, error: "Gagal mendapatkan rekomendasi" }
+  }
+}
+
+// ==========================================
+// 4. TRENDING SKILLS
+// ==========================================
+
+/**
+ * Get trending/most common skills across all users.
+ * Returns top skills with counts.
+ */
+export async function getTrendingSkills(limit = 10) {
+  try {
+    // Get all user skills
+    const users = await prisma.user.findMany({
+      where: {
+        skills: { isEmpty: false },
+      },
+      select: { skills: true },
+    })
+
+    // Count skill frequency
+    const skillCounts: Record<string, number> = {}
+    for (const user of users) {
+      for (const skill of user.skills) {
+        skillCounts[skill] = (skillCounts[skill] ?? 0) + 1
+      }
+    }
+
+    // Sort by count and take top N
+    const trending = Object.entries(skillCounts)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, limit)
+      .map(([skill, count]) => ({ skill, count }))
+
+    const totalUsers = users.length
 
     return {
       success: true,
-      data: topRecommendations
+      data: {
+        trending,
+        totalUsers,
+      },
     }
   } catch (error) {
-    console.error("Error recommending teams:", error)
-    return { success: false, error: "Gagal memuat rekomendasi tim" }
+    console.error("Error getting trending skills:", error)
+    return { success: false, error: "Gagal memuat trending skills" }
   }
 }
