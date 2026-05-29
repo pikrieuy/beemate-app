@@ -9,4 +9,6 @@ export const google = createGoogleGenerativeAI({
 
 // Models
 export const geminiFlash = google("gemini-2.5-flash");
-export const embeddingModel = google.textEmbeddingModel("gemini-embedding-001");
+export const embeddingModel = google.textEmbeddingModel("gemini-embedding-2", {
+  outputDimensionality: 768,
+});
