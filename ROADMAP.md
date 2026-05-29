@@ -1,7 +1,7 @@
 # 🗺️ BeeMate — Roadmap & Planning
 
 **Last Updated:** 29 Mei 2026  
-**Current Status:** Live in Production · 13+ users · 7 teams · 5 competitions · AI Features Active
+**Current Status:** Live in Production · 13+ users · 7 teams · 5 competitions · 6 AI Features Active
 
 ---
 
@@ -11,80 +11,81 @@ BeeMate menjadi platform #1 untuk mahasiswa Indonesia mencari tim lomba dan kola
 
 ---
 
-## 📅 Short Term (1–2 Minggu)
+## ✅ Completed (Short Term)
 
-### Security Hardening
-- [x] Tambah security headers (X-Frame-Options, CSP, nosniff)
-- [x] Fix image wildcard `*.supabase.co` → restrict ke project spesifik
-- [x] Tambah magic byte validation di upload route
-- [x] Pin next-auth version (hapus caret range)
-- [x] Tambah `poweredByHeader: false` di next.config.ts
+### Security Hardening ✅
+- [x] Security headers (X-Frame-Options, CSP, nosniff, Referrer-Policy, Permissions-Policy)
+- [x] Image restrict ke project-specific Supabase URL
+- [x] Magic byte validation di upload route
+- [x] Pin next-auth version (exact, no caret)
+- [x] `poweredByHeader: false`
+- [x] CSP includes unpkg.com for Phosphor icons
 
-### Quick Wins
-- [ ] Setup Resend (daftar, verify domain, isi API key di Vercel)
-- [x] Hapus dead code: `PersonCard.tsx`, `api/uploadthing/`, `picsum.photos` pattern
-- [x] Fix auth redirect di `competitions/[id]/page.tsx` (`/auth/signin` → `/api/auth/signin`)
-- [ ] Tambah onboarding flow untuk user baru
+### Quick Wins ✅
+- [x] Hapus dead code (PersonCard.tsx, api/uploadthing/, picsum.photos)
+- [x] Fix auth redirect (`/auth/signin` → `/api/auth/signin`)
+- [x] Setup Resend (API key di Vercel, email notifications aktif)
+- [x] Onboarding flow dengan AI Skill Extractor
 
-### Growth
+### AI Features ✅
+- [x] **BeeMatch AI** — embedding-based team matching + AI reasoning (`/match`)
+- [x] **BeeCoach AI** — streaming team assistant (`/api/ai/coach`)
+- [x] **AI Skill Extractor** — paste bio → auto-detect skills/role/bio
+- [x] **Team Chemistry Score** — analisis komposisi tim
+- [x] **Competition Recommender** — AI rank kompetisi by relevance
+- [x] **Trending Skills** — top skills di landing page
+
+### Infrastructure ✅
+- [x] Zod input validation di semua server actions
+- [x] Cursor-based pagination di People page
+- [x] pgvector extension + embedding column
+- [x] Vercel AI SDK + Gemini integration
+
+---
+
+## 📅 Next Up (1–2 Minggu)
+
+### Growth (Non-Code)
 - [ ] Ajak 10 user pertama (teman sekelas)
 - [ ] Post di grup kampus
 - [ ] Hubungi dosen untuk mentoring/kolaborasi
+- [ ] Deploy ke Google Cloud Run (untuk #JuaraVibeCoding)
+
+### Fitur
+- [ ] **Team Chat UI** — real-time messaging + BeeCoach integration
+- [ ] **Task Board UI** — kanban drag-and-drop
+- [ ] **Team Chemistry Score UI** — radar chart di team page
+- [ ] **Competition Recommender UI** — section di dashboard
+- [ ] "Looking for Team" badge di profil
 
 ---
 
 ## 📅 Medium Term (1 Bulan)
 
-### Fitur Baru
-- [ ] **Open Projects real** — user bisa posting proyek sendiri (ganti data palsu di `/explore`)
-- [ ] **Team Chat** — messaging antar anggota tim (schema `Message` sudah ada)
-- [ ] **Task Board** — bagi tugas dalam tim (schema `Task` sudah ada)
-- [ ] **Project Showcase** — tim publish hasil proyek (schema `Project` sudah ada)
-- [ ] **Skill Endorsement** — user endorse skill teman (schema `Endorsement` sudah ada)
-- [x] **BeeMatch AI** — AI-powered team matching dengan embedding + reasoning (Gemini)
-- [x] **BeeCoach AI** — AI team assistant di team chat (streaming, context-aware)
-
-### Infrastructure
-- [ ] Rate limiting (Upstash Redis free tier)
-- [ ] Error monitoring (Sentry free tier)
-- [x] Input validation dengan Zod di semua server actions
-- [x] Pagination di People page (cursor-based)
-
-### UX
-- [ ] Onboarding wizard (isi profil → pilih role → lihat rekomendasi)
-- [ ] "Looking for Team" badge di profil
-- [ ] Landing page stats auto-update (sudah dinamis, tinggal tunggu user)
+### Fitur
+- [ ] **Open Projects real** — user posting proyek sendiri (ganti data palsu di `/explore`)
+- [ ] **Project Showcase UI** — tim publish hasil proyek
+- [ ] Rate limiting (Upstash Redis)
+- [ ] Error monitoring (Sentry)
 - [ ] Mobile responsive audit
 
 ---
 
 ## 📅 Long Term (3–6 Bulan)
 
-### Scale
-- [ ] Kerjasama BEM/Himpunan — dapat ratusan user per event
-- [ ] Featured Competition (monetisasi pertama — penyelenggara bayar)
-- [ ] AI Recommendation — matching berbasis embedding skills
+- [ ] Kerjasama BEM/Himpunan
+- [ ] Featured Competition (monetisasi)
 - [ ] PWA + push notifications
-- [ ] Export kalender (Google Calendar integration)
-
-### Monetisasi
-- [ ] B2B: penyelenggara lomba bayar untuk featured listing
-- [ ] Premium profile: badge verified, prioritas di search
-- [ ] Partnership kampus: lisensi per universitas
-
-### Technical
-- [ ] Migrate next-auth ke stable release (saat keluar)
-- [ ] Database sharding / read replicas (jika >10K users)
-- [ ] CDN untuk uploaded images
-- [ ] Automated testing (Playwright E2E)
+- [ ] Export kalender (Google Calendar)
+- [ ] Migrate next-auth ke stable release
 
 ---
 
 ## 📅 Dream (6–12 Bulan)
 
-- [ ] Mobile app (React Native atau PWA serius)
-- [ ] Multi-university support (bukan hanya BINUS)
-- [ ] Real-time video call untuk team meetings
+- [ ] Mobile app (React Native / PWA)
+- [ ] Multi-university support
+- [ ] Real-time video call
 - [ ] Leaderboard & gamification
 - [ ] Startup incubator integration
 
@@ -97,33 +98,23 @@ BeeMate menjadi platform #1 untuk mahasiswa Indonesia mencari tim lomba dan kola
 | Registered users | 50 | 500 |
 | Active teams | 15 | 100 |
 | Competitions posted | 10 | 30 |
-| Team invites sent | 30 | 200 |
+| AI matches made | 50 | 500 |
 | Email open rate | 40%+ | 40%+ |
-
----
-
-## 🧰 Tech Debt (Backlog)
-
-| Item | Priority | Notes |
-|------|----------|-------|
-| `/explore` page data palsu | Medium | Ganti dengan real Open Projects |
-| `confirm()`/`alert()` di beberapa tempat | Low | Sudah fix di team & competition, cek sisanya |
-| ~~`searchUsers("")` full table scan~~ | ~~Medium~~ | ✅ Sudah pakai cursor-based pagination |
-| Notification preferences hanya localStorage | Low | Pindah ke DB kalau ada email system |
-| Landing page testimonials hardcoded | Low | Bisa diganti dengan real testimonials nanti |
 
 ---
 
 ## 🔑 Key Decisions Made
 
-1. **Prisma 7** — connection config di `prisma.config.ts`, bukan `schema.prisma`
-2. **NextAuth v5 beta** — dipilih karena App Router support, monitor untuk stable release
-3. **Supabase Storage** — dipilih over Uploadthing karena sudah pakai Supabase untuk DB
-4. **RLS + Prisma service role** — RLS sebagai defense-in-depth, Prisma handle auth logic
-5. **Realtime via Supabase** — bukan polling, untuk notifikasi instant
-6. **Resend** — dipilih karena free tier generous (100 email/hari) dan API simpel
-7. **Vanilla CSS** — dipilih over Tailwind utilities untuk kontrol penuh atas design system
+1. **Prisma 7** — connection config di `prisma.config.ts`
+2. **NextAuth v5 beta** — App Router support, pinned version
+3. **Supabase Storage** — unified with DB provider
+4. **RLS + Prisma service role** — defense-in-depth
+5. **Supabase Realtime** — instant notifications
+6. **Resend** — 100 email/hari free tier
+7. **Gemini 2.0 Flash** — AI features (free 15 RPM, 1M tokens/day)
+8. **Vercel AI SDK** — streaming, structured output, provider-agnostic
+9. **pgvector** — embedding similarity search in Postgres
 
 ---
 
-*Last reviewed: 27 Mei 2026*
+*Last reviewed: 29 Mei 2026*
