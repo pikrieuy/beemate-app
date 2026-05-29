@@ -9,6 +9,7 @@ import { InviteMemberModal } from "./invite-member-modal";
 import { TeamChat } from "./team-chat";
 import { TeamKanban } from "./team-kanban";
 import { ProjectShowcase } from "./team-showcase";
+import { TeamChemistry } from "./team-chemistry";
 
 interface TeamMember {
   id: string;
@@ -121,7 +122,7 @@ export function TeamDetailClient({ team, currentUserId, isLeader, isMember }: Te
   const [loading, setLoading] = useState(false);
   const [confirm, setConfirm] = useState<{ msg: string; action: () => Promise<void> } | null>(null);
   const { toast, show: showToast } = useToast();
-  const [activeTab, setActiveTab] = useState<"members" | "chat" | "kanban" | "showcase">("members");
+  const [activeTab, setActiveTab] = useState<"members" | "chat" | "kanban" | "showcase" | "chemistry">("members");
 
   const getInitials = (name: string | null) => {
     if (!name) return "??";
@@ -325,6 +326,7 @@ export function TeamDetailClient({ team, currentUserId, isLeader, isMember }: Te
             {[
               { id: 'members', label: 'Anggota Tim', icon: 'ph-fill ph-users' },
               { id: 'showcase', label: 'Project Showcase', icon: 'ph-fill ph-rocket' },
+              { id: 'chemistry', label: 'Chemistry Score', icon: 'ph-fill ph-chart-pie' },
               ...((isLeader || isMember) ? [
                 { id: 'chat', label: 'Chat Room', icon: 'ph-fill ph-chat-circle-text' },
                 { id: 'kanban', label: 'Papan Tugas (Kanban)', icon: 'ph-fill ph-kanban' },
@@ -576,6 +578,10 @@ export function TeamDetailClient({ team, currentUserId, isLeader, isMember }: Te
                   isMember={isMember}
                   isLeader={isLeader}
                 />
+              )}
+
+              {activeTab === "chemistry" && (
+                <TeamChemistry teamId={team.id} />
               )}
             </motion.div>
           </AnimatePresence>

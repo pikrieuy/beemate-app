@@ -7,7 +7,7 @@ export default async function DashboardPage() {
   const session = await auth();
   
   if (!session?.user?.email) {
-    redirect("/auth/signin");
+    redirect("/api/auth/signin");
   }
 
   // Get current user
@@ -22,7 +22,7 @@ export default async function DashboardPage() {
   });
 
   if (!user) {
-    redirect("/auth/signin");
+    redirect("/api/auth/signin");
   }
 
   // Get user's teams (as leader)

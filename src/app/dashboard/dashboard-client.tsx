@@ -5,6 +5,7 @@ import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { CompetitionRecommender } from "@/components/ui/CompetitionRecommender";
 
 interface User {
   id: string;
@@ -379,6 +380,11 @@ export function DashboardClient({
                 />
               )}
             </SectionCard>
+          </motion.div>
+
+          {/* AI Competition Recommender */}
+          <motion.div {...fadeUp(0.5)}>
+            <CompetitionRecommender />
           </motion.div>
 
         </div>
