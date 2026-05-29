@@ -1,7 +1,7 @@
 # 🗺️ BeeMate — Roadmap & Planning
 
-**Last Updated:** 27 Mei 2026  
-**Current Status:** Live in Production · 13+ users · 7 teams · 5 competitions
+**Last Updated:** 29 Mei 2026  
+**Current Status:** Live in Production · 13+ users · 7 teams · 5 competitions · AI Features Active
 
 ---
 
@@ -41,6 +41,8 @@ BeeMate menjadi platform #1 untuk mahasiswa Indonesia mencari tim lomba dan kola
 - [ ] **Task Board** — bagi tugas dalam tim (schema `Task` sudah ada)
 - [ ] **Project Showcase** — tim publish hasil proyek (schema `Project` sudah ada)
 - [ ] **Skill Endorsement** — user endorse skill teman (schema `Endorsement` sudah ada)
+- [x] **BeeMatch AI** — AI-powered team matching dengan embedding + reasoning (Gemini)
+- [x] **BeeCoach AI** — AI team assistant di team chat (streaming, context-aware)
 
 ### Infrastructure
 - [ ] Rate limiting (Upstash Redis free tier)

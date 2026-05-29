@@ -29,6 +29,15 @@
 - [x] Task board (schema ready)
 - [x] Project showcase (schema ready)
 
+## Phase 15: AI Features ✅
+- [x] BeeMatch AI — embedding-based team matching (Gemini text-embedding-004)
+- [x] BeeCoach AI — streaming team assistant (Gemini 2.0 Flash)
+- [x] Vercel AI SDK integration (@ai-sdk/google)
+- [x] pgvector extension for similarity search
+- [x] Auto-generate embeddings on profile update
+- [x] /match page with compatibility scores + AI reasoning
+- [x] /api/ai/coach streaming endpoint (context-aware)
+
 ## Security & Infrastructure ✅
 - [x] Middleware route protection (src/middleware.ts)
 - [x] Role in JWT (client components can read role)
