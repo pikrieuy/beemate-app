@@ -33,10 +33,7 @@ export function MatchClient() {
     setHasSearched(true);
 
     try {
-      // First, ensure user embedding is up to date
-      await fetch("/api/ai/embed", { method: "POST" });
-
-      // Then find matches
+      // Find matches directly (no embedding step needed)
       const res = await fetch("/api/ai/match", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
