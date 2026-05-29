@@ -1,4 +1,15 @@
 {
   "mcpServers": {
+    "huggingface": {
+      "url": "https://huggingface.co/mcp",
+      "headers": {
+        "Authorization": "Bearer ${HF_TOKEN}"
+      },
+      "autoApprove": [
+        "hf_whoami",
+        "hf_doc_search",
+        "hub_repo_search"
+      ]
+    }
   }
 }

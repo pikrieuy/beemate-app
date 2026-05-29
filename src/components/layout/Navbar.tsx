@@ -32,7 +32,7 @@ export function Navbar() {
     { label: "People", path: "/people" },
     { label: "Teams", path: "/teams" },
     { label: "Competitions", path: "/competitions" },
-    { label: "Matchmaking", path: "/matchmaking" }
+    { label: "BeeMatch AI", path: "/match" },
   ];
 
   return (

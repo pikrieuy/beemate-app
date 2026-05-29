@@ -3,6 +3,8 @@
 import { auth } from "@/auth"
 import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
+import { embed } from "ai"
+import { embeddingModel } from "@/lib/ai"
 
 /**
  * Get current user profile
@@ -104,6 +106,10 @@ export async function updateUserProfile(data: {
     })
 
     revalidatePath("/profile")
+
+    // Trigger AI embedding update in background (non-blocking)
+    generateUserEmbedding(user.id).catch(() => {/* silent fail */})
+
     return { success: true, data: user }
   } catch (error) {
     console.error("Error updating user profile:", error)
@@ -423,5 +429,41 @@ export async function removeEndorsement(recipientId: string, skill: string) {
   } catch (error) {
     console.error("Error removing endorsement:", error)
     return { success: false, error: "Failed to remove endorsement" }
+  }
+}
+
+/**
+ * Generate AI embedding for a user's profile (background task).
+ * Called automatically after profile updates.
+ */
+async function generateUserEmbedding(userId: string) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { name: true, bio: true, skills: true, title: true },
+    })
+
+    if (!user || (!user.skills.length && !user.bio && !user.title)) return
+
+    const parts: string[] = []
+    if (user.title) parts.push(`Role: ${user.title}`)
+    if (user.skills.length > 0) parts.push(`Skills: ${user.skills.join(", ")}`)
+    if (user.bio) parts.push(`About: ${user.bio}`)
+    if (user.name) parts.push(`Name: ${user.name}`)
+
+    const profileText = parts.join(". ")
+
+    const { embedding: vector } = await embed({
+      model: embeddingModel,
+      value: profileText,
+    })
+
+    await prisma.$executeRawUnsafe(
+      `UPDATE "User" SET embedding = $1::vector WHERE id = $2`,
+      `[${vector.join(",")}]`,
+      userId
+    )
+  } catch (error) {
+    console.error("Error generating user embedding:", error)
   }
 }
