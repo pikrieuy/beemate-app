@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { updateUserProfile } from "@/actions";
+import { extractSkillsFromText } from "@/actions/matchmaking.actions";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { ImageUpload } from "@/components/ui/ImageUpload";
@@ -23,6 +24,7 @@ export function EditProfileModal({ user, onClose }: EditProfileModalProps) {
   const { update: updateSession } = useSession();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
   
   const [name, setName] = useState(user.name || "");
   const [bio, setBio] = useState(user.bio || "");
@@ -181,6 +183,33 @@ export function EditProfileModal({ user, onClose }: EditProfileModalProps) {
                 fontFamily: 'inherit'
               }}
             />
+            {bio.length >= 10 && (
+              <button
+                type="button"
+                onClick={async () => {
+                  setAiLoading(true);
+                  setError("");
+                  const result = await extractSkillsFromText(bio);
+                  if (result.success && result.data) {
+                    setSkills(result.data.skills);
+                    setTitle(result.data.title);
+                  } else {
+                    setError(result.error || "AI extraction failed");
+                  }
+                  setAiLoading(false);
+                }}
+                disabled={aiLoading}
+                style={{
+                  marginTop: '8px', padding: '6px 14px', borderRadius: '8px',
+                  border: '1px solid rgba(245,166,35,0.3)', background: 'rgba(245,166,35,0.08)',
+                  color: '#f5a623', fontSize: '12px', fontWeight: 700, cursor: 'pointer',
+                  opacity: aiLoading ? 0.6 : 1,
+                }}
+              >
+                <i className="ph-fill ph-sparkle" style={{ marginRight: '4px' }} />
+                {aiLoading ? "Menganalisis..." : "✨ AI Auto-detect Skills dari Bio"}
+              </button>
+            )}
           </div>
 
           {/* Title */}

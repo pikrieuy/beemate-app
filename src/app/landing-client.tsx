@@ -7,6 +7,7 @@ import { TestimonialsColumn } from "@/components/ui/TestimonialsColumn";
 
 interface Props {
   stats: { users: number; teams: number; competitions: number };
+  trendingSkills: Array<{ skill: string; count: number }>;
 }
 
 const allTestimonials = [
@@ -31,7 +32,7 @@ function formatStat(n: number): string {
   return `${n}+`;
 }
 
-export function LandingClient({ stats }: Props) {
+export function LandingClient({ stats, trendingSkills }: Props) {
   const router = useRouter();
 
   const proofText = `${formatStat(stats.users)} Bergabung · ${formatStat(stats.teams)} Tim Aktif · ${stats.competitions} Kompetisi`;
@@ -252,6 +253,71 @@ export function LandingClient({ stats }: Props) {
           <TestimonialsColumn testimonials={col3} duration={20} className="testi-col-mask-col3" />
         </div>
       </section>
+
+      {/* ══ SECTION 4 — TRENDING SKILLS ══ */}
+      {trendingSkills.length > 0 && (
+        <section style={{ position: "relative", zIndex: 1, padding: "80px 28px", maxWidth: 800, margin: "0 auto" }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.5 }}
+            style={{ textAlign: "center", marginBottom: "36px" }}
+          >
+            <div style={{
+              display: "inline-flex", alignItems: "center", gap: 6,
+              background: "rgba(91,156,246,0.1)", border: "1px solid rgba(91,156,246,0.2)", color: "#5b9cf6",
+              fontSize: 10, fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase",
+              padding: "5px 14px", borderRadius: 100, marginBottom: 20,
+            }}>
+              <i className="ph-fill ph-trend-up" style={{ fontSize: 12 }}></i>
+              Trending Skills
+            </div>
+            <h2 style={{
+              fontFamily: "'Sora', sans-serif",
+              fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 900,
+              letterSpacing: "-1px", lineHeight: 1.2, marginBottom: 10,
+            }}>
+              Skill paling dicari{" "}
+              <span style={{
+                background: "linear-gradient(90deg, #5b9cf6, #93c5fd)",
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+              }}>minggu ini</span>
+            </h2>
+            <p style={{ fontSize: 13, color: "var(--t2)", lineHeight: 1.7 }}>
+              Berdasarkan profil {formatStat(stats.users)} user di BeeMate
+            </p>
+          </motion.div>
+
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", justifyContent: "center" }}>
+            {trendingSkills.map((item, i) => (
+              <motion.div
+                key={item.skill}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05, duration: 0.3 }}
+                style={{
+                  padding: "12px 20px", borderRadius: "14px",
+                  background: "var(--bg2)", border: "1px solid var(--b)",
+                  display: "flex", alignItems: "center", gap: "10px",
+                  fontSize: "14px", fontWeight: 700, color: "var(--t)",
+                }}
+              >
+                <span style={{
+                  fontSize: "11px", fontWeight: 800, color: "var(--ho)",
+                  background: "rgba(245,166,35,0.1)", border: "1px solid rgba(245,166,35,0.2)",
+                  padding: "2px 8px", borderRadius: "6px", minWidth: "28px", textAlign: "center",
+                }}>
+                  #{i + 1}
+                </span>
+                {item.skill}
+                <span style={{ fontSize: "11px", color: "var(--t3)", fontWeight: 500 }}>
+                  {item.count} user
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ══ CTA BAR ══ */}
       <div style={{ position: "relative", zIndex: 1, padding: "0 28px 80px", maxWidth: 1100, margin: "0 auto" }}>
