@@ -9,5 +9,5 @@ export const google = createGoogleGenerativeAI({
 });
 
 // Models
-export const geminiFlash = google("gemini-2.0-flash");
+export const geminiFlash = google("gemini-2.5-flash");
 export const embeddingModel = google.textEmbeddingModel("gemini-embedding-001");
