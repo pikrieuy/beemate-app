@@ -48,7 +48,8 @@ Rules: skills max 8, title harus Hacker/Hustler/Hipster, bio max 50 kata bahasa 
     // Find JSON object in response (in case there's extra text)
     const jsonMatch = jsonStr.match(/\{[\s\S]*\}/)
     if (!jsonMatch) {
-      return { success: false, error: "AI response format error. Coba lagi." }
+      console.error("AI raw response:", result)
+      return { success: false, error: `AI format error. Raw: ${result.slice(0, 200)}` }
     }
     const parsed = JSON.parse(jsonMatch[0])
 
