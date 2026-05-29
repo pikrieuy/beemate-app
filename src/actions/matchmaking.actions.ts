@@ -66,8 +66,14 @@ ATURAN:
         bio: (parsed.bio ?? "").slice(0, 500) as string,
       },
     }
-  } catch (error) {
-    console.error("Error extracting skills:", error)
+  } catch (error: any) {
+    console.error("Error extracting skills:", error?.message || error)
+    const msg = error?.message?.includes("quota") 
+      ? "Quota API habis. Coba lagi nanti."
+      : error?.message?.includes("deprecated") || error?.message?.includes("no longer available")
+      ? "Model AI sedang diupdate. Coba lagi."
+      : "Gagal mengekstrak skills. Coba lagi."
+    return { success: false, error: msg }
     return { success: false, error: "Gagal mengekstrak skills. Coba lagi." }
   }
 }

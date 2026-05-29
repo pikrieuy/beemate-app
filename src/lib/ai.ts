@@ -2,7 +2,6 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 
 /**
  * Google Gemini AI client for BeeMate.
- * Uses Gemini 2.0 Flash for fast, cost-effective AI features.
  */
 export const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_AI_API_KEY ?? "",
