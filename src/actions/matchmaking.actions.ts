@@ -30,33 +30,27 @@ export async function extractSkillsFromText(text: string) {
 
     const { text: result } = await generateText({
       model: geminiFlash,
-      prompt: `Kamu adalah AI yang mengekstrak skills dari teks profil seseorang. Analisis teks berikut dan berikan output dalam format JSON.
+      prompt: `Ekstrak skills dari teks ini. Output HANYA JSON valid, tanpa penjelasan apapun.
 
-TEKS:
-"""
-${text.trim()}
-"""
+Teks: "${text.trim()}"
 
-Berikan output JSON (HANYA JSON, tanpa markdown code block):
-{
-  "skills": ["skill1", "skill2", ...],
-  "title": "Hacker" | "Hustler" | "Hipster",
-  "bio": "ringkasan bio 1-2 kalimat dalam Bahasa Indonesia"
-}
+JSON format:
+{"skills":["skill1","skill2"],"title":"Hacker","bio":"ringkasan singkat"}
 
-ATURAN:
-- skills: maksimal 8 skills, gunakan nama pendek (misal "React", "UI Design", "Marketing")
-- title: tentukan berdasarkan dominasi skill:
-  - Hacker = developer/engineer/data/AI
-  - Hustler = business/marketing/sales/management
-  - Hipster = design/creative/content/UX
-- bio: ringkas, profesional, max 100 kata`,
+Rules: skills max 8, title harus Hacker/Hustler/Hipster, bio max 50 kata bahasa Indonesia.`,
       maxTokens: 300,
     })
 
-    // Parse JSON from AI response
-    const cleaned = result.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim()
-    const parsed = JSON.parse(cleaned)
+    // Parse JSON — handle various response formats from Gemini 2.5
+    let jsonStr = result.trim()
+    // Remove markdown code blocks
+    jsonStr = jsonStr.replace(/```json\s*/gi, "").replace(/```\s*/g, "")
+    // Find JSON object in response (in case there's extra text)
+    const jsonMatch = jsonStr.match(/\{[\s\S]*\}/)
+    if (!jsonMatch) {
+      return { success: false, error: "AI response format error. Coba lagi." }
+    }
+    const parsed = JSON.parse(jsonMatch[0])
 
     return {
       success: true,
