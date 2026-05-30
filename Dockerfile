@@ -11,6 +11,11 @@ COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
 
+# Set NEXT_PUBLIC env vars at build time
+ENV NEXT_PUBLIC_SUPABASE_URL="https://vifjovdfiowpiqldphxn.supabase.co"
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpZmpvdmRmaW93cGlxbGRwaHhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMDQ4NzMsImV4cCI6MjA5NTU4MDg3M30.kzdJJ9-WGxVVS1d1qRm-00JLFWaOulmK3VTWIuhbZ7Y"
+ENV NEXT_PUBLIC_APP_URL="https://beemate-568735138336.asia-southeast1.run.app"
+
 # Generate Prisma client
 RUN npx prisma generate
 
