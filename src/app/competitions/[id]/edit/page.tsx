@@ -9,7 +9,7 @@ export default async function EditCompetitionPage({ params }: { params: Promise<
   const session = await auth();
   
   if (!session?.user?.email) {
-    redirect("/auth/signin");
+    redirect("/api/auth/signin");
   }
 
   const result = await getCompetitionById(id);

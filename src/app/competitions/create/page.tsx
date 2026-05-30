@@ -7,7 +7,7 @@ export default async function CreateCompetitionPage() {
   const session = await auth();
   
   if (!session?.user?.email) {
-    redirect("/auth/signin");
+    redirect("/api/auth/signin");
   }
 
   // Get user and check if ADMIN

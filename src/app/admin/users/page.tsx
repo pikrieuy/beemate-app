@@ -5,7 +5,7 @@ import { AdminUsersClient } from "./admin-users-client";
 
 export default async function AdminUsersPage() {
   const session = await auth();
-  if (!session?.user?.email) redirect("/auth/signin");
+  if (!session?.user?.email) redirect("/api/auth/signin");
 
   const currentUser = await prisma.user.findUnique({
     where: { email: session.user.email },

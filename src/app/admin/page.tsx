@@ -5,7 +5,7 @@ import { AdminDashboardClient } from "./admin-dashboard-client";
 
 export default async function AdminPage() {
   const session = await auth();
-  if (!session?.user?.email) redirect("/auth/signin");
+  if (!session?.user?.email) redirect("/api/auth/signin");
 
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },

@@ -6,7 +6,6 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
-      { protocol: "https", hostname: "wtegmqkajcdajbjdmvcu.supabase.co" },
       { protocol: "https", hostname: "vifjovdfiowpiqldphxn.supabase.co" },
       { protocol: "https", hostname: "api.dicebear.com" },
       { protocol: "https", hostname: "images.unsplash.com" },

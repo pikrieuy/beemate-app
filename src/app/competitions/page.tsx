@@ -8,7 +8,7 @@ export default async function CompetitionsPage() {
   const session = await auth();
   
   if (!session?.user?.email) {
-    redirect("/auth/signin");
+    redirect("/api/auth/signin");
   }
 
   const [result, user] = await Promise.all([
