@@ -61,7 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div id="app">
               {children}
             </div>
-            <Analytics />
+            {process.env.NEXT_PUBLIC_VERCEL_ANALYTICS_ID && <Analytics />}
           </ToastProvider>
         </Providers>
       </body>
