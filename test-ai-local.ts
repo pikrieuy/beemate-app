@@ -1,0 +1,1 @@
+import { extractSkillsFromText } from './src/actions/matchmaking.actions'; async function run() { console.log(await extractSkillsFromText('Saya seorang mahasiswa IT yang suka coding Python, React, dan suka mengatur proyek.')); } run();

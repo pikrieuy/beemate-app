@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createCompetition } from "@/actions";
 import { ImageUpload } from "@/components/ui/ImageUpload";
+import { BackButton } from "@/components/ui/back-button";
 
 export function CreateCompetitionClient() {
   const router = useRouter();
@@ -46,19 +47,8 @@ export function CreateCompetitionClient() {
   return (
     <div className="page on" style={{ minHeight: '100vh', padding: '24px' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-        <Link 
-          href="/competitions" 
-          style={{ 
-            display: 'inline-flex', 
-            alignItems: 'center', 
-            gap: '8px', 
-            color: 'var(--t2)', 
-            textDecoration: 'none',
-            fontSize: '14px',
-            marginBottom: '24px'
-          }}
-        >
-          <i className="ph-fill ph-arrow-left"></i> Back to Competitions
+        <Link href="/competitions" style={{ display: 'inline-block' }}>
+          <BackButton />
         </Link>
 
         <div style={{ marginBottom: '32px' }}>

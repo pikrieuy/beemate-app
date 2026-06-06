@@ -347,8 +347,8 @@ function PersonCard({ user, index, highlighted = false }: { user: User; index: n
             background: hovered
               ? `linear-gradient(145deg, var(--bg2) 0%, ${roleConfig?.badge?.bg ?? "rgba(245, 166, 35, 0.15)"} 100%)`
               : highlighted
-              ? "linear-gradient(135deg, var(--bg2), rgba(245, 166, 35, 0.03))"
-              : "var(--bg2)",
+                ? "linear-gradient(135deg, var(--bg2), rgba(245, 166, 35, 0.03))"
+                : "var(--bg2)",
             border: `1px solid ${hovered ? (roleConfig?.badge?.border ?? "var(--hbd)") : highlighted ? "var(--hbd)" : "var(--b)"}`,
             borderRadius: "20px",
             padding: "22px",
@@ -358,8 +358,8 @@ function PersonCard({ user, index, highlighted = false }: { user: User; index: n
             boxShadow: hovered
               ? `0 12px 32px ${roleConfig?.badge?.bg ?? "rgba(245,166,35,0.12)"}, 0 4px 12px rgba(0,0,0,0.15)`
               : highlighted
-              ? "0 4px 20px rgba(245,166,35,0.05)"
-              : "none",
+                ? "0 4px 20px rgba(245,166,35,0.05)"
+                : "none",
             display: "flex",
             flexDirection: "column",
             gap: "14px",

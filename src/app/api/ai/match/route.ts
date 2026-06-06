@@ -105,7 +105,7 @@ Untuk SETIAP kandidat, berikan 1 kalimat singkat (max 15 kata) kenapa mereka coc
 ...
 
 Fokus pada komplementaritas skill.`,
-      maxTokens: 400,
+      maxOutputTokens: 400,
     });
 
     const reasons = text.split("\n").filter(line => /^\d+\./.test(line.trim()));

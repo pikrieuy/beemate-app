@@ -38,7 +38,7 @@ JSON format:
 {"skills":["skill1","skill2"],"title":"Hacker","bio":"ringkasan singkat"}
 
 Rules: skills max 8, title harus Hacker/Hustler/Hipster, bio max 50 kata bahasa Indonesia.`,
-      maxTokens: 1024,
+      maxOutputTokens: 1024,
     })
 
     // Parse JSON — handle various response formats from Gemini 2.5
@@ -69,7 +69,6 @@ Rules: skills max 8, title harus Hacker/Hustler/Hipster, bio max 50 kata bahasa 
       ? "Model AI sedang diupdate. Coba lagi."
       : "Gagal mengekstrak skills. Coba lagi."
     return { success: false, error: msg }
-    return { success: false, error: "Gagal mengekstrak skills. Coba lagi." }
   }
 }
 
@@ -272,7 +271,7 @@ Berikan ranking kompetisi dari yang PALING COCOK untuk user ini. Output JSON arr
 ]
 
 Urutkan dari paling cocok. Maksimal 5 kompetisi.`,
-      maxTokens: 300,
+      maxOutputTokens: 300,
     })
 
     const cleaned = result.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim()

@@ -10,6 +10,7 @@ import { TeamChat } from "./team-chat";
 import { TeamKanban } from "./team-kanban";
 import { ProjectShowcase } from "./team-showcase";
 import { TeamChemistry } from "./team-chemistry";
+import { BackButton } from "@/components/ui/back-button";
 
 interface TeamMember {
   id: string;
@@ -204,19 +205,8 @@ export function TeamDetailClient({ team, currentUserId, isLeader, isMember }: Te
       <div className="page on" style={{ minHeight: '100vh', padding: '24px' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           {/* Back Button */}
-          <Link 
-            href="/teams" 
-            style={{ 
-              display: 'inline-flex', 
-              alignItems: 'center', 
-              gap: '8px', 
-              color: 'var(--t2)', 
-              textDecoration: 'none',
-              fontSize: '14px',
-              marginBottom: '24px'
-            }}
-          >
-            <i className="ph-fill ph-arrow-left"></i> Back to Teams
+          <Link href="/teams" style={{ display: 'inline-block' }}>
+            <BackButton />
           </Link>
 
           {/* Team Header */}

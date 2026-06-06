@@ -85,10 +85,10 @@ KEMAMPUAN:
 - Bantu draft pitch/presentasi
 - Motivasi tim kalau stuck`,
       messages,
-      maxTokens: 800,
+      maxOutputTokens: 800,
     });
 
-    return result.toDataStreamResponse();
+    return result.toUIMessageStreamResponse();
   } catch (error) {
     console.error("BeeCoach error:", error);
     return new Response("Internal server error", { status: 500 });

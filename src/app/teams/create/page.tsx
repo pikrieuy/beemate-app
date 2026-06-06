@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createTeam } from "@/actions";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { BackButton } from "@/components/ui/back-button";
 
 export default function CreateTeamPage() {
   const router = useRouter();
@@ -41,19 +42,8 @@ export default function CreateTeamPage() {
     <div className="page on" style={{ minHeight: '100vh', padding: '24px' }}>
       <div style={{ maxWidth: '700px', margin: '0 auto' }}>
         <div style={{ marginBottom: '32px' }}>
-          <Link 
-            href="/teams" 
-            style={{ 
-              display: 'inline-flex', 
-              alignItems: 'center', 
-              gap: '8px', 
-              color: 'var(--t2)', 
-              textDecoration: 'none',
-              fontSize: '14px',
-              marginBottom: '16px'
-            }}
-          >
-            <i className="ph-fill ph-arrow-left"></i> Back to Teams
+          <Link href="/teams" style={{ display: 'inline-block' }}>
+            <BackButton />
           </Link>
           <h1 style={{ 
             fontSize: '32px', 

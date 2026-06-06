@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { updateCompetition } from "@/actions";
 import { ImageUpload } from "@/components/ui/ImageUpload";
+import { BackButton } from "@/components/ui/back-button";
 
 interface Competition {
   id: string;
@@ -73,19 +74,8 @@ export function EditCompetitionClient({ competition }: EditCompetitionClientProp
     <div className="page on" style={{ minHeight: '100vh', padding: '24px' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         {/* Back Button */}
-        <Link 
-          href={`/competitions/${competition.id}`}
-          style={{ 
-            display: 'inline-flex', 
-            alignItems: 'center', 
-            gap: '8px', 
-            color: 'var(--t2)', 
-            textDecoration: 'none',
-            fontSize: '14px',
-            marginBottom: '24px'
-          }}
-        >
-          <i className="ph-fill ph-arrow-left"></i> Back to Competition
+        <Link href={`/competitions/${competition.id}`} style={{ display: 'inline-block' }}>
+          <BackButton />
         </Link>
 
         {/* Header */}

@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { deleteCompetition } from "@/actions";
+import { BackButton } from "@/components/ui/back-button";
 
 interface Competition {
   id: string;
@@ -13,6 +15,12 @@ interface Competition {
   imageUrl: string | null;
   registrationLink: string | null;
   deadline: Date | null;
+  organizer: string | null;
+  sourceLink: string | null;
+  targetAudience: string | null;
+  entryFee: string | null;
+  competitionLevel: string | null;
+  location: string | null;
   authorId: string;
   author: {
     id: string;
@@ -69,6 +77,12 @@ export function CompetitionDetailClient({ competition, canEdit }: CompetitionDet
   const [loading, setLoading] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleDelete = async () => {
     setLoading(true);
@@ -83,10 +97,10 @@ export function CompetitionDetailClient({ competition, canEdit }: CompetitionDet
 
   const formatDate = (date: Date | null) => {
     if (!date) return "No deadline";
-    return new Date(date).toLocaleDateString("en-US", { 
+    return new Date(date).toLocaleDateString("en-US", {
       weekday: 'long',
-      year: 'numeric', 
-      month: 'long', 
+      year: 'numeric',
+      month: 'long',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
@@ -134,231 +148,305 @@ export function CompetitionDetailClient({ competition, canEdit }: CompetitionDet
         )}
       </AnimatePresence>
       <div className="page on" style={{ minHeight: '100vh', padding: '24px' }}>
-      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-        {/* Back Button */}
-        <Link 
-          href="/competitions" 
-          style={{ 
-            display: 'inline-flex', 
-            alignItems: 'center', 
-            gap: '8px', 
-            color: 'var(--t2)', 
-            textDecoration: 'none',
-            fontSize: '14px',
-            marginBottom: '24px'
-          }}
-        >
-          <i className="ph-fill ph-arrow-left"></i> Back to Competitions
-        </Link>
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+          {/* Back Button */}
+          <Link href="/competitions" style={{ display: 'inline-block' }}>
+            <BackButton />
+          </Link>
 
-        {/* Banner Image */}
-        {competition.imageUrl ? (
-          <div style={{
-            width: '100%',
-            height: '400px',
-            borderRadius: '24px',
-            background: `url(${competition.imageUrl}) center/cover`,
-            marginBottom: '24px',
-            border: '1px solid var(--bdr)'
-          }} />
-        ) : (
-          <div style={{
-            width: '100%',
-            height: '400px',
-            borderRadius: '24px',
-            background: 'linear-gradient(135deg, #f5a623, #ffc04d)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '120px',
-            color: '#fff',
-            marginBottom: '24px',
-            border: '1px solid var(--bdr)'
-          }}>
-            <i className="ph-fill ph-trophy"></i>
-          </div>
-        )}
-
-        {/* Main Content */}
-        <div style={{
-          background: 'var(--bg2)',
-          border: '1px solid var(--bdr)',
-          borderRadius: '24px',
-          padding: '32px',
-          marginBottom: '24px'
-        }}>
-          {/* Header with Actions */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
-            <div style={{ flex: 1 }}>
-              <h1 style={{ 
-                fontSize: '36px', 
-                fontWeight: 900, 
-                color: 'var(--t)', 
-                marginBottom: '16px',
-                lineHeight: 1.2
-              }}>
-                {competition.title}
-              </h1>
-              
-              {timeRemaining && (
-                <div style={{ 
-                  display: 'inline-block',
-                  background: `${timeRemaining.color}15`,
-                  border: `1px solid ${timeRemaining.color}40`,
-                  padding: '8px 16px', 
-                  borderRadius: '100px', 
-                  fontSize: '13px', 
-                  fontWeight: 700, 
-                  color: timeRemaining.color,
-                  marginBottom: '16px'
-                }}>
-                  <i className="ph-fill ph-clock"></i> {timeRemaining.text}
-                </div>
-              )}
-            </div>
+          {/* Main Layout Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 450px) 1fr', gap: '32px', alignItems: 'start' }}>
             
-            {canEdit && (
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <Link href={`/competitions/${competition.id}/edit`}>
-                  <button className="btn btn-sm btn-honey">
-                    <i className="ph-fill ph-pencil"></i> Edit
-                  </button>
-                </Link>
-                <button 
-                  className="btn btn-sm"
-                  style={{ 
-                    background: 'rgba(239, 68, 68, 0.1)', 
-                    border: '1px solid #ef4444', 
-                    color: '#ef4444' 
-                  }}
-                  onClick={() => setShowConfirm(true)}
-                  disabled={loading}
-                >
-                  <i className="ph-fill ph-trash"></i>
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Description */}
-          <div style={{ 
-            fontSize: '16px', 
-            color: 'var(--t)', 
-            lineHeight: 1.8,
-            marginBottom: '32px',
-            whiteSpace: 'pre-wrap'
-          }}>
-            {competition.description}
-          </div>
-
-          {/* Info Grid */}
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '16px',
-            paddingTop: '32px',
-            borderTop: '1px solid var(--bdr)'
-          }}>
-            {/* Deadline */}
-            <div style={{
-              background: 'var(--bg)',
-              border: '1px solid var(--bdr)',
-              borderRadius: '16px',
-              padding: '20px'
-            }}>
-              <div style={{ 
-                fontSize: '13px', 
-                color: 'var(--t2)', 
-                marginBottom: '8px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
+            {/* Left Column: Image & Stats */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{
+                position: 'relative',
+                width: '100%',
+                aspectRatio: '3/4',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                background: 'var(--bg2)',
+                border: '1px solid var(--bdr)'
               }}>
-                <i className="ph-fill ph-calendar"></i> Deadline
-              </div>
-              <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--t)' }}>
-                {formatDate(competition.deadline)}
-              </div>
-            </div>
-
-            {/* Posted By */}
-            <div style={{
-              background: 'var(--bg)',
-              border: '1px solid var(--bdr)',
-              borderRadius: '16px',
-              padding: '20px'
-            }}>
-              <div style={{ 
-                fontSize: '13px', 
-                color: 'var(--t2)', 
-                marginBottom: '8px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}>
-                <i className="ph-fill ph-user"></i> Posted By
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                {competition.author.image ? (
-                  <img 
-                    src={competition.author.image} 
-                    alt={competition.author.name || "Author"} 
-                    style={{
-                      width: '28px',
-                      height: '28px',
-                      borderRadius: '50%',
-                      objectFit: 'cover'
-                    }}
+                {competition.imageUrl ? (
+                  <div 
+                    style={{ width: "100%", height: "100%", background: `url(${competition.imageUrl}) top center / cover no-repeat`, cursor: "zoom-in" }} 
+                    onClick={() => setPreviewImage(competition.imageUrl)}
                   />
                 ) : (
                   <div style={{
-                    width: '28px',
-                    height: '28px',
-                    borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #f5a623, #ffc04d)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '12px',
-                    fontWeight: 800,
-                    color: '#fff'
+                    width: '100%', height: '100%',
+                    background: 'linear-gradient(135deg, var(--hbg) 0%, var(--bg3) 100%)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '80px', color: 'var(--ho)',
+                  }}>
+                    <i className="ph-fill ph-trophy"></i>
+                  </div>
+                )}
+              </div>
+
+              {/* Stats Row */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--t2)', fontSize: '13px', padding: '0 8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <i className="ph-fill ph-heart" style={{ color: 'var(--rd)' }}></i> 3 suka
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <i className="ph-fill ph-eye"></i> 266x dilihat
+                </div>
+              </div>
+
+              {/* Description Block */}
+              <div style={{
+                background: 'var(--bg2)',
+                border: '1px solid var(--bdr)',
+                borderRadius: '16px',
+                padding: '24px',
+                marginTop: '8px'
+              }}>
+                <div style={{
+                  fontSize: '14px',
+                  color: 'var(--t)',
+                  lineHeight: 1.6,
+                  whiteSpace: 'pre-wrap'
+                }}>
+                  {competition.description}
+                </div>
+              </div>
+
+              {/* Action Links Row */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center', marginTop: '8px', fontSize: '13px', fontWeight: 600 }}>
+                <button style={{ background: 'none', border: 'none', color: 'var(--bl)', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', padding: 0 }}>
+                  <i className="ph-fill ph-warning-circle"></i> <span style={{ textDecoration: 'underline' }}>Laporkan Lomba</span>
+                </button>
+                <div style={{ flex: 1 }} />
+                <button className="btn btn-sm" style={{ background: 'var(--bg2)', border: '1px solid var(--b)', color: 'var(--t)' }}>
+                  <i className="ph-fill ph-question"></i> Panduan Lomba
+                </button>
+                <button className="btn btn-sm" style={{ background: 'var(--bg2)', border: '1px solid var(--b)', color: 'var(--t)' }}>
+                  <i className="ph-fill ph-bookmark-simple"></i> Simpan
+                </button>
+                <button className="btn btn-sm" style={{ background: 'var(--bg2)', border: '1px solid var(--b)', color: 'var(--t)' }}>
+                  <i className="ph-fill ph-share-network"></i> Bagikan
+                </button>
+              </div>
+
+              {/* Organizer Profile Details */}
+              <div style={{ marginTop: '24px' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: 800, color: 'var(--t)', marginBottom: '16px' }}>Profile Penyelenggara</h3>
+                <div style={{ background: 'var(--bg2)', border: '1px solid var(--bdr)', borderRadius: '16px', padding: '24px' }}>
+                  <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--bl)', marginBottom: '16px' }}>
+                    {competition.organizer || competition.author.name || "Penyelenggara"}
+                  </div>
+                  {/* Dummy detail for now */}
+                  <div style={{ fontSize: '13px', color: 'var(--t)', lineHeight: 1.6 }}>
+                    <p style={{ marginBottom: '16px' }}>Penyelenggara ini merupakan entitas yang aktif mengadakan kompetisi di berbagai bidang untuk mengembangkan potensi mahasiswa.</p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <div><strong>Alamat:</strong> Jl. Dummy No. 123, Kota Dummy, Indonesia</div>
+                      <div><strong>Media Sosial Instagram:</strong> @dummy_ig</div>
+                      <div><strong>Kunjungi Kami:</strong> https://dummy.com/</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Details */}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                <h1 style={{
+                  fontSize: '28px',
+                  fontWeight: 800,
+                  color: 'var(--t)',
+                  lineHeight: 1.3,
+                  margin: 0
+                }}>
+                  {competition.title}
+                </h1>
+                {canEdit && (
+                  <div style={{ display: 'flex', gap: '8px', flexShrink: 0, marginLeft: '16px' }}>
+                    <Link href={`/competitions/${competition.id}/edit`}>
+                      <button className="btn btn-sm" style={{ background: 'var(--bg2)', border: '1px solid var(--b)', color: 'var(--t)' }}>
+                        <i className="ph-fill ph-pencil"></i>
+                      </button>
+                    </Link>
+                    <button
+                      className="btn btn-sm"
+                      style={{ background: 'var(--rdb)', border: '1px solid var(--rbd)', color: 'var(--rd)' }}
+                      onClick={() => setShowConfirm(true)}
+                      disabled={loading}
+                    >
+                      <i className="ph-fill ph-trash"></i>
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Tags */}
+              {competition.competitionLevel && (
+                <div style={{ display: 'flex', gap: '8px', marginBottom: '24px' }}>
+                  <span style={{ border: '1px solid var(--b)', borderRadius: '100px', padding: '6px 16px', fontSize: '12px', fontWeight: 600, color: 'var(--t)' }}>
+                    {competition.competitionLevel}
+                  </span>
+                </div>
+              )}
+
+              {/* Meta Rows */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: 'var(--t)', fontWeight: 500 }}>
+                  <i className="ph-fill ph-graduation-cap" style={{ fontSize: '18px', color: 'var(--bl)', width: '24px', textAlign: 'center' }}></i>
+                  {competition.targetAudience || "SMA / Sederajat, Gapyear, Mahasiswa, Umum"}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: 'var(--t)', fontWeight: 500 }}>
+                  <i className="ph-fill ph-coins" style={{ fontSize: '18px', color: 'var(--or)', width: '24px', textAlign: 'center' }}></i>
+                  {competition.entryFee || "Gratis"}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: 'var(--t)', fontWeight: 500 }}>
+                  <i className="ph-fill ph-map-pin" style={{ fontSize: '18px', color: 'var(--rd)', width: '24px', textAlign: 'center' }}></i>
+                  {competition.location || "Online"}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: 'var(--t)', fontWeight: 500 }}>
+                  <i className="ph-fill ph-calendar-blank" style={{ fontSize: '18px', color: 'var(--gn)', width: '24px', textAlign: 'center' }}></i>
+                  {formatDate(competition.deadline)}
+                </div>
+              </div>
+
+              <div style={{ height: '1px', background: 'var(--bdr)', width: '100%', marginBottom: '24px' }} />
+
+              {/* Organizer Row */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px' }}>
+                {competition.author.image ? (
+                  <img
+                    src={competition.author.image}
+                    alt={competition.author.name || "Author"}
+                    style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <div style={{
+                    width: '40px', height: '40px', borderRadius: '50%',
+                    background: 'linear-gradient(135deg, var(--hbg), var(--bg3))',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '16px', fontWeight: 800, color: 'var(--ho)'
                   }}>
                     {competition.author.name?.[0] || "?"}
                   </div>
                 )}
-                <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--t)' }}>
-                  {competition.author.name || "Unknown"}
-                </span>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--t2)', fontWeight: 600 }}>Diselenggarakan oleh</span>
+                  <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--t)' }}>{competition.organizer || competition.author.name || "Unknown"}</span>
+                </div>
               </div>
-            </div>
-          </div>
 
-          {/* Registration Button */}
-          {competition.registrationLink && (
-            <div style={{ marginTop: '32px' }}>
-              <a 
-                href={competition.registrationLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: 'none' }}
-              >
-                <button 
-                  className="btn btn-honey"
-                  style={{ 
-                    width: '100%', 
-                    padding: '16px',
-                    fontSize: '16px',
-                    fontWeight: 700
-                  }}
-                >
-                  <i className="ph-fill ph-arrow-square-out"></i> Register Now
-                </button>
-              </a>
+              {/* Action Button */}
+              {competition.registrationLink && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <a
+                    href={competition.registrationLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <button
+                      style={{
+                        width: '100%',
+                        padding: '16px',
+                        background: 'var(--bl)',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '12px',
+                        fontSize: '15px',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px',
+                        transition: 'all 0.2s',
+                        boxShadow: '0 8px 16px rgba(59, 130, 246, 0.25)'
+                      }}
+                    >
+                      Daftar Sekarang <i className="ph-bold ph-caret-right" style={{ fontSize: '14px' }}></i>
+                    </button>
+                  </a>
+                  
+                  {/* Additional Action Links */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', background: 'var(--bg2)', padding: '16px', borderRadius: '12px', border: '1px solid var(--bdr)' }}>
+                    <div style={{ fontSize: '13px', color: 'var(--t)', display: 'flex', alignItems: 'center', gap: '8px', wordBreak: 'break-all' }}>
+                      <i className="ph-fill ph-link" style={{ color: 'var(--t2)', flexShrink: 0 }}></i>
+                      <strong style={{ flexShrink: 0 }}>Form pendaftaran:</strong> 
+                      <a href={competition.registrationLink} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--bl)', textDecoration: 'none' }}>
+                        {competition.registrationLink}
+                      </a>
+                    </div>
+                    {competition.sourceLink && (
+                      <div style={{ fontSize: '13px', color: 'var(--t)', display: 'flex', alignItems: 'center', gap: '8px', wordBreak: 'break-all' }}>
+                        <i className="ph-fill ph-instagram-logo" style={{ color: 'var(--t2)', flexShrink: 0 }}></i>
+                        <strong style={{ flexShrink: 0 }}>Sumber (Instagram):</strong> 
+                        <a href={competition.sourceLink} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--bl)', textDecoration: 'none' }}>
+                          {competition.sourceLink}
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Contact/DM Info */}
+                  <div style={{ fontSize: '13px', color: 'var(--t2)', lineHeight: 1.6, marginTop: '8px', padding: '0 8px' }}>
+                    Kalau kalian punya pertanyaan boleh langsung DM aja ke penyelenggara <strong>{(competition.organizer || "penyelenggara").replace(/\s+/g, '').toLowerCase()}</strong>. Kita tunggu keseruan momen kalian yaa! Good luck! 🎉
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Fullscreen Image Preview */}
+      {mounted && createPortal(
+        <AnimatePresence>
+          {previewImage && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setPreviewImage(null)}
+              style={{
+                position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+                backgroundColor: "rgba(0,0,0,0.85)", zIndex: 999999,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                padding: "20px", cursor: "zoom-out"
+              }}
+            >
+              <motion.img
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.9 }}
+                src={previewImage}
+                alt="Preview"
+                style={{
+                  maxWidth: "100%", maxHeight: "100%",
+                  objectFit: "contain", borderRadius: "8px",
+                  boxShadow: "0 20px 50px rgba(0,0,0,0.5)"
+                }}
+                onClick={(e) => e.stopPropagation()} // Prevent click through to close
+              />
+              
+              <button 
+                onClick={() => setPreviewImage(null)}
+                style={{
+                  position: "absolute", top: "20px", right: "20px",
+                  background: "rgba(0,0,0,0.5)", border: "none",
+                  color: "white", width: "40px", height: "40px",
+                  borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
+                  cursor: "pointer", fontSize: "20px"
+                }}
+              >
+                <i className="ph-bold ph-x" />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   );
 }

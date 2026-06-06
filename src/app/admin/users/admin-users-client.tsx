@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { changeUserRole } from "@/actions";
+import { BackButton } from "@/components/ui/back-button";
 
 interface AdminUser {
   id: string;
@@ -65,8 +66,8 @@ export function AdminUsersClient({ users, currentUserId }: AdminUsersClientProps
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
 
         {/* Header */}
-        <Link href="/admin" style={{ display: "inline-flex", alignItems: "center", gap: "8px", color: "var(--t2)", textDecoration: "none", fontSize: "14px", marginBottom: "24px" }}>
-          <i className="ph-fill ph-arrow-left"></i> Back to Admin
+        <Link href="/admin" style={{ display: 'inline-block' }}>
+          <BackButton />
         </Link>
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "32px" }}>

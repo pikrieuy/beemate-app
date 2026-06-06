@@ -8,33 +8,29 @@ import { geminiFlash } from "@/lib/ai";
  * Returns the AI response or detailed error.
  */
 export async function GET() {
-  try {
-    const apiKey = process.env.GOOGLE_AI_API_KEY;
-    
-    if (!apiKey) {
-      return NextResponse.json({ 
-        error: "GOOGLE_AI_API_KEY not set",
-        hasKey: false 
-      }, { status: 500 });
-    }
+  const isVertexMode = !!process.env.K_SERVICE || process.env.USE_VERTEX_AI === "true";
 
+  try {
     const { text } = await generateText({
       model: geminiFlash,
       prompt: "Say 'BeeMate AI is working!' in exactly those words.",
-      maxTokens: 50,
+      maxOutputTokens: 1024,
     });
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       response: text,
-      keyPrefix: apiKey.substring(0, 10) + "...",
+      mode: isVertexMode ? "vertex-ai" : "ai-studio",
+      project: process.env.GOOGLE_CLOUD_PROJECT ?? null,
+      location: process.env.GOOGLE_CLOUD_LOCATION ?? null,
     });
   } catch (error: any) {
-    return NextResponse.json({ 
-      success: false, 
+    return NextResponse.json({
+      success: false,
       error: error.message || "Unknown error",
       name: error.name,
       cause: error.cause?.message,
+      mode: isVertexMode ? "vertex-ai" : "ai-studio",
     }, { status: 500 });
   }
 }
