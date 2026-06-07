@@ -4,7 +4,7 @@ import { Project } from "@/lib/data";
 
 export function ProjectCard({ project, onClick, onApply }: { project: Project; onClick: () => void; onApply: (e: React.MouseEvent) => void }) {
   return (
-    <div className="proj-card" onClick={onClick}>
+    <div className={cn(cardVariants({ variant: "proj" }))} onClick={onClick}>
       <div className="proj-top">
         <span className={`bdg ${project.badge}`}>{project.type}</span>
         <span className={`proj-deadline ${project.urgent ? 'urgent' : ''}`}>

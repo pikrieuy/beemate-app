@@ -335,7 +335,7 @@ export function ProjectShowcase({ teamId, isMember, isLeader }: ProjectShowcaseP
           <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end", marginTop: "12px" }}>
             <button
               type="button"
-              className="btn btn-dark"
+              className={buttonVariants({ variant: "dark" })}
               onClick={() => setIsEditing(false)}
               disabled={submitting}
             >
@@ -343,7 +343,7 @@ export function ProjectShowcase({ teamId, isMember, isLeader }: ProjectShowcaseP
             </button>
             <button
               type="submit"
-              className="btn btn-honey"
+              className={buttonVariants({ variant: "honey" })}
               disabled={submitting}
             >
               {submitting ? "Menyimpan..." : "Simpan Proyek"}
@@ -375,7 +375,7 @@ export function ProjectShowcase({ teamId, isMember, isLeader }: ProjectShowcaseP
         {canEdit && (
           <button
             onClick={handleEditClick}
-            className="btn btn-honey"
+            className={buttonVariants({ variant: "honey" })}
           >
             <i className="ph-fill ph-plus-circle"></i> Buat Project Showcase
           </button>
@@ -510,7 +510,7 @@ export function ProjectShowcase({ teamId, isMember, isLeader }: ProjectShowcaseP
               href={project.demoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-honey"
+              className={buttonVariants({ variant: "honey" })}
               style={{ textDecoration: "none" }}
             >
               <i className="ph-fill ph-globe"></i> Kunjungi Live Demo
@@ -522,7 +522,7 @@ export function ProjectShowcase({ teamId, isMember, isLeader }: ProjectShowcaseP
               href={project.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-dark"
+              className={buttonVariants({ variant: "dark" })}
               style={{
                 textDecoration: "none",
                 display: "inline-flex",

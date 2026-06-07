@@ -61,13 +61,13 @@ export default function NotFound() {
 
         <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
           <button
-            className="btn btn-honey"
+            className={buttonVariants({ variant: "honey" })}
             onClick={() => router.push("/dashboard")}
           >
             <i className="ph-fill ph-house"></i> Go to Dashboard
           </button>
           <button
-            className="btn"
+            className={buttonVariants({ variant: "default" })}
             style={{ background: "var(--bg2)", border: "1px solid var(--bdr)", color: "var(--t)" }}
             onClick={() => router.back()}
           >

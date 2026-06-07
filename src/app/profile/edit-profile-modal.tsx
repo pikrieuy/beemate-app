@@ -267,7 +267,7 @@ export function EditProfileModal({ user, onClose }: EditProfileModalProps) {
               <button
                 type="button"
                 onClick={addSkill}
-                className="btn btn-sm"
+                className={buttonVariants({ size: "sm" })}
                 style={{ background: 'var(--ho)', color: '#fff' }}
               >
                 Add
@@ -349,7 +349,7 @@ export function EditProfileModal({ user, onClose }: EditProfileModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="btn btn-sm"
+              className={buttonVariants({ size: "sm" })}
               style={{ background: 'var(--bg2)', border: '1px solid var(--bdr)', color: 'var(--t)' }}
               disabled={loading}
             >
@@ -357,7 +357,7 @@ export function EditProfileModal({ user, onClose }: EditProfileModalProps) {
             </button>
             <button
               type="submit"
-              className="btn btn-sm"
+              className={buttonVariants({ size: "sm" })}
               style={{ background: 'var(--ho)', color: '#fff' }}
               disabled={loading}
             >

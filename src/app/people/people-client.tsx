@@ -194,7 +194,7 @@ export function PeopleClient({ initialUsers, recommended, currentUserId, initial
                     WebkitTextFillColor: "transparent",
                   }}>People</span>
                 </h1>
-                <div className="page-sub">
+                <div className="text-[11px] text-[#a8b0d0] mt-[3px] font-[400] text-balance">
                   {filtered.length} {filtered.length === 1 ? "orang" : "orang"} ditemukan
                 </div>
               </div>

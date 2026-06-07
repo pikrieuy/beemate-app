@@ -148,7 +148,7 @@ export function ProfileClient({ user, teams }: ProfileClientProps) {
                   href={user.portfolioUrl} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="btn btn-sm"
+                  className={buttonVariants({ size: "sm" })}
                   style={{ marginBottom: '32px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
                 >
                   <i className="ph-fill ph-link"></i> Visit Portfolio

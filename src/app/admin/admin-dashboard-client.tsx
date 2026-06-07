@@ -99,17 +99,17 @@ export function AdminDashboardClient({ stats, recentUsers, recentCompetitions }:
           </h2>
           <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
             <Link href="/admin/users">
-              <button className="btn btn-honey">
+              <button className={buttonVariants({ variant: "honey" })}>
                 <i className="ph-fill ph-users"></i> Manage Users
               </button>
             </Link>
             <Link href="/admin/competitions">
-              <button className="btn" style={{ background: "var(--bg2)", border: "1px solid var(--bdr)", color: "var(--t)" }}>
+              <button className={buttonVariants({ variant: "default" })} style={{ background: "var(--bg2)", border: "1px solid var(--bdr)", color: "var(--t)" }}>
                 <i className="ph-fill ph-trophy"></i> Manage Competitions
               </button>
             </Link>
             <Link href="/competitions/create">
-              <button className="btn" style={{ background: "var(--bg2)", border: "1px solid var(--bdr)", color: "var(--t)" }}>
+              <button className={buttonVariants({ variant: "default" })} style={{ background: "var(--bg2)", border: "1px solid var(--bdr)", color: "var(--t)" }}>
                 <i className="ph-fill ph-plus"></i> Post Competition
               </button>
             </Link>

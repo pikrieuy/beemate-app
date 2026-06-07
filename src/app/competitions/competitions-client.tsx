@@ -244,7 +244,7 @@ export function CompetitionsClient({ competitions, userEmail, isAdmin }: Competi
                     </>
                   )}
                 </h1>
-                <div className="page-sub">
+                <div className="text-[11px] text-[#a8b0d0] mt-[3px] font-[400] text-balance">
                   {tab === "competitions"
                     ? `${filteredComps.length} kompetisi ditemukan`
                     : `${filteredProjs.length} proyek mencari anggota`}

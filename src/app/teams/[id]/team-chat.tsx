@@ -348,7 +348,7 @@ export function TeamChat({ teamId, currentUserId, members, leader }: TeamChatPro
         <button
           type="submit"
           disabled={!inputText.trim() || sending}
-          className="btn btn-honey"
+          className={buttonVariants({ variant: "honey" })}
           style={{
             borderRadius: "50%",
             width: "44px",

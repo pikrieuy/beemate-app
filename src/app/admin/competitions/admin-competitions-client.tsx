@@ -74,7 +74,7 @@ export function AdminCompetitionsClient({ competitions }: { competitions: Compet
             </p>
           </div>
           <Link href="/competitions/create">
-            <button className="btn btn-honey">
+            <button className={buttonVariants({ variant: "honey" })}>
               <i className="ph-fill ph-plus"></i> Post Competition
             </button>
           </Link>
@@ -141,7 +141,7 @@ export function AdminCompetitionsClient({ competitions }: { competitions: Compet
                 {/* Actions */}
                 <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
                   <button
-                    className="btn btn-sm"
+                    className={buttonVariants({ size: "sm" })}
                     style={{ background: "var(--bg)", border: "1px solid var(--bdr)", color: "var(--t)" }}
                     onClick={() => router.push(`/competitions/${c.id}`)}
                   >
@@ -153,7 +153,7 @@ export function AdminCompetitionsClient({ competitions }: { competitions: Compet
                     </button>
                   </Link>
                   <button
-                    className="btn btn-sm"
+                    className={buttonVariants({ size: "sm" })}
                     style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", color: "#ef4444" }}
                     onClick={() => handleDelete(c.id, c.title)}
                     disabled={deleting === c.id}

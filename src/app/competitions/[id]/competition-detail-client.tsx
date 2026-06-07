@@ -60,7 +60,7 @@ function ConfirmDialog({ message, onConfirm, onCancel }: { message: string; onCo
         <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
           <button className="btn btn-dark btn-sm" onClick={onCancel}>Batal</button>
           <button
-            className="btn btn-sm"
+            className={buttonVariants({ size: "sm" })}
             style={{ background: "var(--rdb)", color: "var(--rd)", border: "1px solid var(--rbd)" }}
             onClick={onConfirm}
           >
@@ -219,13 +219,13 @@ export function CompetitionDetailClient({ competition, canEdit }: CompetitionDet
                   <i className="ph-fill ph-warning-circle"></i> <span style={{ textDecoration: 'underline' }}>Laporkan Lomba</span>
                 </button>
                 <div style={{ flex: 1 }} />
-                <button className="btn btn-sm" style={{ background: 'var(--bg2)', border: '1px solid var(--b)', color: 'var(--t)' }}>
+                <button className={buttonVariants({ size: "sm" })} style={{ background: 'var(--bg2)', border: '1px solid var(--b)', color: 'var(--t)' }}>
                   <i className="ph-fill ph-question"></i> Panduan Lomba
                 </button>
-                <button className="btn btn-sm" style={{ background: 'var(--bg2)', border: '1px solid var(--b)', color: 'var(--t)' }}>
+                <button className={buttonVariants({ size: "sm" })} style={{ background: 'var(--bg2)', border: '1px solid var(--b)', color: 'var(--t)' }}>
                   <i className="ph-fill ph-bookmark-simple"></i> Simpan
                 </button>
-                <button className="btn btn-sm" style={{ background: 'var(--bg2)', border: '1px solid var(--b)', color: 'var(--t)' }}>
+                <button className={buttonVariants({ size: "sm" })} style={{ background: 'var(--bg2)', border: '1px solid var(--b)', color: 'var(--t)' }}>
                   <i className="ph-fill ph-share-network"></i> Bagikan
                 </button>
               </div>
@@ -265,12 +265,12 @@ export function CompetitionDetailClient({ competition, canEdit }: CompetitionDet
                 {canEdit && (
                   <div style={{ display: 'flex', gap: '8px', flexShrink: 0, marginLeft: '16px' }}>
                     <Link href={`/competitions/${competition.id}/edit`}>
-                      <button className="btn btn-sm" style={{ background: 'var(--bg2)', border: '1px solid var(--b)', color: 'var(--t)' }}>
+                      <button className={buttonVariants({ size: "sm" })} style={{ background: 'var(--bg2)', border: '1px solid var(--b)', color: 'var(--t)' }}>
                         <i className="ph-fill ph-pencil"></i>
                       </button>
                     </Link>
                     <button
-                      className="btn btn-sm"
+                      className={buttonVariants({ size: "sm" })}
                       style={{ background: 'var(--rdb)', border: '1px solid var(--rbd)', color: 'var(--rd)' }}
                       onClick={() => setShowConfirm(true)}
                       disabled={loading}

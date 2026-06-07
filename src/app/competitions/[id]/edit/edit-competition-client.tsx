@@ -311,7 +311,7 @@ export function EditCompetitionClient({ competition }: EditCompetitionClientProp
               <Link href={`/competitions/${competition.id}`}>
                 <button 
                   type="button"
-                  className="btn"
+                  className={buttonVariants({ variant: "default" })}
                   style={{ 
                     background: 'var(--bg)', 
                     border: '1px solid var(--bdr)', 
@@ -324,7 +324,7 @@ export function EditCompetitionClient({ competition }: EditCompetitionClientProp
               </Link>
               <button 
                 type="submit"
-                className="btn btn-honey"
+                className={buttonVariants({ variant: "honey" })}
                 disabled={loading}
               >
                 {loading ? (

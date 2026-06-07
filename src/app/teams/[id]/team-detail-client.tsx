@@ -89,7 +89,7 @@ function ConfirmDialog({
             Batal
           </button>
           <button
-            className="btn btn-sm"
+            className={buttonVariants({ size: "sm" })}
             style={danger ? {
               background: "var(--rdb)", color: "var(--rd)",
               border: "1px solid var(--rbd)",
@@ -236,7 +236,7 @@ export function TeamDetailClient({ team, currentUserId, isLeader, isMember }: Te
                     <i className="ph-fill ph-user-plus"></i> Invite Member
                   </button>
                   <button 
-                    className="btn btn-sm"
+                    className={buttonVariants({ size: "sm" })}
                     style={{ background: 'var(--bg)', border: '1px solid var(--bdr)', color: 'var(--t)' }}
                     onClick={handleDeleteTeam}
                     disabled={loading}
@@ -248,7 +248,7 @@ export function TeamDetailClient({ team, currentUserId, isLeader, isMember }: Te
               
               {!isLeader && isMember && (
                 <button 
-                  className="btn btn-sm"
+                  className={buttonVariants({ size: "sm" })}
                   style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid #ef4444', color: '#ef4444' }}
                   onClick={handleLeaveTeam}
                   disabled={loading}
@@ -448,7 +448,7 @@ export function TeamDetailClient({ team, currentUserId, isLeader, isMember }: Te
                           
                           {isLeader && member.userId !== currentUserId && (
                             <button
-                              className="btn btn-sm"
+                              className={buttonVariants({ size: "sm" })}
                               style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid #ef4444', color: '#ef4444' }}
                               onClick={() => handleRemoveMember(member.userId, member.user.name)}
                             >
@@ -523,7 +523,7 @@ export function TeamDetailClient({ team, currentUserId, isLeader, isMember }: Te
                               </div>
                             </div>
                             <button
-                              className="btn btn-sm"
+                              className={buttonVariants({ size: "sm" })}
                               style={{ background: 'var(--bg)', border: '1px solid var(--bdr)', color: 'var(--t)' }}
                               onClick={() => handleRemoveMember(member.userId, member.user.name)}
                             >

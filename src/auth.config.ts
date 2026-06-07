@@ -13,16 +13,20 @@ export const authConfig = {
     }),
   ],
   pages: {
-    signIn: "/api/auth/signin",
     error: "/auth/error",
   },
+  basePath: "/api/auth",
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user
       const { pathname } = nextUrl
+      
+      console.log("NextAuth Middleware - Pathname:", pathname);
+      console.log("NextAuth Middleware - Is Logged In:", isLoggedIn);
 
       // Always allow NextAuth's own routes to avoid infinite redirect loops
       if (pathname.startsWith("/api/auth")) {
+        console.log("NextAuth Middleware - Allowing /api/auth route.");
         return true
       }
 

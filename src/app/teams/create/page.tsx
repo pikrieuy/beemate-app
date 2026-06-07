@@ -188,7 +188,7 @@ export default function CreateTeamPage() {
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
               <Link 
                 href="/teams"
-                className="btn btn-sm"
+                className={buttonVariants({ size: "sm" })}
                 style={{ 
                   background: 'var(--bg)', 
                   border: '1px solid var(--bdr)', 

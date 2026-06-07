@@ -73,11 +73,11 @@ export default function Error({
         </p>
 
         <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
-          <button className="btn btn-honey" onClick={reset}>
+          <button className={buttonVariants({ variant: "honey" })} onClick={reset}>
             <i className="ph-fill ph-arrow-clockwise"></i> Try Again
           </button>
           <button
-            className="btn"
+            className={buttonVariants({ variant: "default" })}
             style={{ background: "var(--bg2)", border: "1px solid var(--bdr)", color: "var(--t)" }}
             onClick={() => router.push("/dashboard")}
           >

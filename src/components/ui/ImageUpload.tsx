@@ -226,7 +226,7 @@ export function ImageUpload({
         <button
           type="button"
           onClick={() => !isUploading && fileInputRef.current?.click()}
-          className="btn btn-sm"
+          className={buttonVariants({ size: "sm" })}
           style={{
             background: "var(--bg2)",
             border: "1px solid var(--bdr)",

@@ -98,12 +98,12 @@ function AuthErrorContent() {
         {/* Actions */}
         <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
           <Link href="/api/auth/signin" style={{ textDecoration: "none" }}>
-            <button className="btn btn-honey">
+            <button className={buttonVariants({ variant: "honey" })}>
               <i className="ph-fill ph-sign-in" /> Coba Login Lagi
             </button>
           </Link>
           <Link href="/" style={{ textDecoration: "none" }}>
-            <button className="btn" style={{ background: "var(--bg3)", border: "1px solid var(--b)", color: "var(--t)" }}>
+            <button className={buttonVariants({ variant: "default" })} style={{ background: "var(--bg3)", border: "1px solid var(--b)", color: "var(--t)" }}>
               <i className="ph-fill ph-house" /> Ke Beranda
             </button>
           </Link>

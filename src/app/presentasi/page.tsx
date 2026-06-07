@@ -78,7 +78,7 @@ export default function PresentasiPage() {
             </p>
             <div style={{ marginTop: "20px", display: "flex", gap: "12px", flexWrap: "wrap" }}>
               <a href="https://beemate-app.vercel.app" target="_blank" rel="noopener noreferrer">
-                <button className="btn btn-honey">
+                <button className={buttonVariants({ variant: "honey" })}>
                   <i className="ph-fill ph-arrow-square-out" /> Buka Platform
                 </button>
               </a>
@@ -275,7 +275,7 @@ export default function PresentasiPage() {
               Platform digital yang membantu mahasiswa menemukan teman tim yang tepat — cepat, mudah, dan tanpa perlu repot tanya satu per satu di grup WA.
             </p>
             <a href="https://beemate-app.vercel.app" target="_blank" rel="noopener noreferrer">
-              <button className="btn btn-honey">
+              <button className={buttonVariants({ variant: "honey" })}>
                 <i className="ph-fill ph-arrow-square-out" /> Coba Sekarang
               </button>
             </a>

@@ -202,7 +202,7 @@ export function CreateCompetitionClient() {
               <Link href="/competitions">
                 <button 
                   type="button"
-                  className="btn"
+                  className={buttonVariants({ variant: "default" })}
                   style={{ background: 'var(--bg)', border: '1px solid var(--bdr)', color: 'var(--t)' }}
                   disabled={loading}
                 >
@@ -211,7 +211,7 @@ export function CreateCompetitionClient() {
               </Link>
               <button 
                 type="submit"
-                className="btn btn-honey"
+                className={buttonVariants({ variant: "honey" })}
                 disabled={loading}
               >
                 {loading ? (

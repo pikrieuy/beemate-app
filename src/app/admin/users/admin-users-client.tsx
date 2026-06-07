@@ -98,7 +98,7 @@ export function AdminUsersClient({ users, currentUserId }: AdminUsersClientProps
             {(["all", "USER", "ADMIN"] as const).map((r) => (
               <button
                 key={r}
-                className="btn btn-sm"
+                className={buttonVariants({ size: "sm" })}
                 style={{
                   background: roleFilter === r ? "var(--ho)" : "var(--bg2)",
                   border: "1px solid var(--bdr)",
@@ -184,13 +184,13 @@ export function AdminUsersClient({ users, currentUserId }: AdminUsersClientProps
                 {/* Actions */}
                 <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
                   <Link href={`/profile/${u.id}`}>
-                    <button className="btn btn-sm" style={{ background: "var(--bg)", border: "1px solid var(--bdr)", color: "var(--t)" }}>
+                    <button className={buttonVariants({ size: "sm" })} style={{ background: "var(--bg)", border: "1px solid var(--bdr)", color: "var(--t)" }}>
                       <i className="ph-fill ph-user"></i>
                     </button>
                   </Link>
                   {u.id !== currentUserId && (
                     <button
-                      className="btn btn-sm"
+                      className={buttonVariants({ size: "sm" })}
                       style={{
                         background: u.role === "ADMIN" ? "rgba(239,68,68,0.1)" : "rgba(245,166,35,0.1)",
                         border: `1px solid ${u.role === "ADMIN" ? "rgba(239,68,68,0.3)" : "rgba(245,166,35,0.3)"}`,

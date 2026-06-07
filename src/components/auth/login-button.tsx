@@ -6,19 +6,19 @@ export function GoogleLoginButton() {
   const { data: session, status } = useSession()
 
   if (status === "loading") {
-    return <button disabled className="btn btn-dark">Loading...</button>
+    return <button disabled className={buttonVariants({ variant: "dark" })}>Loading...</button>
   }
 
   if (session) {
     return (
-      <button onClick={() => signOut({ callbackUrl: "/" })} className="btn btn-dark">
+      <button onClick={() => signOut({ callbackUrl: "/" })} className={buttonVariants({ variant: "dark" })}>
         Sign Out
       </button>
     )
   }
 
   return (
-    <button onClick={() => signIn("google", { callbackUrl: "/profile" })} className="btn btn-honey">
+    <button onClick={() => signIn("google", { callbackUrl: "/profile" })} className={buttonVariants({ variant: "honey" })}>
       Sign In with Google
     </button>
   )

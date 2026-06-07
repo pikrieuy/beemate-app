@@ -1,10 +1,10 @@
 import NextAuth from "next-auth"
 import { authConfig } from "./auth.config"
 
-// Use the Edge-compatible authConfig for the proxy layer.
-// The authorized() callback in authConfig handles route protection.
+// Wrap your auth function using the Edge-compatible config
 export default NextAuth(authConfig).auth
 
+// Matcher controls which routes run through middleware
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 }

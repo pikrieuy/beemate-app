@@ -125,7 +125,7 @@ export function TeamsClient({ initialTeams }: TeamsClientProps) {
                   {filtered.length} dari {initialTeams.length} tim — bergabung atau buat timmu sendiri
                 </p>
               </div>
-              <Link href="/teams/create" className="btn btn-honey" style={{ flexShrink: 0 }}>
+              <Link href="/teams/create" className={buttonVariants({ variant: "honey" })} style={{ flexShrink: 0 }}>
                 <i className="ph-fill ph-plus" /> Buat Tim
               </Link>
             </div>
@@ -314,7 +314,7 @@ export function TeamsClient({ initialTeams }: TeamsClientProps) {
                     </p>
                     <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
                       <button
-                        className="btn btn-sm"
+                        className={buttonVariants({ size: "sm" })}
                         style={{ background: "var(--bg3)", border: "1px solid var(--b)", color: "var(--t)" }}
                         onClick={() => { setSearch(""); setSizeFilter("all"); }}
                       >
