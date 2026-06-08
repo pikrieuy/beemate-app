@@ -45,7 +45,7 @@ export function CompetitionRecommender() {
           onClick={loadRecommendations}
           disabled={loading}
           style={{
-            padding: "10px 20px", borderRadius: "10px",
+            padding: "10px 20px", borderRadius: "var(--r-pill)",
             background: "linear-gradient(135deg, #f5a623, #ffc04d)",
             color: "#000", border: "none", fontSize: "13px",
             fontWeight: 700, cursor: "pointer",
@@ -98,7 +98,7 @@ export function CompetitionRecommender() {
             >
               <Link href={`/competitions/${comp.id}`} style={{ textDecoration: "none" }}>
                 <div style={{
-                  padding: "14px 16px", borderRadius: "12px",
+                  padding: "14px 16px", borderRadius: "var(--r-pill)",
                   background: "var(--bg)", border: "1px solid var(--b)",
                   transition: "border-color 0.15s",
                   cursor: "pointer",
@@ -134,3 +134,4 @@ export function CompetitionRecommender() {
     </div>
   );
 }
+

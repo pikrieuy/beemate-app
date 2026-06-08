@@ -2,9 +2,14 @@
 
 import { Project } from "@/lib/data";
 
+import { cn } from "@/lib/utils";
+// Jika cardVariants tidak didefinisikan secara khusus, kita fallback ke div biasa atau pastikan importnya benar
+// Untuk amannya karena kita tidak tahu cardVariants di mana, kita ganti ke class statis sementara.
+// Namun mari kita coba import cn dulu dan lihat apakah cardVariants didefinisikan di suatu tempat.
+
 export function ProjectCard({ project, onClick, onApply }: { project: Project; onClick: () => void; onApply: (e: React.MouseEvent) => void }) {
   return (
-    <div className={cn(cardVariants({ variant: "proj" }))} onClick={onClick}>
+    <div className={cn("bg-[var(--bg4)] border border-[var(--b)] rounded-[9px] p-[10px] transition-all duration-150 hover:border-[var(--b2)] cursor-pointer", "proj")} onClick={onClick}>
       <div className="proj-top">
         <span className={`bdg ${project.badge}`}>{project.type}</span>
         <span className={`proj-deadline ${project.urgent ? 'urgent' : ''}`}>

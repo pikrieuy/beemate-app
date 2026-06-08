@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { endorseSkill, removeEndorsement } from "@/actions";
+import { buttonVariants } from "@/components/ui/button";
 
 interface PublicProfileClientProps {
   user: {

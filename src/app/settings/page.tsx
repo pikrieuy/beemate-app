@@ -26,7 +26,7 @@ function PrefRow({
     <div style={{
       display: "flex", alignItems: "center", justifyContent: "space-between",
       padding: "18px 20px", background: "var(--bg)", border: "1px solid var(--b)",
-      borderRadius: "14px",
+      borderRadius: "var(--r-pill)",
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
         <i className={`ph-fill ${icon}`} style={{ fontSize: "22px", color: "var(--ho)" }} />
@@ -38,7 +38,7 @@ function PrefRow({
       <button
         onClick={() => onChange(!checked)}
         style={{
-          width: "44px", height: "24px", borderRadius: "12px", border: "none",
+          width: "44px", height: "24px", borderRadius: "var(--r-pill)", border: "none",
           background: checked ? "var(--ho)" : "var(--b2)",
           cursor: "pointer", position: "relative", transition: "background 0.2s", flexShrink: 0,
         }}
@@ -126,7 +126,7 @@ export default function SettingsPage() {
             exit={{ opacity: 0, y: -16 }}
             style={{
               position: "fixed", top: "72px", left: "50%", transform: "translateX(-50%)",
-              zIndex: 9999, padding: "12px 24px", borderRadius: "12px",
+              zIndex: 9999, padding: "12px 24px", borderRadius: "var(--r-pill)",
               background: toast.type === "ok" ? "var(--gnb)" : "var(--rdb)",
               border: `1px solid ${toast.type === "ok" ? "var(--gbd)" : "var(--rbd)"}`,
               color: toast.type === "ok" ? "var(--gn)" : "var(--rd)",
@@ -150,7 +150,7 @@ export default function SettingsPage() {
                 onClick={() => setActiveTab(tab.id)}
                 style={{
                   display: "flex", alignItems: "center", gap: "12px",
-                  padding: "13px 16px", borderRadius: "12px", border: "none",
+                  padding: "13px 16px", borderRadius: "var(--r-pill)", border: "none",
                   background: activeTab === tab.id ? "var(--hbg)" : "transparent",
                   color: activeTab === tab.id ? "var(--ho)" : "var(--t2)",
                   fontWeight: activeTab === tab.id ? 700 : 500,
@@ -171,7 +171,7 @@ export default function SettingsPage() {
               onClick={() => signOut({ callbackUrl: "/" })}
               style={{
                 display: "flex", alignItems: "center", gap: "12px",
-                padding: "13px 16px", borderRadius: "12px", border: "none",
+                padding: "13px 16px", borderRadius: "var(--r-pill)", border: "none",
                 background: "transparent", color: "var(--rd)",
                 fontWeight: 600, fontSize: "14px", cursor: "pointer",
                 textAlign: "left", width: "100%", transition: "background 0.15s",
@@ -213,7 +213,7 @@ export default function SettingsPage() {
                   {/* Role badge */}
                   <div style={{
                     display: "flex", alignItems: "center", gap: "12px",
-                    padding: "14px 18px", borderRadius: "12px",
+                    padding: "14px 18px", borderRadius: "var(--r-pill)",
                     background: role === "ADMIN" ? "rgba(239,68,68,0.06)" : "var(--hbg)",
                     border: `1px solid ${role === "ADMIN" ? "rgba(239,68,68,0.2)" : "var(--hbd)"}`,
                   }}>
@@ -246,7 +246,7 @@ export default function SettingsPage() {
                       placeholder="Nama kamu..."
                       style={{
                         background: "var(--bg)", border: "1px solid var(--b)",
-                        padding: "13px 16px", borderRadius: "12px",
+                        padding: "13px 16px", borderRadius: "var(--r-pill)",
                         color: "var(--t)", fontSize: "14px", outline: "none",
                         transition: "border-color 0.15s",
                       }}
@@ -267,12 +267,12 @@ export default function SettingsPage() {
                         disabled
                         style={{
                           flex: 1, background: "var(--bg)", border: "1px solid var(--b)",
-                          padding: "13px 16px", borderRadius: "12px",
+                          padding: "13px 16px", borderRadius: "var(--r-pill)",
                           color: "var(--t2)", fontSize: "14px", opacity: 0.6,
                         }}
                       />
                       <span style={{
-                        fontSize: "11px", padding: "4px 10px", borderRadius: "8px",
+                        fontSize: "11px", padding: "4px 10px", borderRadius: "var(--r-pill)",
                         background: "var(--gnb)", color: "var(--gn)",
                         border: "1px solid var(--gbd)", fontWeight: 700, whiteSpace: "nowrap",
                       }}>
@@ -317,7 +317,7 @@ export default function SettingsPage() {
                 <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                   <div style={{
                     display: "flex", alignItems: "center", justifyContent: "space-between",
-                    padding: "20px", background: "var(--bg)", border: "1px solid var(--b)", borderRadius: "14px",
+                    padding: "20px", background: "var(--bg)", border: "1px solid var(--b)", borderRadius: "var(--r-pill)",
                   }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
                       <i className="ph-fill ph-moon" style={{ fontSize: "22px", color: "var(--ho)" }} />
@@ -329,7 +329,7 @@ export default function SettingsPage() {
                       </div>
                     </div>
                     <span style={{
-                      fontSize: "11px", padding: "4px 10px", borderRadius: "8px",
+                      fontSize: "11px", padding: "4px 10px", borderRadius: "var(--r-pill)",
                       background: "var(--hbg)", color: "var(--ho)",
                       border: "1px solid var(--hbd)", fontWeight: 700,
                     }}>
@@ -347,7 +347,7 @@ export default function SettingsPage() {
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                   {notifSaved && (
                     <div style={{
-                      padding: "10px 16px", borderRadius: "10px",
+                      padding: "10px 16px", borderRadius: "var(--r-pill)",
                       background: "var(--gnb)", border: "1px solid var(--gbd)",
                       color: "var(--gn)", fontWeight: 700, fontSize: "12px",
                     }}>
@@ -395,7 +395,7 @@ export default function SettingsPage() {
                   {/* Info keamanan */}
                   <div style={{
                     padding: "18px 20px", background: "var(--gnb)",
-                    border: "1px solid var(--gbd)", borderRadius: "14px",
+                    border: "1px solid var(--gbd)", borderRadius: "var(--r-pill)",
                     display: "flex", gap: "14px", alignItems: "flex-start",
                   }}>
                     <i className="ph-fill ph-shield-check" style={{ fontSize: "22px", color: "var(--gn)", flexShrink: 0, marginTop: "2px" }} />
@@ -419,7 +419,7 @@ export default function SettingsPage() {
                       <div key={item.label} style={{
                         display: "flex", gap: "14px", alignItems: "flex-start",
                         padding: "16px 18px", background: "var(--bg)",
-                        border: "1px solid var(--b)", borderRadius: "12px",
+                        border: "1px solid var(--b)", borderRadius: "var(--r-pill)",
                       }}>
                         <i className={`ph-fill ${item.icon}`} style={{ fontSize: "18px", color: "var(--t3)", flexShrink: 0, marginTop: "2px" }} />
                         <div>
@@ -433,7 +433,7 @@ export default function SettingsPage() {
                   {/* Danger zone */}
                   <div style={{
                     padding: "20px", background: "var(--rdb)",
-                    border: "1px solid var(--rbd)", borderRadius: "14px",
+                    border: "1px solid var(--rbd)", borderRadius: "var(--r-pill)",
                   }}>
                     <div style={{ fontWeight: 700, color: "var(--rd)", fontSize: "14px", marginBottom: "6px" }}>
                       Danger Zone
@@ -446,7 +446,7 @@ export default function SettingsPage() {
                       <button
                         onClick={() => setShowDeleteConfirm(true)}
                         style={{
-                          padding: "9px 18px", borderRadius: "10px", border: "1px solid var(--rbd)",
+                          padding: "9px 18px", borderRadius: "var(--r-pill)", border: "1px solid var(--rbd)",
                           background: "transparent", color: "var(--rd)",
                           fontWeight: 700, fontSize: "13px", cursor: "pointer",
                         }}
@@ -466,7 +466,7 @@ export default function SettingsPage() {
                           placeholder="Ketik HAPUS"
                           style={{
                             background: "var(--bg)", border: "1px solid var(--rbd)",
-                            padding: "10px 14px", borderRadius: "10px",
+                            padding: "10px 14px", borderRadius: "var(--r-pill)",
                             color: "var(--t)", fontSize: "13px", outline: "none",
                           }}
                         />
@@ -493,7 +493,7 @@ export default function SettingsPage() {
                               });
                             }}
                             style={{
-                              padding: "7px 16px", borderRadius: "10px",
+                              padding: "7px 16px", borderRadius: "var(--r-pill)",
                               border: "1px solid var(--rbd)",
                               background: deleteInput === "HAPUS" ? "var(--rd)" : "transparent",
                               color: deleteInput === "HAPUS" ? "#fff" : "var(--rd)",
@@ -523,3 +523,4 @@ export default function SettingsPage() {
     </div>
   );
 }
+

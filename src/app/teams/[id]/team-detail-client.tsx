@@ -11,6 +11,7 @@ import { TeamKanban } from "./team-kanban";
 import { ProjectShowcase } from "./team-showcase";
 import { TeamChemistry } from "./team-chemistry";
 import { BackButton } from "@/components/ui/back-button";
+import { buttonVariants } from "@/components/ui/button";
 
 interface TeamMember {
   id: string;

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
@@ -39,7 +40,7 @@ export default function PresentasiPage() {
           <SectionLabel>Masalah yang Kami Selesaikan</SectionLabel>
           <div style={{
             background: "linear-gradient(135deg, var(--bg2), var(--bg3))",
-            border: "1px solid var(--b)", borderRadius: "24px", padding: "32px",
+            border: "1px solid var(--b)", borderRadius: "var(--r-pill)", padding: "32px",
             position: "relative", overflow: "hidden",
           }}>
             <div style={{
@@ -57,7 +58,7 @@ export default function PresentasiPage() {
             <div style={{
               marginTop: "20px", padding: "16px 20px",
               background: "rgba(249,107,107,0.08)", border: "1px solid rgba(249,107,107,0.2)",
-              borderRadius: "14px", fontSize: "15px", fontWeight: 700, color: "var(--rd)",
+              borderRadius: "var(--r-pill)", fontSize: "15px", fontWeight: 700, color: "var(--rd)",
             }}>
               Akhirnya ikut seadanya — atau malah tidak ikut sama sekali. 😔
             </div>
@@ -69,7 +70,7 @@ export default function PresentasiPage() {
           <SectionLabel>Solusinya</SectionLabel>
           <div style={{
             background: "var(--hbg)", border: "1px solid var(--hbd)",
-            borderRadius: "24px", padding: "32px",
+            borderRadius: "var(--r-pill)", padding: "32px",
           }}>
             <div style={{ fontSize: "32px", marginBottom: "16px" }}>💡</div>
             <p style={{ fontSize: "16px", color: "var(--t)", lineHeight: 1.8 }}>
@@ -131,12 +132,12 @@ export default function PresentasiPage() {
                 {...fadeUp(0.35 + i * 0.05)}
                 style={{
                   background: "var(--bg2)", border: "1px solid var(--b)",
-                  borderRadius: "16px", padding: "20px 24px",
+                  borderRadius: "var(--r-pill)", padding: "20px 24px",
                   display: "flex", alignItems: "center", gap: "20px",
                 }}
               >
                 <div style={{
-                  width: "48px", height: "48px", borderRadius: "14px",
+                  width: "48px", height: "48px", borderRadius: "var(--r-pill)",
                   background: f.bg, flexShrink: 0,
                   display: "flex", alignItems: "center", justifyContent: "center",
                   fontSize: "24px", color: f.color,
@@ -157,7 +158,7 @@ export default function PresentasiPage() {
           <SectionLabel>Status Saat Ini</SectionLabel>
           <div style={{
             background: "var(--gnb)", border: "1px solid var(--gbd)",
-            borderRadius: "24px", padding: "32px",
+            borderRadius: "var(--r-pill)", padding: "32px",
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
               <div style={{ width: "12px", height: "12px", borderRadius: "50%", background: "var(--gn)", boxShadow: "0 0 8px var(--gn)" }} />
@@ -214,7 +215,7 @@ export default function PresentasiPage() {
             ].map((r, i) => (
               <motion.div key={r.phase} {...fadeUp(0.5 + i * 0.07)} style={{
                 background: r.bg, border: `1px solid ${r.border}`,
-                borderRadius: "18px", padding: "24px",
+                borderRadius: "var(--r-pill)", padding: "24px",
                 display: "flex", gap: "20px", alignItems: "flex-start",
               }}>
                 <div style={{
@@ -248,7 +249,7 @@ export default function PresentasiPage() {
             ].map((v) => (
               <div key={v.title} style={{
                 background: v.bg, border: `1px solid ${v.border}`,
-                borderRadius: "18px", padding: "24px",
+                borderRadius: "var(--r-pill)", padding: "24px",
               }}>
                 <div style={{ fontSize: "28px", color: v.color, marginBottom: "12px" }}>
                   <i className={`ph-fill ${v.icon}`} />
@@ -264,7 +265,7 @@ export default function PresentasiPage() {
         <motion.div {...fadeUp(0.6)}>
           <div style={{
             background: "linear-gradient(135deg, var(--bg2), var(--bg3))",
-            border: "1px solid var(--hbd)", borderRadius: "24px",
+            border: "1px solid var(--hbd)", borderRadius: "var(--r-pill)",
             padding: "40px", textAlign: "center",
           }}>
             <div style={{ fontSize: "40px", marginBottom: "16px" }}>🐝</div>
@@ -299,3 +300,4 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+

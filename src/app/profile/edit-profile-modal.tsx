@@ -6,6 +6,7 @@ import { extractSkillsFromText } from "@/actions/matchmaking.actions";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { ImageUpload } from "@/components/ui/ImageUpload";
+import { buttonVariants } from "@/components/ui/button";
 
 interface EditProfileModalProps {
   user: {
@@ -92,7 +93,7 @@ export function EditProfileModal({ user, onClose }: EditProfileModalProps) {
       <div 
         style={{
           background: 'var(--bg)',
-          borderRadius: '24px',
+          borderRadius: "var(--r-pill)",
           padding: '32px',
           maxWidth: '600px',
           width: '100%',
@@ -152,7 +153,7 @@ export function EditProfileModal({ user, onClose }: EditProfileModalProps) {
               style={{
                 width: '100%',
                 padding: '12px 16px',
-                borderRadius: '12px',
+                borderRadius: "var(--r-pill)",
                 border: '1px solid var(--bdr)',
                 background: 'var(--bg2)',
                 color: 'var(--t)',
@@ -174,7 +175,7 @@ export function EditProfileModal({ user, onClose }: EditProfileModalProps) {
               style={{
                 width: '100%',
                 padding: '12px 16px',
-                borderRadius: '12px',
+                borderRadius: "var(--r-pill)",
                 border: '1px solid var(--bdr)',
                 background: 'var(--bg2)',
                 color: 'var(--t)',
@@ -200,7 +201,7 @@ export function EditProfileModal({ user, onClose }: EditProfileModalProps) {
                 }}
                 disabled={aiLoading}
                 style={{
-                  marginTop: '8px', padding: '6px 14px', borderRadius: '8px',
+                  marginTop: '8px', padding: '6px 14px', borderRadius: "var(--r-pill)",
                   border: '1px solid rgba(245,166,35,0.3)', background: 'rgba(245,166,35,0.08)',
                   color: '#f5a623', fontSize: '12px', fontWeight: 700, cursor: 'pointer',
                   opacity: aiLoading ? 0.6 : 1,
@@ -223,7 +224,7 @@ export function EditProfileModal({ user, onClose }: EditProfileModalProps) {
               style={{
                 width: '100%',
                 padding: '12px 16px',
-                borderRadius: '12px',
+                borderRadius: "var(--r-pill)",
                 border: '1px solid var(--bdr)',
                 background: 'var(--bg2)',
                 color: 'var(--t)',
@@ -257,7 +258,7 @@ export function EditProfileModal({ user, onClose }: EditProfileModalProps) {
                 style={{
                   flex: 1,
                   padding: '12px 16px',
-                  borderRadius: '12px',
+                  borderRadius: "var(--r-pill)",
                   border: '1px solid var(--bdr)',
                   background: 'var(--bg2)',
                   color: 'var(--t)',
@@ -322,7 +323,7 @@ export function EditProfileModal({ user, onClose }: EditProfileModalProps) {
               style={{
                 width: '100%',
                 padding: '12px 16px',
-                borderRadius: '12px',
+                borderRadius: "var(--r-pill)",
                 border: '1px solid var(--bdr)',
                 background: 'var(--bg2)',
                 color: 'var(--t)',
@@ -334,7 +335,7 @@ export function EditProfileModal({ user, onClose }: EditProfileModalProps) {
           {error && (
             <div style={{ 
               padding: '12px', 
-              borderRadius: '12px', 
+              borderRadius: "var(--r-pill)", 
               background: 'rgba(239, 68, 68, 0.1)', 
               color: '#ef4444', 
               marginBottom: '20px',
@@ -369,3 +370,4 @@ export function EditProfileModal({ user, onClose }: EditProfileModalProps) {
     </div>
   );
 }
+

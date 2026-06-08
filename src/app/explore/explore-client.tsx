@@ -104,29 +104,29 @@ export function ExploreClient({ projects, isLoggedIn }: Props) {
                   type="text" placeholder="Judul proyek *" value={form.title}
                   onChange={e => setForm({ ...form, title: e.target.value })}
                   required maxLength={100}
-                  style={{ background: "var(--bg)", border: "1px solid var(--b)", padding: "12px 16px", borderRadius: "12px", color: "var(--t)", fontSize: "14px", outline: "none" }}
+                  style={{ background: "var(--bg)", border: "1px solid var(--b)", padding: "12px 16px", borderRadius: "var(--r-pill)", color: "var(--t)", fontSize: "14px", outline: "none" }}
                 />
                 <textarea
                   placeholder="Deskripsi proyek — apa yang sedang dibangun, skill apa yang dibutuhkan *"
                   value={form.description}
                   onChange={e => setForm({ ...form, description: e.target.value })}
                   required maxLength={1000} rows={4}
-                  style={{ background: "var(--bg)", border: "1px solid var(--b)", padding: "12px 16px", borderRadius: "12px", color: "var(--t)", fontSize: "14px", outline: "none", resize: "vertical", fontFamily: "inherit" }}
+                  style={{ background: "var(--bg)", border: "1px solid var(--b)", padding: "12px 16px", borderRadius: "var(--r-pill)", color: "var(--t)", fontSize: "14px", outline: "none", resize: "vertical", fontFamily: "inherit" }}
                 />
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
                   <input
                     type="url" placeholder="Demo URL (opsional)" value={form.demoUrl}
                     onChange={e => setForm({ ...form, demoUrl: e.target.value })}
-                    style={{ background: "var(--bg)", border: "1px solid var(--b)", padding: "12px 16px", borderRadius: "12px", color: "var(--t)", fontSize: "14px", outline: "none" }}
+                    style={{ background: "var(--bg)", border: "1px solid var(--b)", padding: "12px 16px", borderRadius: "var(--r-pill)", color: "var(--t)", fontSize: "14px", outline: "none" }}
                   />
                   <input
                     type="url" placeholder="GitHub URL (opsional)" value={form.githubUrl}
                     onChange={e => setForm({ ...form, githubUrl: e.target.value })}
-                    style={{ background: "var(--bg)", border: "1px solid var(--b)", padding: "12px 16px", borderRadius: "12px", color: "var(--t)", fontSize: "14px", outline: "none" }}
+                    style={{ background: "var(--bg)", border: "1px solid var(--b)", padding: "12px 16px", borderRadius: "var(--r-pill)", color: "var(--t)", fontSize: "14px", outline: "none" }}
                   />
                 </div>
                 {error && (
-                  <div style={{ padding: "10px 14px", borderRadius: "10px", background: "var(--rdb)", border: "1px solid var(--rbd)", color: "var(--rd)", fontSize: "13px", fontWeight: 600 }}>
+                  <div style={{ padding: "10px 14px", borderRadius: "var(--r-pill)", background: "var(--rdb)", border: "1px solid var(--rbd)", color: "var(--rd)", fontSize: "13px", fontWeight: 600 }}>
                     {error}
                   </div>
                 )}
@@ -192,7 +192,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         background: "var(--bg2)", border: `1px solid ${hovered ? "var(--hbd)" : "var(--b)"}`,
-        borderRadius: "18px", padding: "22px",
+        borderRadius: "var(--r-pill)", padding: "22px",
         transition: "all 0.2s", cursor: "default",
         transform: hovered ? "translateY(-3px)" : "translateY(0)",
         boxShadow: hovered ? "0 10px 28px rgba(245,166,35,0.1)" : "none",
@@ -253,3 +253,4 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
     </motion.div>
   );
 }
+

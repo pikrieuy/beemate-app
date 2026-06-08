@@ -6,6 +6,7 @@ import Link from "next/link";
 import { updateCompetition } from "@/actions";
 import { ImageUpload } from "@/components/ui/ImageUpload";
 import { BackButton } from "@/components/ui/back-button";
+import { buttonVariants } from "@/components/ui/button";
 
 interface Competition {
   id: string;

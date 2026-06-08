@@ -6,6 +6,7 @@ import Link from "next/link";
 import { createCompetition } from "@/actions";
 import { ImageUpload } from "@/components/ui/ImageUpload";
 import { BackButton } from "@/components/ui/back-button";
+import { buttonVariants } from "@/components/ui/button";
 
 export function CreateCompetitionClient() {
   const router = useRouter();
@@ -64,7 +65,7 @@ export function CreateCompetitionClient() {
           <div style={{
             background: 'var(--bg2)',
             border: '1px solid var(--bdr)',
-            borderRadius: '24px',
+            borderRadius: "var(--r-pill)",
             padding: '32px'
           }}>
             <div style={{ marginBottom: '28px' }}>
@@ -90,7 +91,7 @@ export function CreateCompetitionClient() {
                     padding: '10px 14px',
                     background: 'var(--bg)',
                     border: '1px solid var(--bdr)',
-                    borderRadius: '10px',
+                    borderRadius: "var(--r-pill)",
                     fontSize: '13px',
                     color: 'var(--t)',
                     outline: 'none'
@@ -114,7 +115,7 @@ export function CreateCompetitionClient() {
                   padding: '12px 16px',
                   background: 'var(--bg)',
                   border: '1px solid var(--bdr)',
-                  borderRadius: '12px',
+                  borderRadius: "var(--r-pill)",
                   fontSize: '15px',
                   color: 'var(--t)',
                   outline: 'none'
@@ -141,7 +142,7 @@ export function CreateCompetitionClient() {
                   padding: '12px 16px',
                   background: 'var(--bg)',
                   border: '1px solid var(--bdr)',
-                  borderRadius: '12px',
+                  borderRadius: "var(--r-pill)",
                   fontSize: '15px',
                   color: 'var(--t)',
                   outline: 'none',
@@ -169,7 +170,7 @@ export function CreateCompetitionClient() {
                   padding: '12px 16px',
                   background: 'var(--bg)',
                   border: '1px solid var(--bdr)',
-                  borderRadius: '12px',
+                  borderRadius: "var(--r-pill)",
                   fontSize: '15px',
                   color: 'var(--t)',
                   outline: 'none'
@@ -190,7 +191,7 @@ export function CreateCompetitionClient() {
                   padding: '12px 16px',
                   background: 'var(--bg)',
                   border: '1px solid var(--bdr)',
-                  borderRadius: '12px',
+                  borderRadius: "var(--r-pill)",
                   fontSize: '15px',
                   color: 'var(--t)',
                   outline: 'none'
@@ -227,3 +228,4 @@ export function CreateCompetitionClient() {
     </div>
   );
 }
+

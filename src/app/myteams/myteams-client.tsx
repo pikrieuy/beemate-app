@@ -61,7 +61,7 @@ export function MyTeamsClient({ asLeader, asMember }: Props) {
                 onClick={() => router.push(`/teams/${t.id}`)}
                 style={{
                   background: "var(--bg2)", border: "1px solid var(--b)",
-                  borderRadius: "18px", padding: "20px 24px",
+                  borderRadius: "var(--r-pill)", padding: "20px 24px",
                   display: "flex", alignItems: "center", gap: "18px",
                   cursor: "pointer", transition: "all 0.15s",
                 }}
@@ -76,7 +76,7 @@ export function MyTeamsClient({ asLeader, asMember }: Props) {
               >
                 {/* Icon */}
                 <div style={{
-                  width: "48px", height: "48px", borderRadius: "14px",
+                  width: "48px", height: "48px", borderRadius: "var(--r-pill)",
                   background: t.role === "Leader" ? "var(--hbg)" : "var(--blb)",
                   border: `1px solid ${t.role === "Leader" ? "var(--hbd)" : "var(--bbd)"}`,
                   display: "flex", alignItems: "center", justifyContent: "center",
@@ -143,7 +143,7 @@ export function MyTeamsClient({ asLeader, asMember }: Props) {
           <div
             onClick={() => router.push("/teams/create")}
             style={{
-              marginTop: "14px", border: "1px dashed var(--b)", borderRadius: "18px",
+              marginTop: "14px", border: "1px dashed var(--b)", borderRadius: "var(--r-pill)",
               padding: "20px", textAlign: "center", cursor: "pointer",
               opacity: 0.7, transition: "opacity 0.15s",
             }}
@@ -158,3 +158,4 @@ export function MyTeamsClient({ asLeader, asMember }: Props) {
     </div>
   );
 }
+

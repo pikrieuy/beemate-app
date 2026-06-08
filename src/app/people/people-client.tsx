@@ -302,7 +302,7 @@ export function PeopleClient({ initialUsers, recommended, currentUserId, initial
                   padding: "10px 24px",
                   fontSize: "13px",
                   fontWeight: 700,
-                  borderRadius: "12px",
+                  borderRadius: "var(--r-pill)",
                   border: "1px solid var(--b)",
                   background: "var(--bg2)",
                   color: "var(--t2)",
@@ -382,7 +382,7 @@ function PersonCard({ user, index, highlighted = false }: { user: User; index: n
                   src={user.image}
                   alt={user.name || "User"}
                   style={{
-                    width: "56px", height: "56px", borderRadius: "16px",
+                    width: "56px", height: "56px", borderRadius: "var(--r-pill)",
                     objectFit: "cover",
                     border: `2px solid ${hovered ? (roleConfig?.badge?.border ?? "var(--hbd)") : "var(--b)"}`,
                     transition: "border-color 0.22s",
@@ -390,7 +390,7 @@ function PersonCard({ user, index, highlighted = false }: { user: User; index: n
                 />
               ) : (
                 <div style={{
-                  width: "56px", height: "56px", borderRadius: "16px",
+                  width: "56px", height: "56px", borderRadius: "var(--r-pill)",
                   background: avatarGradient,
                   display: "flex", alignItems: "center", justifyContent: "center",
                   fontSize: "20px", fontWeight: 900, color: "#fff",
@@ -497,3 +497,4 @@ function PersonCard({ user, index, highlighted = false }: { user: User; index: n
     </motion.div>
   );
 }
+

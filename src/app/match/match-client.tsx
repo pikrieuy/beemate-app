@@ -92,7 +92,7 @@ export function MatchClient() {
                 color: "#000",
                 border: "none",
                 padding: "14px 32px",
-                borderRadius: "14px",
+                borderRadius: "var(--r-pill)",
                 fontSize: "15px",
                 fontWeight: 800,
                 cursor: "pointer",
@@ -128,14 +128,42 @@ export function MatchClient() {
           </div>
         )}
 
-        {/* Error */}
+        {/* Error / Incomplete Profile */}
         {error && (
           <div style={{
-            textAlign: "center", padding: "20px",
-            background: "rgba(239,68,68,.1)", border: "1px solid rgba(239,68,68,.3)",
-            borderRadius: "12px", marginBottom: "24px",
+            background: "var(--bg2)",
+            border: "1px solid rgba(239,68,68,0.4)",
+            borderRadius: "20px",
+            padding: "36px 24px",
+            textAlign: "center",
+            marginBottom: "24px"
           }}>
-            <p style={{ color: "#ef4444", fontSize: "14px" }}>{error}</p>
+            <div style={{
+              width: "56px", height: "56px", borderRadius: "16px",
+              background: "rgba(239,68,68,.15)", color: "#ef4444",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "28px", margin: "0 auto 16px"
+            }}>
+              <i className="ph-fill ph-warning-circle" />
+            </div>
+            <h3 style={{ fontSize: "18px", fontWeight: 800, color: "var(--t)", marginBottom: "8px" }}>
+              Profil BeeMatch Belum Aktif
+            </h3>
+            <p style={{ color: "var(--t2)", fontSize: "14px", lineHeight: 1.6, maxWidth: "480px", margin: "0 auto 24px" }}>
+              {typeof error === "string" && error.includes("profil") ? error : "Sistem tidak dapat mencocokkan Anda karena data profil/skill belum lengkap. Silakan lengkapi profil BeeMatch Anda terlebih dahulu."}
+            </p>
+            <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+              <Link href="/settings" style={{ textDecoration: "none" }}>
+                <button className="btn btn-honey rounded-full">
+                  Update Profil BeeMatch
+                </button>
+              </Link>
+              <Link href="/dashboard" style={{ textDecoration: "none" }}>
+                <button className="btn rounded-full" style={{ background: "var(--bg3)", border: "1px solid var(--b)", color: "var(--t)" }}>
+                  Kembali ke Dashboard
+                </button>
+              </Link>
+            </div>
           </div>
         )}
 
@@ -198,7 +226,7 @@ function MatchCard({ match, index }: { match: MatchResult; index: number }) {
         <div style={{
           background: "var(--bg2)",
           border: `1px solid ${roleStyle.border}`,
-          borderRadius: "16px",
+          borderRadius: "var(--r-pill)",
           padding: "20px",
           display: "flex",
           gap: "16px",
@@ -222,13 +250,13 @@ function MatchCard({ match, index }: { match: MatchResult; index: number }) {
                 src={match.image}
                 alt={match.name || "User"}
                 style={{
-                  width: "52px", height: "52px", borderRadius: "14px",
+                  width: "52px", height: "52px", borderRadius: "var(--r-pill)",
                   objectFit: "cover", border: `2px solid ${roleStyle.border}`,
                 }}
               />
             ) : (
               <div style={{
-                width: "52px", height: "52px", borderRadius: "14px",
+                width: "52px", height: "52px", borderRadius: "var(--r-pill)",
                 background: `linear-gradient(135deg, ${roleStyle.text}, ${roleStyle.border})`,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 fontSize: "20px", fontWeight: 900, color: "#fff",
@@ -301,3 +329,4 @@ function MatchCard({ match, index }: { match: MatchResult; index: number }) {
     </motion.div>
   );
 }
+

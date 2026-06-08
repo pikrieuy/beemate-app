@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { deleteCompetition } from "@/actions";
 import { BackButton } from "@/components/ui/back-button";
+import { buttonVariants } from "@/components/ui/button";
 
 interface Competition {
   id: string;
@@ -90,7 +91,7 @@ export function AdminCompetitionsClient({ competitions }: { competitions: Compet
             style={{
               width: "100%", maxWidth: "400px", padding: "10px 16px",
               background: "var(--bg2)", border: "1px solid var(--bdr)",
-              borderRadius: "12px", fontSize: "14px", color: "var(--t)", outline: "none"
+              borderRadius: "var(--r-pill)", fontSize: "14px", color: "var(--t)", outline: "none"
             }}
           />
         </div>
@@ -106,13 +107,13 @@ export function AdminCompetitionsClient({ competitions }: { competitions: Compet
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
                 style={{
-                  background: "var(--bg2)", border: "1px solid var(--bdr)", borderRadius: "16px",
+                  background: "var(--bg2)", border: "1px solid var(--bdr)", borderRadius: "var(--r-pill)",
                   padding: "20px 24px", display: "flex", alignItems: "center", gap: "16px"
                 }}
               >
                 {/* Banner thumbnail */}
                 <div style={{
-                  width: "56px", height: "56px", borderRadius: "12px", flexShrink: 0, overflow: "hidden",
+                  width: "56px", height: "56px", borderRadius: "var(--r-pill)", flexShrink: 0, overflow: "hidden",
                   background: c.imageUrl ? `url(${c.imageUrl}) center/cover` : "linear-gradient(135deg,#f5a623,#ffc04d)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   fontSize: "24px", color: "#fff"
@@ -174,3 +175,4 @@ export function AdminCompetitionsClient({ competitions }: { competitions: Compet
     </div>
   );
 }
+

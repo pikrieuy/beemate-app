@@ -120,7 +120,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                   background: bg,
                   backdropFilter: "blur(12px)",
                   border,
-                  borderRadius: "16px",
+                  borderRadius: "var(--r-pill)",
                   padding: "16px 20px",
                   color: "var(--t)",
                   display: "flex",
@@ -146,3 +146,4 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     </ToastContext.Provider>
   );
 }
+

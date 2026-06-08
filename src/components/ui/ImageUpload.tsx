@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { buttonVariants } from "@/components/ui/button";
 
 export type ImageUploadFolder = "avatars" | "banners";
 

@@ -219,7 +219,7 @@ export function NotificationsClient({ notifications: initial, invitations }: Pro
                   transition={{ delay: i * 0.05 }}
                   style={{
                     background: "var(--bg2)", border: "1px solid var(--hbd)",
-                    borderRadius: "16px", padding: "20px",
+                    borderRadius: "var(--r-pill)", padding: "20px",
                     position: "relative", overflow: "hidden",
                   }}
                 >
@@ -291,7 +291,7 @@ export function NotificationsClient({ notifications: initial, invitations }: Pro
                           ? "var(--bg)"
                           : "var(--bg2)",
                         border: `1px solid ${isNew ? "var(--hbd)" : "var(--b)"}`,
-                        borderRadius: "14px",
+                        borderRadius: "var(--r-pill)",
                         padding: "16px 18px",
                         display: "flex",
                         gap: "14px",
@@ -363,3 +363,4 @@ export function NotificationsClient({ notifications: initial, invitations }: Pro
     </div>
   );
 }
+

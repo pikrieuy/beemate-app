@@ -27,6 +27,12 @@ Live di: beemate-app.vercel.app | Repo: github.com/pikrieuy/beemate-app
 - 14 models, 12 indexes, RLS aktif semua tabel
 - Realtime aktif untuk tabel Notification
 
+## Troubleshooting & Critical Lessons Learned
+- **NextAuth v5 (Auth.js) Middleware Redirect Loop:** Jangan pernah mengecualikan `/api/auth` secara penuh dari `matcher` di `middleware.ts`. Jika `matcher` di-*exclude* (misal: `/((?!api|...`), NextAuth *Edge Runtime* tidak akan bisa memproses `/api/auth/session` yang menyebabkan *infinite loop redirect* ke halaman login atau merespons dengan HTML *error page*. Pastikan rute API ditangani dengan benar oleh `NextAuth.auth`.
+- **UI Components (shadcn/buttonVariants):** JANGAN PERNAH menggunakan `buttonVariants()` di dalam *Client Components* tanpa meng-import fungsinya. Jika lupa `import { buttonVariants } from "@/components/ui/button";`, Next.js 16 *Turbopack* akan mogok dan memunculkan `ReferenceError: buttonVariants is not defined`.
+- **React Unique Keys:** Hati-hati saat menggabungkan dua array (misalnya `teamsCreated` dan `teamMemberships`) untuk dirender ke UI. Jika ada entitas yang sama, `key={item.id}` akan bentrok. Selalu gunakan *composite key* seperti `key={\`\${team.id}-\${team.role}\`}`.
+- **Button Styling:** Desain project ini mengharuskan SEMUA tombol melengkung penuh (*pill-shape/rounded-full*) dan memiliki padding lega. Gunakan kelas Tailwind `rounded-full` atau global CSS variable `var(--r-pill)`. Sudah ada paksaan CSS di `globals.css` menggunakan `!important`, jadi jangan mencoba membuat tombol kotak (bersudut lancip).
+
 ## Workflow Preferences (dari user)
 - User suka mode "nyuruh-nyuruh" — langsung kerjakan, jangan banyak tanya
 - Untuk fitur kecil/bug fix: langsung kerjakan tanpa spec

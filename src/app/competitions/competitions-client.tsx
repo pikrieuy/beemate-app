@@ -152,7 +152,7 @@ export function CompetitionsClient({ competitions, userEmail, isAdmin }: Competi
                 onClick={() => { setTab(t); setSearch(""); }}
                 style={{
                   display: "flex", alignItems: "center", gap: "10px",
-                  padding: "12px 14px", borderRadius: "12px", border: "none",
+                  padding: "12px 14px", borderRadius: "var(--r-pill)", border: "none",
                   background: tab === t ? "var(--hbg)" : "transparent",
                   color: tab === t ? "var(--ho)" : "var(--t2)",
                   fontWeight: tab === t ? 800 : 500,
@@ -378,7 +378,7 @@ function CompetitionCard({ competition, index, onClick, onImageClick }: { compet
           position: "absolute", top: "12px", left: "12px",
           backgroundColor: hMinusBg,
           color: hMinusColor, 
-          padding: "4px 12px", borderRadius: "8px",
+          padding: "4px 12px", borderRadius: "var(--r-pill)",
           fontSize: "12px", fontWeight: "bold",
           border: `1px solid ${hMinusColor}40`,
           boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
@@ -634,3 +634,4 @@ function EmptyState({ icon, title, sub }: { icon: string; title: string; sub: st
     </div>
   );
 }
+

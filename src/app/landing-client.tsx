@@ -296,7 +296,7 @@ export function LandingClient({ stats, trendingSkills }: Props) {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05, duration: 0.3 }}
                 style={{
-                  padding: "12px 20px", borderRadius: "14px",
+                  padding: "12px 20px", borderRadius: "var(--r-pill)",
                   background: "var(--bg2)", border: "1px solid var(--b)",
                   display: "flex", alignItems: "center", gap: "10px",
                   fontSize: "14px", fontWeight: 700, color: "var(--t)",
@@ -341,3 +341,4 @@ export function LandingClient({ stats, trendingSkills }: Props) {
     </div>
   );
 }
+

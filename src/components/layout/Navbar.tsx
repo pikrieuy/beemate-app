@@ -162,7 +162,7 @@ export function Navbar() {
             </div>
             <button 
               onClick={() => setIsMobileMenuOpen(false)}
-              style={{ background: 'transparent', border: 'none', color: 'var(--t)', fontSize: '28px' }}
+              style={{ background: 'transparent', border: 'none', color: 'var(--t)', fontSize: '28px', borderRadius: 'var(--r-pill)' }}
             >
               <i className="ph-bold ph-x"></i>
             </button>
@@ -184,7 +184,7 @@ export function Navbar() {
                   fontWeight: pathname === link.path ? 800 : 500,
                   textAlign: 'left',
                   padding: '12px 16px',
-                  borderRadius: '12px'
+                  borderRadius: 'var(--r-pill)'
                 }}
               >
                 {link.label}

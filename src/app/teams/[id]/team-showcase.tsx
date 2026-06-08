@@ -12,6 +12,7 @@ import {
 } from "@/actions"
 import { ImageUpload } from "@/components/ui/ImageUpload"
 import { motion } from "framer-motion"
+import { buttonVariants } from "@/components/ui/button";
 
 interface ProjectShowcaseProps {
   teamId: string

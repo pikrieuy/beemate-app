@@ -6,5 +6,5 @@ export default NextAuth(authConfig).auth
 
 // Matcher controls which routes run through middleware
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 }

@@ -50,7 +50,7 @@ export function PostModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
             style={{
               position: "relative", background: "var(--bg)",
               border: "1px solid var(--b)", boxShadow: "0 24px 48px rgba(0,0,0,0.2)",
-              borderRadius: "24px", padding: "32px", width: "100%", maxWidth: "560px",
+              borderRadius: "var(--r-pill)", padding: "32px", width: "100%", maxWidth: "560px",
             }}
           >
             {/* Close */}
@@ -82,7 +82,7 @@ export function PostModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                 onClick={handleCariAnggota}
                 style={{
                   display: "flex", alignItems: "center", padding: "20px",
-                  borderRadius: "16px", border: "1px solid var(--b)",
+                  borderRadius: "var(--r-pill)", border: "1px solid var(--b)",
                   background: "var(--bg2)", cursor: "pointer",
                   transition: "all 0.2s ease", gap: "18px",
                 }}
@@ -98,7 +98,7 @@ export function PostModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                 }}
               >
                 <div style={{
-                  width: "48px", height: "48px", borderRadius: "12px",
+                  width: "48px", height: "48px", borderRadius: "var(--r-pill)",
                   background: "rgba(245,166,35,0.15)", color: "var(--ho)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   fontSize: "24px", flexShrink: 0,
@@ -121,7 +121,7 @@ export function PostModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                 onClick={handleTawarkanDiri}
                 style={{
                   display: "flex", alignItems: "center", padding: "20px",
-                  borderRadius: "16px", border: "1px solid var(--b)",
+                  borderRadius: "var(--r-pill)", border: "1px solid var(--b)",
                   background: "var(--bg2)", cursor: "pointer",
                   transition: "all 0.2s ease", gap: "18px",
                 }}
@@ -137,7 +137,7 @@ export function PostModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                 }}
               >
                 <div style={{
-                  width: "48px", height: "48px", borderRadius: "12px",
+                  width: "48px", height: "48px", borderRadius: "var(--r-pill)",
                   background: "rgba(91,156,246,0.15)", color: "var(--bl)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   fontSize: "24px", flexShrink: 0,
@@ -161,3 +161,4 @@ export function PostModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
     </AnimatePresence>
   );
 }
+

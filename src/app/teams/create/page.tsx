@@ -5,6 +5,7 @@ import { createTeam } from "@/actions";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { BackButton } from "@/components/ui/back-button";
+import { buttonVariants } from "@/components/ui/button";
 
 export default function CreateTeamPage() {
   const router = useRouter();
@@ -61,7 +62,7 @@ export default function CreateTeamPage() {
         <div style={{
           background: 'var(--bg2)',
           border: '1px solid var(--bdr)',
-          borderRadius: '24px',
+          borderRadius: "var(--r-pill)",
           padding: '32px'
         }}>
           <form onSubmit={handleSubmit}>
@@ -85,7 +86,7 @@ export default function CreateTeamPage() {
                 style={{
                   width: '100%',
                   padding: '14px 16px',
-                  borderRadius: '12px',
+                  borderRadius: "var(--r-pill)",
                   border: '1px solid var(--bdr)',
                   background: 'var(--bg)',
                   color: 'var(--t)',
@@ -123,7 +124,7 @@ export default function CreateTeamPage() {
                 style={{
                   width: '100%',
                   padding: '14px 16px',
-                  borderRadius: '12px',
+                  borderRadius: "var(--r-pill)",
                   border: '1px solid var(--bdr)',
                   background: 'var(--bg)',
                   color: 'var(--t)',
@@ -144,7 +145,7 @@ export default function CreateTeamPage() {
             {error && (
               <div style={{ 
                 padding: '14px', 
-                borderRadius: '12px', 
+                borderRadius: "var(--r-pill)", 
                 background: 'rgba(239, 68, 68, 0.1)', 
                 color: '#ef4444', 
                 marginBottom: '24px',
@@ -162,7 +163,7 @@ export default function CreateTeamPage() {
             <div style={{
               background: 'rgba(245, 166, 35, 0.1)',
               border: '1px solid rgba(245, 166, 35, 0.3)',
-              borderRadius: '12px',
+              borderRadius: "var(--r-pill)",
               padding: '16px',
               marginBottom: '24px'
             }}>
@@ -230,3 +231,4 @@ export default function CreateTeamPage() {
     </div>
   );
 }
+

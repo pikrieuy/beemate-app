@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { buttonVariants } from "@/components/ui/button";
 
 interface Team {
   id: string;
@@ -142,7 +143,7 @@ export function TeamsClient({ initialTeams }: TeamsClientProps) {
               style={{ display: "flex", flexDirection: "column", gap: "16px", position: "sticky", top: "80px" }}
             >
               {/* Search */}
-              <div style={{ background: "var(--bg2)", border: "1px solid var(--b)", borderRadius: "16px", padding: "16px" }}>
+              <div style={{ background: "var(--bg2)", border: "1px solid var(--b)", borderRadius: "var(--r-pill)", padding: "16px" }}>
                 <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--t3)", letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: "10px" }}>
                   Cari
                 </div>
@@ -177,7 +178,7 @@ export function TeamsClient({ initialTeams }: TeamsClientProps) {
               </div>
 
               {/* Sort */}
-              <div style={{ background: "var(--bg2)", border: "1px solid var(--b)", borderRadius: "16px", padding: "16px" }}>
+              <div style={{ background: "var(--bg2)", border: "1px solid var(--b)", borderRadius: "var(--r-pill)", padding: "16px" }}>
                 <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--t3)", letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: "10px" }}>
                   Urutkan
                 </div>
@@ -212,7 +213,7 @@ export function TeamsClient({ initialTeams }: TeamsClientProps) {
               </div>
 
               {/* Size filter */}
-              <div style={{ background: "var(--bg2)", border: "1px solid var(--b)", borderRadius: "16px", padding: "16px" }}>
+              <div style={{ background: "var(--bg2)", border: "1px solid var(--b)", borderRadius: "var(--r-pill)", padding: "16px" }}>
                 <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--t3)", letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: "10px" }}>
                   Ukuran Tim
                 </div>
@@ -244,7 +245,7 @@ export function TeamsClient({ initialTeams }: TeamsClientProps) {
               </div>
 
               {/* Stats summary */}
-              <div style={{ background: "var(--bg2)", border: "1px solid var(--b)", borderRadius: "16px", padding: "16px" }}>
+              <div style={{ background: "var(--bg2)", border: "1px solid var(--b)", borderRadius: "var(--r-pill)", padding: "16px" }}>
                 <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--t3)", letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: "12px" }}>
                   Statistik
                 </div>
@@ -256,7 +257,7 @@ export function TeamsClient({ initialTeams }: TeamsClientProps) {
                   ].map((s) => (
                     <div key={s.label} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                       <div style={{
-                        width: "30px", height: "30px", borderRadius: "8px",
+                        width: "30px", height: "30px", borderRadius: "var(--r-pill)",
                         background: "var(--bg3)", border: "1px solid var(--b)",
                         display: "flex", alignItems: "center", justifyContent: "center",
                         fontSize: "14px", color: s.color, flexShrink: 0,
@@ -365,7 +366,7 @@ function TeamCard({ team, index }: { team: Team; index: number }) {
               ? `linear-gradient(145deg, var(--bg2) 0%, ${color.glow} 100%)`
               : "var(--bg2)",
             border: `1px solid ${hovered ? color.border : "var(--b)"}`,
-            borderRadius: "18px",
+            borderRadius: "var(--r-pill)",
             padding: "20px",
             display: "flex",
             flexDirection: "column",
@@ -484,3 +485,4 @@ function TeamCard({ team, index }: { team: Team; index: number }) {
     </motion.div>
   );
 }
+

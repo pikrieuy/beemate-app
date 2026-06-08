@@ -132,7 +132,7 @@ export function OnboardingClient({ userName }: Props) {
                 placeholder={"Contoh: Saya mahasiswa Informatika semester 5, berpengalaman di React, Node.js, dan PostgreSQL. Pernah ikut hackathon Gemastik dan menang juara 3. Tertarik dengan AI dan machine learning..."}
                 rows={6}
                 style={{
-                  width: "100%", padding: "16px", borderRadius: "14px",
+                  width: "100%", padding: "16px", borderRadius: "var(--r-pill)",
                   border: "1px solid var(--b)", background: "var(--bg2)",
                   color: "var(--t)", fontSize: "14px", resize: "vertical",
                   fontFamily: "inherit", lineHeight: 1.6,
@@ -147,7 +147,7 @@ export function OnboardingClient({ userName }: Props) {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   style={{
-                    marginTop: "20px", padding: "20px", borderRadius: "16px",
+                    marginTop: "20px", padding: "20px", borderRadius: "var(--r-pill)",
                     background: "rgba(245,166,35,0.05)", border: "1px solid rgba(245,166,35,0.2)",
                     textAlign: "left",
                   }}
@@ -223,14 +223,14 @@ export function OnboardingClient({ userName }: Props) {
                     onClick={() => setSelectedRole(role.key)}
                     style={{
                       display: "flex", alignItems: "center", gap: "16px",
-                      padding: "20px", borderRadius: "16px", cursor: "pointer",
+                      padding: "20px", borderRadius: "var(--r-pill)", cursor: "pointer",
                       background: selectedRole === role.key ? role.bg : "var(--bg2)",
                       border: `2px solid ${selectedRole === role.key ? role.border : "var(--b)"}`,
                       transition: "all 0.15s",
                     }}
                   >
                     <div style={{
-                      width: "48px", height: "48px", borderRadius: "14px",
+                      width: "48px", height: "48px", borderRadius: "var(--r-pill)",
                       background: role.bg, color: role.color,
                       display: "flex", alignItems: "center", justifyContent: "center",
                       fontSize: "24px", flexShrink: 0,
@@ -335,3 +335,4 @@ export function OnboardingClient({ userName }: Props) {
     </div>
   );
 }
+

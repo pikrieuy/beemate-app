@@ -24,12 +24,12 @@ const buttonVariants = cva(
         no: "bg-[rgba(249,107,107,0.12)] text-[#f96b6b] border border-[rgba(249,107,107,0.3)] hover:bg-[rgba(249,107,107,0.18)]",
       },
       size: {
-        default: "h-10 px-[18px] py-[8px] text-[13px] rounded-full",
-        sm: "px-[13px] py-[6px] text-[12px] rounded-full",
-        lg: "px-[22px] py-[10px] text-[14px] rounded-full",
+        default: "h-10 px-[20px] py-[10px] text-[13px] rounded-full",
+        sm: "px-[15px] py-[8px] text-[12px] rounded-full",
+        lg: "px-[24px] py-[12px] text-[14px] rounded-full",
         icon: "h-10 w-10 rounded-full",
-        xs: "px-[10px] py-[4px] text-[11px] rounded-full",
-        xl: "px-[26px] py-[13px] text-[15px] rounded-full",
+        xs: "px-[12px] py-[6px] text-[11px] rounded-full",
+        xl: "px-[28px] py-[15px] text-[15px] rounded-full",
       },
     },
     defaultVariants: {

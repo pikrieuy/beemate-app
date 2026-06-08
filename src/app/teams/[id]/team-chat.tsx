@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { getTeamMessages, sendTeamMessage } from "@/actions"
 import { getSupabaseBrowserClient } from "@/lib/supabase/client"
 import { motion } from "framer-motion"
+import { buttonVariants } from "@/components/ui/button";
 
 interface ChatMember {
   userId: string

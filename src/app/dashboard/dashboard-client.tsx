@@ -208,7 +208,7 @@ export function DashboardClient({
             {quickActions.map((a) => (
               <Link key={a.href} href={a.href} style={{ textDecoration: "none" }}>
                 <button
-                  className={a.primary ? "btn btn-honey btn-sm" : "btn btn-sm"}
+                  className={`${a.primary ? "btn btn-honey btn-sm" : "btn btn-sm"} rounded-full`}
                   style={a.primary ? {} : {
                     background: "var(--bg2)",
                     border: "1px solid var(--b)",
@@ -242,7 +242,7 @@ export function DashboardClient({
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   {allTeams.slice(0, 5).map((team) => (
                     <TeamRow
-                      key={team.id}
+                      key={`${team.id}-${team.role}`}
                       team={team}
                       role={team.role}
                       onClick={() => router.push(`/teams/${team.id}`)}
@@ -278,7 +278,7 @@ export function DashboardClient({
                       style={{
                         background: "var(--rdb)",
                         border: "1px solid var(--rbd)",
-                        borderRadius: "12px",
+                        borderRadius: "var(--r-pill)",
                         padding: "14px 16px",
                         cursor: "pointer",
                         transition: "opacity 0.15s",
@@ -290,7 +290,7 @@ export function DashboardClient({
                       onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.opacity = "1")}
                     >
                       <div style={{
-                        width: "36px", height: "36px", borderRadius: "10px",
+                        width: "36px", height: "36px", borderRadius: "var(--r-pill)",
                         background: "var(--rdb)", border: "1px solid var(--rbd)",
                         display: "flex", alignItems: "center", justifyContent: "center",
                         fontSize: "18px", color: "var(--rd)", flexShrink: 0,
@@ -333,7 +333,7 @@ export function DashboardClient({
                         style={{
                           background: "var(--bg3)",
                           border: "1px solid var(--b)",
-                          borderRadius: "12px",
+                          borderRadius: "var(--r-pill)",
                           padding: "14px 16px",
                           cursor: "pointer",
                           transition: "border-color 0.15s, transform 0.15s",
@@ -351,7 +351,7 @@ export function DashboardClient({
                         }}
                       >
                         <div style={{
-                          width: "36px", height: "36px", borderRadius: "10px",
+                          width: "36px", height: "36px", borderRadius: "var(--r-pill)",
                           background: "var(--gnb)", border: "1px solid var(--gbd)",
                           display: "flex", alignItems: "center", justifyContent: "center",
                           fontSize: "18px", color: "var(--gn)", flexShrink: 0,
@@ -422,7 +422,7 @@ function HeroCard({ user, greeting }: { user: User; greeting: string }) {
       style={{
         background: "linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%)",
         border: `1px solid ${hovered ? "var(--hbd)" : "var(--b)"}`,
-        borderRadius: "24px",
+        borderRadius: "var(--r-pill)",
         padding: "32px",
         display: "flex",
         alignItems: "center",
@@ -495,7 +495,7 @@ function StatCard({ stat }: { stat: { label: string; value: number; icon: string
       style={{
         background: stat.bg,
         border: `1px solid ${hovered ? stat.color : stat.border}`,
-        borderRadius: "18px",
+        borderRadius: "var(--r-pill)",
         padding: "20px 22px",
         cursor: "pointer",
         transition: "transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease",
@@ -526,7 +526,7 @@ function StatCard({ stat }: { stat: { label: string; value: number; icon: string
         animate={{ scale: hovered ? 1.1 : 1, rotate: hovered ? -5 : 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         style={{
-          width: "44px", height: "44px", borderRadius: "12px",
+          width: "44px", height: "44px", borderRadius: "var(--r-pill)",
           background: "rgba(255,255,255,0.06)",
           display: "flex", alignItems: "center", justifyContent: "center",
           fontSize: "22px", color: stat.color, flexShrink: 0,
@@ -616,7 +616,7 @@ function TeamRow({ team, role, onClick }: { team: Team; role: "Leader" | "Member
       style={{
         background: "var(--bg3)",
         border: "1px solid var(--b)",
-        borderRadius: "12px",
+        borderRadius: "var(--r-pill)",
         padding: "14px 16px",
         cursor: "pointer",
         transition: "border-color 0.15s, transform 0.15s",
@@ -634,7 +634,7 @@ function TeamRow({ team, role, onClick }: { team: Team; role: "Leader" | "Member
       }}
     >
       <div style={{
-        width: "36px", height: "36px", borderRadius: "10px",
+        width: "36px", height: "36px", borderRadius: "var(--r-pill)",
         background: role === "Leader" ? "var(--hbg)" : "var(--blb)",
         border: `1px solid ${role === "Leader" ? "var(--hbd)" : "var(--bbd)"}`,
         display: "flex", alignItems: "center", justifyContent: "center",
@@ -683,9 +683,10 @@ function EmptyState({
       <div style={{ fontSize: "12px", color: "var(--t3)", marginBottom: action ? "16px" : 0 }}>{sub}</div>
       {action && (
         <Link href={action.href}>
-          <button className="btn btn-honey btn-sm">{action.label}</button>
+          <button className="btn btn-honey btn-sm rounded-full">{action.label}</button>
         </Link>
       )}
     </div>
   );
 }
+

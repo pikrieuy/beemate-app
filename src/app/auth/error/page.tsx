@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Suspense } from "react";
+import { Button } from "@/components/ui/button";
 
 const ERROR_MESSAGES: Record<string, { title: string; desc: string }> = {
   Configuration: {
@@ -51,7 +52,7 @@ function AuthErrorContent() {
       <div style={{
         background: "var(--bg2)",
         border: "1px solid var(--rbd)",
-        borderRadius: "24px",
+        borderRadius: "var(--r-pill)",
         padding: "48px 40px",
         maxWidth: "480px",
         width: "100%",
@@ -59,7 +60,7 @@ function AuthErrorContent() {
       }}>
         {/* Icon */}
         <div style={{
-          width: "64px", height: "64px", borderRadius: "18px",
+          width: "64px", height: "64px", borderRadius: "var(--r-pill)",
           background: "var(--rdb)", border: "1px solid var(--rbd)",
           display: "flex", alignItems: "center", justifyContent: "center",
           fontSize: "32px", color: "var(--rd)",
@@ -98,14 +99,14 @@ function AuthErrorContent() {
         {/* Actions */}
         <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
           <Link href="/api/auth/signin" style={{ textDecoration: "none" }}>
-            <button className={buttonVariants({ variant: "honey" })}>
+            <Button variant="honey">
               <i className="ph-fill ph-sign-in" /> Coba Login Lagi
-            </button>
+            </Button>
           </Link>
           <Link href="/" style={{ textDecoration: "none" }}>
-            <button className={buttonVariants({ variant: "default" })} style={{ background: "var(--bg3)", border: "1px solid var(--b)", color: "var(--t)" }}>
+            <Button variant="default" style={{ background: "var(--bg3)", border: "1px solid var(--b)", color: "var(--t)" }}>
               <i className="ph-fill ph-house" /> Ke Beranda
-            </button>
+            </Button>
           </Link>
         </div>
       </div>
@@ -120,3 +121,4 @@ export default function AuthErrorPage() {
     </Suspense>
   );
 }
+

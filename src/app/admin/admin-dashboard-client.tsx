@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { buttonVariants } from "@/components/ui/button";
 
 interface AdminDashboardClientProps {
   stats: { totalUsers: number; totalTeams: number; totalCompetitions: number };
@@ -74,7 +75,7 @@ export function AdminDashboardClient({ stats, recentUsers, recentCompetitions }:
               onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--bdr)"; }}
             >
               <div style={{
-                width: "44px", height: "44px", borderRadius: "12px",
+                width: "44px", height: "44px", borderRadius: "var(--r-pill)",
                 background: `${card.color}15`, color: card.color,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 fontSize: "22px", marginBottom: "16px"
@@ -122,7 +123,7 @@ export function AdminDashboardClient({ stats, recentUsers, recentCompetitions }:
           {/* Recent Users */}
           <motion.div
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
-            style={{ background: "var(--bg2)", border: "1px solid var(--bdr)", borderRadius: "24px", padding: "24px" }}
+            style={{ background: "var(--bg2)", border: "1px solid var(--bdr)", borderRadius: "var(--r-pill)", padding: "24px" }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
               <h3 style={{ fontSize: "18px", fontWeight: 800, color: "var(--t)" }}>Recent Users</h3>
@@ -168,7 +169,7 @@ export function AdminDashboardClient({ stats, recentUsers, recentCompetitions }:
           {/* Recent Competitions */}
           <motion.div
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-            style={{ background: "var(--bg2)", border: "1px solid var(--bdr)", borderRadius: "24px", padding: "24px" }}
+            style={{ background: "var(--bg2)", border: "1px solid var(--bdr)", borderRadius: "var(--r-pill)", padding: "24px" }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
               <h3 style={{ fontSize: "18px", fontWeight: 800, color: "var(--t)" }}>Recent Competitions</h3>
@@ -182,7 +183,7 @@ export function AdminDashboardClient({ stats, recentUsers, recentCompetitions }:
                   <div
                     key={c.id}
                     onClick={() => router.push(`/competitions/${c.id}`)}
-                    style={{ cursor: "pointer", padding: "12px", background: "var(--bg)", borderRadius: "12px", border: "1px solid var(--bdr)", transition: "all 0.2s" }}
+                    style={{ cursor: "pointer", padding: "12px", background: "var(--bg)", borderRadius: "var(--r-pill)", border: "1px solid var(--bdr)", transition: "all 0.2s" }}
                     onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--ho)"; }}
                     onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--bdr)"; }}
                   >
@@ -205,3 +206,4 @@ export function AdminDashboardClient({ stats, recentUsers, recentCompetitions }:
     </div>
   );
 }
+

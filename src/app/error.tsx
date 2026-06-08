@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { buttonVariants } from "@/components/ui/button";
 
 export default function Error({
   error,

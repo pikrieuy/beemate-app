@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { EditProfileModal } from "./edit-profile-modal";
+import { buttonVariants } from "@/components/ui/button";
 
 interface ProfileClientProps {
   user: {
@@ -50,7 +51,7 @@ export function ProfileClient({ user, teams }: ProfileClientProps) {
           {/* Hero Banner */}
           <div style={{ 
             height: '240px', 
-            borderRadius: '24px', 
+            borderRadius: "var(--r-pill)", 
             background: 'linear-gradient(135deg, var(--ho), #ffbe4d, var(--bl))',
             position: 'relative',
             marginBottom: '80px'
@@ -198,7 +199,7 @@ export function ProfileClient({ user, teams }: ProfileClientProps) {
                         As Team Leader
                       </h3>
                       {teams.asLeader.map((team: any) => (
-                        <div key={team.id} style={{ background: 'var(--bg2)', border: '1px solid var(--bdr)', borderRadius: '24px', padding: '24px', marginBottom: '16px' }}>
+                        <div key={team.id} style={{ background: 'var(--bg2)', border: '1px solid var(--bdr)', borderRadius: "var(--r-pill)", padding: '24px', marginBottom: '16px' }}>
                           <h4 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--t)', marginBottom: '8px' }}>
                             {team.name}
                           </h4>
@@ -219,7 +220,7 @@ export function ProfileClient({ user, teams }: ProfileClientProps) {
                         As Team Member
                       </h3>
                       {teams.asMember.map((team: any) => (
-                        <div key={team.id} style={{ background: 'var(--bg2)', border: '1px solid var(--bdr)', borderRadius: '24px', padding: '24px', marginBottom: '16px' }}>
+                        <div key={team.id} style={{ background: 'var(--bg2)', border: '1px solid var(--bdr)', borderRadius: "var(--r-pill)", padding: '24px', marginBottom: '16px' }}>
                           <h4 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--t)', marginBottom: '8px' }}>
                             {team.name}
                           </h4>
@@ -250,11 +251,11 @@ export function ProfileClient({ user, teams }: ProfileClientProps) {
                   {user.portfolioUrl ? (
                     <div style={{
                       background: 'var(--bg2)', border: '1px solid var(--hbd)',
-                      borderRadius: '16px', padding: '20px',
+                      borderRadius: "var(--r-pill)", padding: '20px',
                       display: 'flex', alignItems: 'center', gap: '16px',
                     }}>
                       <div style={{
-                        width: '44px', height: '44px', borderRadius: '12px',
+                        width: '44px', height: '44px', borderRadius: "var(--r-pill)",
                         background: 'var(--hbg)', color: 'var(--ho)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontSize: '22px', flexShrink: 0,
@@ -287,7 +288,7 @@ export function ProfileClient({ user, teams }: ProfileClientProps) {
                   ) : (
                     <div style={{
                       background: 'var(--bg2)', border: '1px dashed var(--b)',
-                      borderRadius: '16px', padding: '20px',
+                      borderRadius: "var(--r-pill)", padding: '20px',
                       display: 'flex', alignItems: 'center', gap: '14px',
                     }}>
                       <i className="ph-fill ph-link-break" style={{ fontSize: '22px', color: 'var(--t3)' }} />
@@ -318,11 +319,11 @@ export function ProfileClient({ user, teams }: ProfileClientProps) {
                       ].map((item) => (
                         <div key={item.title} style={{
                           background: 'var(--bg2)', border: `1px solid ${item.border}`,
-                          borderRadius: '14px', padding: '16px',
+                          borderRadius: "var(--r-pill)", padding: '16px',
                           display: 'flex', gap: '12px', alignItems: 'flex-start',
                         }}>
                           <div style={{
-                            width: '38px', height: '38px', borderRadius: '10px',
+                            width: '38px', height: '38px', borderRadius: "var(--r-pill)",
                             background: item.bg, color: item.color,
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             fontSize: '18px', flexShrink: 0,
@@ -354,7 +355,7 @@ export function ProfileClient({ user, teams }: ProfileClientProps) {
 
             {/* Stats Sidebar */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              <div style={{ background: 'var(--bg2)', border: '1px solid var(--bdr)', borderRadius: '24px', padding: '24px' }}>
+              <div style={{ background: 'var(--bg2)', border: '1px solid var(--bdr)', borderRadius: "var(--r-pill)", padding: '24px' }}>
                 <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--t2)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>
                   Teams
                 </div>
@@ -371,7 +372,7 @@ export function ProfileClient({ user, teams }: ProfileClientProps) {
                 </p>
               </div>
 
-              <div style={{ background: 'var(--bg2)', border: '1px solid var(--bdr)', borderRadius: '24px', padding: '24px' }}>
+              <div style={{ background: 'var(--bg2)', border: '1px solid var(--bdr)', borderRadius: "var(--r-pill)", padding: '24px' }}>
                 <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--t2)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>
                   Top Skills
                 </div>
@@ -437,3 +438,4 @@ export function ProfileClient({ user, teams }: ProfileClientProps) {
     </>
   );
 }
+

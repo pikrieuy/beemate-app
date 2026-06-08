@@ -9,7 +9,7 @@ export function BackButton() {
 
   return (
     <Button
-      className="group relative overflow-hidden bg-primary text-primary-foreground hover:bg-primary/90 rounded-md h-10 px-4 py-2 inline-flex items-center justify-center whitespace-nowrap"
+      className="group relative overflow-hidden rounded-full"
       onClick={() => router.back()}
     >
       <span className="w-20 translate-x-2 transition-opacity duration-500 group-hover:opacity-0">

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { changeUserRole } from "@/actions";
 import { BackButton } from "@/components/ui/back-button";
+import { buttonVariants } from "@/components/ui/button";
 
 interface AdminUser {
   id: string;
@@ -91,7 +92,7 @@ export function AdminUsersClient({ users, currentUserId }: AdminUsersClientProps
             style={{
               flex: 1, minWidth: "200px", padding: "10px 16px",
               background: "var(--bg2)", border: "1px solid var(--bdr)",
-              borderRadius: "12px", fontSize: "14px", color: "var(--t)", outline: "none"
+              borderRadius: "var(--r-pill)", fontSize: "14px", color: "var(--t)", outline: "none"
             }}
           />
           <div style={{ display: "flex", gap: "8px" }}>
@@ -119,7 +120,7 @@ export function AdminUsersClient({ users, currentUserId }: AdminUsersClientProps
         )}
 
         {/* Users Table */}
-        <div style={{ background: "var(--bg2)", border: "1px solid var(--bdr)", borderRadius: "24px", overflow: "hidden" }}>
+        <div style={{ background: "var(--bg2)", border: "1px solid var(--bdr)", borderRadius: "var(--r-pill)", overflow: "hidden" }}>
           {filtered.length > 0 ? (
             filtered.map((u, i) => (
               <motion.div
@@ -217,3 +218,4 @@ export function AdminUsersClient({ users, currentUserId }: AdminUsersClientProps
     </div>
   );
 }
+
