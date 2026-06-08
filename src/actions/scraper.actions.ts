@@ -86,7 +86,7 @@ export async function aggregateCompetitionsGrounded(topic: string = "Hackathon d
 
     const { object } = await generateObject({
       // We use standard google provider for grounding to ensure it uses the local API key with grounding capabilities
-      model: google("gemini-2.5-flash"),
+      model: geminiFlash, // Menggunakan instance model dari @/lib/ai
       schema: competitionSchema,
       prompt: `Cari informasi kompetisi mahasiswa terbaru di Indonesia tahun 2026 yang deadline-nya belum lewat. 
                Fokus pada kategori: ${topic}.
